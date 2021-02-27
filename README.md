@@ -6,3 +6,7 @@
     - Powerup ?  
     - PVP ?  
     - Peut-être PVE ?  
+    - Java/js ? ou Java/jsp ?
+    - Bdd
+    - interface
+    - connection

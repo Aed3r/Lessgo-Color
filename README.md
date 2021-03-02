@@ -12,7 +12,7 @@
     - connection
 
 
-<b>Idées Powerup</b>
+<b>Idées Powerup</b>  
     - Dessiner plus au dessous de soit  
     - Ralentir les joueurs adverse dans un rayon  
     - Accélérer les coéquipié  

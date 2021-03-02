@@ -13,7 +13,7 @@
 
 <b>Langues d'implémentations</b>  
     - Mobile: HTML/Javascript   
-    - Serveur: Python (PyGame)   
+    - Serveur: Python   
 
 <b>Ecrans mobile</b>    
     - Mini carte avec position du joueur    
@@ -23,3 +23,7 @@
 <b>Projecteurs</b>  
     - Plateau plein écran   
     - Pourcentages des zones de couleur 
+
+<b>Librairies</b>
+    - PyGaSe (Gestion des intéractions client Serveur)
+    - Pygame (Graphisme)

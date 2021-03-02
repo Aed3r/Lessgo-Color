@@ -13,13 +13,13 @@
 
 <b>Langues d'implémentations</b>  
     - Mobile: HTML/Javascript   
-    - Serveur: Python   
+    - Serveur: Python (PyGame)   
 
-<b>Ecrans mobile</b> 
+<b>Ecrans mobile</b>    
     - Mini carte avec position du joueur    
     - Contrôles     
     - Powerup ramassé   
 
-<b>Projecteurs</b>
+<b>Projecteurs</b>  
     - Plateau plein écran   
     - Pourcentages des zones de couleur 

@@ -1,5 +1,7 @@
 <b>Pitch</b>: joueurs répartis en équipes devant s'affronter en coloriant le plateau de leurs couleur. L'équipe ayant la plus grande surface gagne. 
 
+<b>Déroulement</b>: https://docs.google.com/document/d/1iM4CwHCNdIPDv0mJ89oppqIE51hGo_PN0Ww2bJXOZe0/edit?usp=sharing    
+
 <b>Contrôles</b>:   
     - Joystick  
     - bouton powerup    

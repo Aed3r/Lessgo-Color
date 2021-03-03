@@ -29,3 +29,5 @@
 <b>Librairies</b>
     - PyGaSe (Gestion des intéractions client Serveur)
     - Pygame (Graphisme)
+
+<b>Protocole de connexion</b>: UDP (http://milliways.bcit.ca/res/report.pdf)

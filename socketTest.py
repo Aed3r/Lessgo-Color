@@ -10,7 +10,6 @@ async def index(request):
         return web.Response(text=f.read(), content_type='text/html')
 
 async def websocket_handler(request):
-
     ws = web.WebSocketResponse()
     await ws.prepare(request)
 

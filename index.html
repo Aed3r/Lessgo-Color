@@ -1,11 +1,16 @@
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Document</title>
-  </head>
-  <body>
-    Hello World
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Document</title>
+    </head>
+    <body>
+        Hello World
+        <script>
+            url = window.location.href;
+            alert("ws" + url.substring(4, url.length - 4));
+            //socket = new WebSocket(url.substring(4, ))
+        </script>
+    </body>
 </html>

@@ -1,65 +1,69 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<meta charset="utf-8" />
+<html>
     <head>
-        <meta charset="utf-8" />
-        <title>WebSocket Test</title>
+        <title>Socket test</title>
         <script language="javascript" type="text/javascript">
-            fetch('/ws')
-            .then(function (response) {
-                alert(response)
-            });
-            url = window.location.href;
-            var wsUri = "ws" + url.substring(4, url.length) + "/ws";
-            var output;
+            var conn = null;
+            var name = "UNKNOWN";
 
-            function init() { 
-                output = document.getElementById("output");
-                testWebSocket(); 
+            function connect() {
+                disconnect();
+                var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host;
+                conn = new WebSocket(wsUri);
+                
+                console.log("Tentative de connection...");
+
+                conn.onopen = function() {
+                    console.log("Connection établie.");
+                };
+                conn.onmessage = function(e) {
+                    console.log("Paquet Reçu: " + e.data);
+
+                    var data = JSON.parse(e.data);
+                                                                                                                        
+                    switch (data.action) {
+                        case 'position':
+                            document.getElementById("posLabel").innerHTML = "(" + data.x + ", " + data.y + ")";
+                            break;
+                    }
+                };
+                conn.onclose = function() {
+                    console.log("Connection fermé.")
+                    conn = null;
+                };
             }
 
-            function testWebSocket() { 
-                websocket = new WebSocket(wsUri);
-                websocket.onopen = function(evt) { onOpen(evt) };
-                websocket.onclose = function(evt) { onClose(evt) };
-                websocket.onmessage = function(evt) { onMessage(evt) };
-                websocket.onerror = function(evt) { onError(evt) }; 
+            function disconnect() {
+                if (conn != null) {
+                    console.log("Déconnexion...");
+                    conn.close();
+                    conn = null;
+                    name = 'UNKNOWN';
+                }
             }
 
-            function onOpen(evt) { 
-                writeToScreen("CONNECTED"); 
-                doSend("WebSocket rocks"); 
+            function deplacement(offX, offY) {
+                var offset = {offX, offY};
+                var msg = JSON.stringify(offset);
+
+                console.log("Envoi du déplacement " + msg);
+
+                conn.send(msg);
             }
 
-            function onClose(evt) { 
-                writeToScreen("DISCONNECTED"); 
-            }
-
-            function onMessage(evt) { 
-                console.log(evt); 
-                writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>'); 
-                websocket.close(); 
-            }
-
-            function onError(evt) { 
-                writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data); 
-            }
-
-            function doSend(message) { 
-                writeToScreen("SENT: " + message);  
-                websocket.send(message); 
-            }
-            
-            function writeToScreen(message) { 
-                var pre = document.createElement("p"); 
-                pre.style.wordWrap = "break-word"; 
-                pre.innerHTML = message; 
-                output.appendChild(pre); 
-            }  
-            window.addEventListener("load", init, false);
+            connect();
         </script>
-    </head>
+     </head>
     <body>
-        <h2>WebSocket Test</h2>  <div id="output"></div>
+        <h3>Test de connexion</h3>
+        <br>
+        <input id="movUp" type="button" value="^" onclick="deplacement(0, 1);"/>
+        <input id="movLeft" type="button" value="<" onclick="deplacement(-1, 0);"/>
+        <input id="movRight" type="button" value=">" onclick="deplacement(1, 0);"/>
+        <input id="movDown" type="button" value="v" onclick="deplacement(0, -1);"/>
+        <br><br>
+        <span>Position: </span>
+        <span id="posLabel">(0, 0)</span>
     </body>
 </html>

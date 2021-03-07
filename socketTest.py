@@ -1,5 +1,8 @@
-# examples/server_simple.py
 from aiohttp import web
+import aiohttp
+import json
+
+nb_connections = 0
 
 async def init_app():
 
@@ -25,33 +28,39 @@ async def index(request):
     if not ws_ready.ok:
         with open('index.html') as f:
             return web.Response(text=f.read(), content_type='text/html')
+    
+    global nb_connections
+    nb_connections += 1
+    num_connection = nb_connections
+
+    print ("[" + str(num_connection) + "] Nouvelle connexion. Ouverture du websocket...");
 
     await ws_current.prepare(request)
+    print ("[" + str(num_connection) + "] Websocket ouvert. Envoi du paquet initial...");
 
-    name = get_random_name()
-    log.info('%s joined.', name)
+    x = 0
+    y = 0
 
-    await ws_current.send_json({'action': 'connect', 'name': name})
+    #for ws in request.app['websockets'].values():
+    #    await ws.send_json({'action': 'join', 'name': name})
+    #request.app['websockets'][name] = ws_current
 
-    for ws in request.app['websockets'].values():
-        await ws.send_json({'action': 'join', 'name': name})
-    request.app['websockets'][name] = ws_current
+    await ws_current.send_json(({'action': 'position', 'x': x, 'y': y}))
+
+    print ("[" + str(num_connection) + "] Paquet envoyé. Attente de réponses...")
 
     while True:
-        msg = await ws_current.receive()
+        msg = await ws_current.receive();
 
         if msg.type == aiohttp.WSMsgType.text:
-            for ws in request.app['websockets'].values():
-                if ws is not ws_current:
-                    await ws.send_json(
-                        {'action': 'sent', 'name': name, 'text': msg.data})
+            print ("[" + str(num_connection) + "] Paquet reçu: " + msg.data)
+            data = json.loads(msg.data)
+            x += data["offX"];
+            y += data["offY"];
+            print ("[" + str(num_connection) + "] Envoi de la position: (" + str(x) + ", " + str(y) + ")")
+            await ws_current.send_json(({'action': 'position', 'x': x, 'y': y}))
         else:
             break
-    
-    del request.app['websockets'][name]
-    log.info('%s disconnected.', name)
-    for ws in request.app['websockets'].values():
-        await ws.send_json({'action': 'disconnect', 'name': name})
     
     return ws_current
 

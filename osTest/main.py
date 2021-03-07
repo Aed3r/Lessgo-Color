@@ -12,7 +12,12 @@ boucler = True
 while boucler:
     
     fenetre.fill((80,80,80)) #couleur fenetre
-    pygame.draw.line(fenetre,(0,0,0),[0,0],[800,600]) #trace ligne noir
+    
+    # pygame.draw.line(fenetre,(0,0,0),[0,0],[800,600])
+
+    #pygame.draw.rect(fenetre,(0,0,0),pygame.Rect(10,10,2,2))
+
+    pygame.draw.circle(fenetre,(0,0,0),[150, 100], 5)
     
     pygame.display.flip() #actualise
     

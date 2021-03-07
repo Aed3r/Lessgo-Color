@@ -1,37 +1,60 @@
+# examples/server_simple.py
 from aiohttp import web
-import aiohttp
 
-## Creates a new Aiohttp Web Application
-app = web.Application()
+async def init_app():
 
-## aiohttp endpoint
+    app = web.Application()
+
+    app['websockets'] = {}
+
+    app.on_shutdown.append(shutdown)
+
+    app.router.add_get('/', index)
+
+    return app
+
+async def shutdown(app):
+    for ws in app['websockets'].values():
+        await ws.close()
+    app['websockets'].clear()
+
 async def index(request):
-    with open('index.html') as f:
-        return web.Response(text=f.read(), content_type='text/html')
+    ws_current = web.WebSocketResponse()
+    ws_ready = ws_current.can_prepare(request)
+    
+    if not ws_ready.ok:
+        with open('index.html') as f:
+            return web.Response(text=f.read(), content_type='text/html')
 
-async def websocket_handler(request):
-    ws = web.WebSocketResponse()
-    await ws.prepare(request)
+    await ws_current.prepare(request)
 
-    async for msg in ws:
-        if msg.type == aiohttp.WSMsgType.TEXT:
-            if msg.data == 'close':
-                await ws.close()
-            else:
-                await ws.send_str(msg.data + '/answer')
-        elif msg.type == aiohttp.WSMsgType.ERROR:
-            print('ws connection closed with exception %s' %
-                  ws.exception())
+    name = get_random_name()
+    log.info('%s joined.', name)
 
-    print('websocket connection closed')
+    await ws_current.send_json({'action': 'connect', 'name': name})
 
-    return ws
+    for ws in request.app['websockets'].values():
+        await ws.send_json({'action': 'join', 'name': name})
+    request.app['websockets'][name] = ws_current
 
-## We bind our aiohttp endpoint to our app
-## router
-app.router.add_get('/', index)
-app.add_routes([web.get('/ws', websocket_handler)])
+    while True:
+        msg = await ws_current.receive()
 
-## We kick off our server
+        if msg.type == aiohttp.WSMsgType.text:
+            for ws in request.app['websockets'].values():
+                if ws is not ws_current:
+                    await ws.send_json(
+                        {'action': 'sent', 'name': name, 'text': msg.data})
+        else:
+            break
+    
+    del request.app['websockets'][name]
+    log.info('%s disconnected.', name)
+    for ws in request.app['websockets'].values():
+        await ws.send_json({'action': 'disconnect', 'name': name})
+    
+    return ws_current
+
 if __name__ == '__main__':
+    app = init_app()
     web.run_app(app)

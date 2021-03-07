@@ -1,0 +1,16 @@
+# lint
+flake8==3.5.0
+
+# test
+pytest==3.5.0
+pytest-aiohttp
+
+
+# dev
+psycopg2
+
+# docs
+sphinx==1.7.2
+sphinxcontrib-asyncio==0.2.0
+pygments==2.2.0
+sphinxcontrib-spelling==4.1.0; platform_system!="Windows"  # We only use it in Travis CI

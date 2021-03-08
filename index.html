@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="utf-8">
+    <meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=0' charset="utf-8">
     <title>OS</title>
     <style>
       *{
@@ -19,9 +19,6 @@
       }
       body.charger{
 	  opacity: 1;
-      }
-      p{
-	  text-align: center
       }
     </style>
   </head>
@@ -41,7 +38,7 @@
     /*variable de configuration*/
     var dessiner = false;                                       //test si on est entraint de dessiner
     var jj = false;                                             //test d'entrer dans la boucle
-    var xJoy = 250, yJoy = 600;                                 //position x,y joyistick
+    var xJoy=100, yJoy=300;                                 //position x,y joyistick
     var xClient = 0, yClient =0;                                //position souris ou tactile utilisateur
     var rayonM=55,rayonE=60;                                    //rayon millieu et exterieur joyistick
     var dist = 0;                                               //distnance d'un point avec un autre
@@ -60,6 +57,7 @@
     document.addEventListener('mouseup', fin);                  //executer lorsque la souris est relacher
     document.addEventListener('mousemove', mouvement);          //executer lorsqu'un mouvement de souris est effectuer
     /*lorsque le chargement est fini on fait apparaitre en fondu + les élément de la manette de base*/
+
     function chargementfini() {
 	document.body.className += " charger";
 	redimentionne();
@@ -68,14 +66,22 @@
 	bouton();
     }
     function redimentionne(){
+	/*full canvas*/
 	largeur = (window.innerWidth)-10;
 	hauteur = (window.innerHeight)-10;
 	canvas.width = largeur;
 	canvas.height = hauteur;
-	xJoy=(largeur/100)*65;
-	yjoy=(hauteur/100)*80;
+	
+	/*pos*/
+	xJoy=100;
+	yJoy=100;
 	xBouton=xJoy-(largeurBouton/2);
-	yBouton=(hauteur/100)*20;
+	yBouton=100;
+	/*dimention*/
+	rayonM=20;
+	rayonE=rayonM-5;
+	longeurBouton=40;
+	largeurBouton=longeurBouton/2; 
     }
     /*executer si un ecouteur de click est lancer*/
     function debut(event) {

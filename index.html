@@ -31,6 +31,11 @@
                 conn.onclose = function() {
                     console.log("Connection fermé.")
                     conn = null;
+
+                    var divsToHide = document.getElementsByClassName("movBtn");
+                    for(var i = 0; i < divsToHide.length; i++) divsToHide[i].style.display = "none";
+                    document.getElementById("header").style.display = "block";
+                    document.getElementById("header").innerHTML = "Problème de connection au serveur";
                 };
             }
 
@@ -56,12 +61,12 @@
         </script>
      </head>
     <body>
-        <h3>Test de connexion</h3>
+        <h3 id="header">Test de connexion</h3>
         <br>
-        <input id="movUp" type="button" value="^" onclick="deplacement(0, 1);"/>
-        <input id="movLeft" type="button" value="<" onclick="deplacement(-1, 0);"/>
-        <input id="movRight" type="button" value=">" onclick="deplacement(1, 0);"/>
-        <input id="movDown" type="button" value="v" onclick="deplacement(0, -1);"/>
+        <input class="movBtn" id="movUp" type="button" value="^" onclick="deplacement(0, 1);"/>
+        <input class="movBtn" id="movLeft" type="button" value="<" onclick="deplacement(-1, 0);"/>
+        <input class="movBtn" id="movRight" type="button" value=">" onclick="deplacement(1, 0);"/>
+        <input class="movBtn" id="movDown" type="button" value="v" onclick="deplacement(0, -1);"/>
         <br><br>
         <span>Position: </span>
         <span id="posLabel">(0, 0)</span>

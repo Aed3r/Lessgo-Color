@@ -44,7 +44,7 @@
     var dist = 0;                                               //distnance d'un point avec un autre
     var pi = Math.PI;                                           //PI
     var xBouton=210,yBouton=200;                                //poisition x,y bouton
-    var longeurBouton=160,largeurBouton=80;                     //largeur et longeur bouton
+    var longeurBouton=80,largeurBouton=160;                     //largeur et longeur bouton
     //les ecouteurs des entrer ecrant tactile
     document.addEventListener('touchstart', debut);             //executer au toucher
     document.addEventListener('touchend', fin);                 //ececuter quand relacher
@@ -64,6 +64,7 @@
 	fond();
 	joystick();
 	bouton();
+	//document.html.requestFullscreen();
     }
     function redimentionne(){
 	/*full canvas*/
@@ -72,16 +73,16 @@
 	canvas.width = largeur;
 	canvas.height = hauteur;
 	
-	/*pos*/
-	xJoy=100;
-	yJoy=100;
-	xBouton=xJoy-(largeurBouton/2);
-	yBouton=100;
 	/*dimention*/
-	rayonM=20;
+	rayonM=(largeur/100)*6;
 	rayonE=rayonM-5;
-	longeurBouton=40;
-	largeurBouton=longeurBouton/2; 
+	longeurBouton=rayonM*1.5;
+	largeurBouton=rayonM*3;
+	/*pos*/
+	xJoy=(largeur/100)*80;
+	yJoy=(hauteur/100)*80;
+	xBouton=(largeur/100)*20;
+	yBouton=yJoy-longeurBouton/2;
     }
     /*executer si un ecouteur de click est lancer*/
     function debut(event) {

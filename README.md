@@ -28,6 +28,6 @@
 
 <b>Librairies</b>
     - PyGaSe (Gestion des intéractions client Serveur)
-    - Pygame (Graphisme) <span style="color:#FF0000;>sudo apt-get install python3-pygame</span>
+    - Pygame (Graphisme) <span style="color:#FF0000>sudo apt-get install python3-pygame</span>
 
 <b>Protocole de connexion</b>: UDP (http://milliways.bcit.ca/res/report.pdf)

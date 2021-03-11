@@ -45,28 +45,30 @@
     var pi = Math.PI;                                           //PI
     var xBouton=210,yBouton=200;                                //poisition x,y bouton
     var longeurBouton=80,largeurBouton=160;                     //largeur et longeur bouton
-
+    var angle,xJoyMouvement,yJoyMouvement;
     /*lorsque le chargement est fini on fait apparaitre en fondu + les élément de la manette de base*/
-
     function chargementfini() {
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
 	redimentionne();
-	fond();
-	joystick();
-	bouton();
+	manetteBase();
 	//les ecouteurs des entrer ecrant tactile
 	document.addEventListener('touchstart', debut);             //executer au toucher
 	document.addEventListener('touchend', fin);                 //ececuter quand relacher
 	document.addEventListener('touchcancel', fin);              //execution a l'interuption
-	document.addEventListener('touchmove', mouvement);          //executer lors d'un mouvement sur l'ecrant
+	document.addEventListener('touchmove', manetteUtiliser);    //executer lors d'un mouvement sur l'ecrant
 	/*executer lors du redimentionage de la fenetre*/
 	window.addEventListener('resize', redimentionne);
 	/*les ecouteur des entrer souris*/
 	document.addEventListener('mousedown', debut);              //executer au click souris
 	document.addEventListener('mouseup', fin);                  //executer lorsque la souris est relacher
-	document.addEventListener('mousemove', mouvement);          //executer lorsqu'un mouvement de souris est effectuer
-	document.body.className += " charger";
+	document.addEventListener('mousemove', manetteUtiliser);    //executer lorsqu'un mouvement de souris est effectuer
+	document.body.className += " charger";                      //effet fondu
+    }
+    function manetteBase(){
+	fond();
+	joystick();
+	bouton();
     }
     function redimentionne(){
 	/*full canvas*/
@@ -75,7 +77,7 @@
 	canvas.width = largeur;
 	canvas.height = hauteur;
 	/*dimention*/
-	rayonM=(largeur/100)*10;
+	rayonM=(hauteur/100)*10;
 	rayonE=rayonM-5;
 	longeurBouton=rayonM*2;
 	largeurBouton=rayonM*4;
@@ -84,6 +86,7 @@
 	yJoy=(hauteur/100)*80;
 	xBouton=(largeur/100)*20;
 	yBouton=yJoy-longeurBouton/2;
+	manetteBase();
     }
     /*executer si un ecouteur de click est lancer*/
     function debut(event) {
@@ -93,9 +96,8 @@
     /*executer si un ecouteur de relacher click est lancer*/
     function fin() {
 	dessiner = false;
-	fond();
-	bouton();
-	joystick();
+	jj =  false;
+	manetteBase();
     }
     /*le fond de la manette, encoche des boutons*/
     function fond(){    
@@ -122,15 +124,15 @@
 	context.stroke();
 	context.closePath();
     }
-    function joystickA(event){
+    function joystickA(xJoyMouvement,yJoyMouvement){
 	context.beginPath();
 	context.fillStyle="#333333";
-	context.arc(event.clientX, event.clientY, rayonM, 0, 2 * pi);
+	context.arc(xJoyMouvement, yJoyMouvement, rayonM, 0, 2 * pi);
 	context.fill();
 	context.closePath();
 	context.beginPath();
 	context.lineWidth="4";
-	context.arc(event.clientX, event.clientY, rayonM, 0, 2 * pi);
+	context.arc(xJoyMouvement, yJoyMouvement, rayonM, 0, 2 * pi);
 	context.stroke();
 	context.closePath();
     }
@@ -146,35 +148,30 @@
 	context.strokeRect(xBouton+5 , yBouton+5, largeurBouton-10, longeurBouton-10);
     }
     /*executer lorsque l'ecouteur de mouvement est lancer ou lors d'un apuis bouton, cette fonction est le coeur de la manette*/
-    function mouvement(event) {
+    function manetteUtiliser(event) {
 	if(dessiner){
 	    xClient=event.clientX || event.touches[0].clientX;
 	    yClient=event.clientY || event.touches[0].clientY;
-	    if(((xClient>xBouton+5)&&(xClient<xBouton+largeurBouton-5))&&((yClient>yBouton+5)&&(yClient<yBouton+longeurBouton-5))){
-		fond();
-		boutonA();
-		joystick();
-	    }
+	    angle=Math.atan2((yClient-yJoy),(xClient-xJoy));
 	    dist=Math.sqrt(Math.pow(xClient-xJoy,2)+Math.pow(yClient-yJoy,2));
-	    if(dist<rayonE+rayonM){
-		fond();
+	    fond();
+	    if(((xClient>xBouton+5)&&(xClient<xBouton+largeurBouton-5))&&((yClient>yBouton+5)&&(yClient<yBouton+longeurBouton-5))){
+		boutonA();
+	    }else{
 		bouton();
-		joystickA(event);
+	    }
+	    if(dist<rayonE){
+		joystickA(xClient,yClient);
 		jj = true;
 	    }else{
 		if(jj){
-		    context.clearRect(0, 0, canvas.width, canvas.height);
-		    fond();
-		    bouton();
+		    xJoyMouvement=rayonE*Math.cos(angle)+xJoy;
+		    yJoyMouvement=rayonE*Math.sin(angle)+yJoy;
+		    joystickA(xJoyMouvement,yJoyMouvement);
+		}else{
 		    joystick();
-		    jj = false;
 		}
 	    }
-	}else{
-	    context.clearRect(0, 0, canvas.width, canvas.height);
-	    fond();
-	    bouton();
-	    joystick();
 	}
     }
   </script>

@@ -50,8 +50,6 @@
     function chargementfini() {
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
-	redimentionne();
-	manetteBase();
 	//les ecouteurs des entrer ecrant tactile
 	document.addEventListener('touchstart', debut);             //executer au toucher
 	document.addEventListener('touchend', fin);                 //ececuter quand relacher
@@ -64,6 +62,8 @@
 	document.addEventListener('mouseup', fin);                  //executer lorsque la souris est relacher
 	document.addEventListener('mousemove', manetteUtiliser);    //executer lorsqu'un mouvement de souris est effectuer
 	document.body.className += " charger";                      //effet fondu
+	redimentionne();
+	manetteBase();
     }
     function manetteBase(){
 	fond();
@@ -75,12 +75,19 @@
 	largeur = (window.innerWidth)-10;
 	hauteur = (window.innerHeight)-10;
 	canvas.width = largeur;
-	canvas.height = hauteur;
+	canvas.height = hauteur;	
 	/*dimention*/
-	rayonM=(hauteur/100)*10;
-	rayonE=rayonM-5;
-	longeurBouton=rayonM*1.5;
-	largeurBouton=rayonM*3;
+	if(hauteur<largeur){                                        //verification si téléphone/tablette/ecrant est en mode "horizontal" et choisit les dimention en sorte d'obtenir le bonne affichage 
+	    rayonM=(hauteur/100)*10;
+	    rayonE=rayonM-5;
+	    longeurBouton=rayonM*1.5;
+	    largeurBouton=rayonM*3;
+	}else{                                                      //verification si téléphone/tablette/ecrant est en mode "verticale" et choisit les dimention en sorte d'obtenir le bonne affichage
+	    rayonM=(largeur/100)*10;
+	    rayonE=rayonM-5;
+	    longeurBouton=rayonM*1.5;
+	    largeurBouton=rayonM*3;
+	}
 	/*pos*/
 	xJoy=(largeur/100)*80;
 	yJoy=(hauteur/100)*80;

@@ -45,7 +45,7 @@
     var pi = Math.PI;                                           //PI
     var xBouton=210,yBouton=200;                                //poisition x,y bouton
     var longeurBouton=80,largeurBouton=160;                     //largeur et longeur bouton
-    var angle,xJoyMouvement,yJoyMouvement;
+    var angle,xJoyMouvement,yJoyMouvement,vitesse
     /*lorsque le chargement est fini on fait apparaitre en fondu + les élément de la manette de base*/
     function chargementfini(){
 	canvas = document.getElementById('canvas');
@@ -168,6 +168,8 @@
 		bouton();
 	    }
 	    if(dist<rayonE){
+		vitesse = parseInt(((dist/rayonE)*100),10);                                                      //calcul de la vitesse
+		console.log(vitesse);
 		joystickA(xClient,yClient);
 		jj = true;
 	    }else{

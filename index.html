@@ -30,7 +30,7 @@
   </body>
   <script>
     /*
-      fonctionnaliter : manette de jeu, jouable ecrant tactile ou souris
+     fonctionnaliter : manette de jeu, jouable ecrant tactile ou souris
     */
     var canvas,contex;
     /*dimention de la fenetre*/
@@ -47,7 +47,7 @@
     var longeurBouton=80,largeurBouton=160;                     //largeur et longeur bouton
     var angle,xJoyMouvement,yJoyMouvement;
     /*lorsque le chargement est fini on fait apparaitre en fondu + les élément de la manette de base*/
-    function chargementfini() {
+    function chargementfini(){
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
 	//les ecouteurs des entrer ecrant tactile
@@ -96,12 +96,12 @@
 	manetteBase();
     }
     /*executer si un ecouteur de click est lancer*/
-    function debut(event) {
+    function debut(event){
 	dessiner = true;
 	manetteUtiliser(event);
     }
     /*executer si un ecouteur de relacher click est lancer*/
-    function fin() {
+    function fin(){
 	dessiner = false;
 	jj =  false;
 	manetteBase();
@@ -155,7 +155,7 @@
 	context.strokeRect(xBouton+5 , yBouton+5, largeurBouton-10, longeurBouton-10);
     }
     /*executer lorsque l'ecouteur de mouvement est lancer ou lors d'un apuis bouton, cette fonction est le coeur de la manette*/
-    function manetteUtiliser(event) {
+    function manetteUtiliser(event){
 	if(dessiner){
 	    xClient=event.clientX || event.touches[0].clientX;
 	    yClient=event.clientY || event.touches[0].clientY;

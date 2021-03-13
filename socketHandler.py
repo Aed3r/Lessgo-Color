@@ -32,9 +32,12 @@ async def request_handler(ws_current, request):
         if msg.type == aiohttp.WSMsgType.text:
             print ("[" + str(num_connection) + "] Paquet reçu: " + msg.data)
             data = json.loads(msg.data)
-            x += data["offX"];
-            y += data["offY"];
-            print ("[" + str(num_connection) + "] Envoi de la position: (" + str(x) + ", " + str(y) + ")")
+
+            distance = data["distance"]
+            x += data["offX"] * distance;
+            y += data["offY"] * distance;
+
+            print ("[" + str(num_connection) + "] Envoi de la position: (" + str(x) + ", " + str(y) + "), vitesse=" + str(distance))
             await ws_current.send_json(({'action': 'position', 'x': x, 'y': y}))
         else:
             break

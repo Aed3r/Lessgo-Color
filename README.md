@@ -27,7 +27,5 @@
     - Pourcentages des zones de couleur 
 
 <b>Librairies</b>
-    - PyGaSe (Gestion des intéractions client Serveur)
-    - Pygame (Graphisme)
-
-<b>Protocole de connexion</b>: UDP (http://milliways.bcit.ca/res/report.pdf)
+    - Pygame (Graphisme) *sudo apt-get install python3-pygame*
+    - aiohttp (Réseau) *pip install aiohttp*

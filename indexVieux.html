@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<html>
+    <head>
+        <title>Socket test</title>
+        <script language="javascript" type="text/javascript">
+            var conn = null;
+            var name = "UNKNOWN";
+
+            function connect() {
+                disconnect();
+                var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host;
+                conn = new WebSocket(wsUri);
+                
+                console.log("Tentative de connection...");
+
+                conn.onopen = function() {
+                    console.log("Connection établie.");
+                };
+                conn.onmessage = function(e) {
+                    console.log("Paquet Reçu: " + e.data);
+
+                    var data = JSON.parse(e.data);
+                                                                                                                        
+                    switch (data.action) {
+                        case 'position':
+                            document.getElementById("posLabel").innerHTML = "(" + data.x + ", " + data.y + ")";
+                            break;
+                    }
+                };
+                conn.onclose = function() {
+                    console.log("Connection fermé.")
+                    conn = null;
+
+                    var divsToHide = document.getElementsByClassName("movBtn");
+                    for(var i = 0; i < divsToHide.length; i++) divsToHide[i].style.display = "none";
+                    document.getElementById("header").style.display = "block";
+                    document.getElementById("header").innerHTML = "Problème de connection au serveur";
+                };
+            }
+
+            function disconnect() {
+                if (conn != null) {
+                    console.log("Déconnexion...");
+                    conn.close();
+                    conn = null;
+                    name = 'UNKNOWN';
+                }
+            }
+
+            function deplacement(offX, offY) {
+                var offset = {offX, offY};
+                var msg = JSON.stringify(offset);
+
+                console.log("Envoi du déplacement " + msg);
+
+                conn.send(msg);
+            }
+
+            connect();
+        </script>
+     </head>
+    <body>
+        <h3 id="header">Test de connexion</h3>
+        <br>
+        <input class="movBtn" id="movUp" type="button" value="^" onclick="deplacement(0, 1);"/>
+        <input class="movBtn" id="movLeft" type="button" value="<" onclick="deplacement(-1, 0);"/>
+        <input class="movBtn" id="movRight" type="button" value=">" onclick="deplacement(1, 0);"/>
+        <input class="movBtn" id="movDown" type="button" value="v" onclick="deplacement(0, -1);"/>
+        <br><br>
+        <span>Position: </span>
+        <span id="posLabel">(0, 0)</span>
+    </body>
+</html>

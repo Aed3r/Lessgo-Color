@@ -1,7 +1,12 @@
 #Classe servant a instancier des joueurs
 import pygame
 
-class Joueur(object):
+joueurs = []
+
+# TODO: tenir vecteur direction en plus de la position
+# TODO: gestion du tableau de joueurs (ajout, enlever, placement initial suivant équipe, affichage)
+
+class Joueur(object): 
     def __init__(self, id, x, y, equipe):
         self.id = id
         self.x = x

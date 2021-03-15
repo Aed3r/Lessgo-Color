@@ -24,8 +24,8 @@ class Joueur(object):
     def setDead(self, valeur):
         self.dead = valeur
     def afficher(self, fenetre):
-        if !self.isDead():
-            pygame.draw.circle(fenetre, self.color, [self.x, self.y], 5)
-        else:
+        if self.isDead():
             self.x = -1
             self.y = -1
+        else:
+            pygame.draw.circle(fenetre, self.color, [self.x, self.y], 5)

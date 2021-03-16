@@ -84,6 +84,7 @@ class ListeJoueurs(object):
                     j.x = 12
                     j.y = 1000
     def afficher(self, fenetre):
+        fenetre.fill((80,80,80)) #couleur fenetre
         for i in range(4):
             for j in self.lekip[i]:
                 j.afficher(fenetre)

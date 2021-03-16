@@ -1,17 +1,20 @@
 from aiohttp import web
 import aiohttp
 import json
+from joueur import *
 
 nb_connections = 0
+listeJ = ListeJoueurs()
 
 # Attend et répond aux requêtes client
 async def request_handler(ws_current, request):
     global nb_connections
+    global listeJ
     nb_connections += 1
     num_connection = nb_connections
 
-    x = 0
-    y = 0
+    j = Joueur(nb_connections, (nb_connections%4) + 1)
+    listeJ.ajouter(j)
 
     print ("[" + str(num_connection) + "] Nouvelle connexion. Ouverture du websocket...");
     await ws_current.prepare(request)
@@ -22,7 +25,7 @@ async def request_handler(ws_current, request):
     request.app['websockets'].append(ws_current)
     print(request.app['websockets'])
 
-    await ws_current.send_json(({'action': 'position', 'x': x, 'y': y}))
+    await ws_current.send_json(({'action': 'position', 'x': j.x, 'y': j.y}))
 
     print ("[" + str(num_connection) + "] Paquet envoyé. Attente de requêtes...")
 
@@ -34,11 +37,10 @@ async def request_handler(ws_current, request):
             data = json.loads(msg.data)
 
             distance = data["distance"]
-            x += data["offX"] * distance;
-            y += data["offY"] * distance;
+            j.translation(data["offX"] * distance, data["offY"] * distance)
 
-            print ("[" + str(num_connection) + "] Envoi de la position: (" + str(x) + ", " + str(y) + "), vitesse=" + str(distance))
-            await ws_current.send_json(({'action': 'position', 'x': x, 'y': y}))
+            print ("[" + str(num_connection) + "] Envoi de la position: (" + str(j.x) + ", " + str(j.y) + "), vitesse=" + str(distance))
+            await ws_current.send_json(({'action': 'position', 'x': j.x, 'y': j.y}))
         else:
             break
     

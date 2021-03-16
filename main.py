@@ -1,5 +1,6 @@
 from aiohttp import web
 import socketHandler
+from joueur import *
 
 # Prépare les gestionnaires web
 async def init_app():

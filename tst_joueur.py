@@ -1,4 +1,5 @@
 import pygame
+from pygame.constants import JOYBUTTONDOWN
 from joueur import *
 
 pygame.init()
@@ -11,18 +12,21 @@ pygame.display.flip() #actualise
 ok = True
 
 listeJoueurs = ListeJoueurs()
-listeJoueurs.ajouter(Joueur(0, 1))
+j = Joueur(0,1)
+listeJoueurs.ajouter(j)
 listeJoueurs.ajouter(Joueur(2, 2))
 listeJoueurs.ajouter(Joueur(3, 3))
 listeJoueurs.ajouter(Joueur(4, 4))
+
+listeJoueurs.placementJoueurs()
 
 while ok:
     
     fenetre.fill((80,80,80)) #couleur fenetre
     
-    listeJoueurs.placementJoueurs()
     listeJoueurs.afficher(fenetre)
-    
+
+    j.translation(1, 1)
 
 
     pygame.display.flip() #actualise

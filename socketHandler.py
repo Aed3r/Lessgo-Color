@@ -4,17 +4,17 @@ import json
 from joueur import *
 
 nb_connections = 0
-listeJ = ListeJoueurs()
 
 # Attend et répond aux requêtes client
 async def request_handler(ws_current, request):
     global nb_connections
-    global listeJ
+    global joueurs
+
     nb_connections += 1
     num_connection = nb_connections
 
-    j = Joueur(nb_connections, (nb_connections%4) + 1)
-    listeJ.ajouter(j)
+    j = Joueur(num_connection, (nb_connections%4) + 1)
+    ajouterJoueur(j)
 
     print ("[" + str(num_connection) + "] Nouvelle connexion. Ouverture du websocket...");
     await ws_current.prepare(request)
@@ -36,10 +36,9 @@ async def request_handler(ws_current, request):
             print ("[" + str(num_connection) + "] Paquet reçu: " + msg.data)
             data = json.loads(msg.data)
 
-            distance = data["distance"]
-            j.translation(data["offX"] * distance, data["offY"] * distance)
+            j.setDirection(data["dx"], data["dy"])
 
-            print ("[" + str(num_connection) + "] Envoi de la position: (" + str(j.x) + ", " + str(j.y) + "), vitesse=" + str(distance))
+            print ("[" + str(num_connection) + "] Envoi de la position: (" + str(j.x) + ", " + str(j.y) + ")")
             await ws_current.send_json(({'action': 'position', 'x': j.x, 'y': j.y}))
         else:
             break

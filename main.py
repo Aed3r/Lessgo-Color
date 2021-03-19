@@ -1,6 +1,7 @@
 from aiohttp import web
 import socketHandler
-from joueur import *
+import threading 
+from display import affichage
 
 # Prépare les gestionnaires web
 async def init_app():
@@ -25,5 +26,11 @@ async def index(request):
     return await socketHandler.request_handler(ws_current, request)
 
 if __name__ == '__main__':
+    print("Initialisations...")
+    disp = affichage()
     app = init_app()
+    disp.start()
+    print("Affichage lancé. Lancement du site...")
     web.run_app(app)
+    disp.do_run = False
+    print("Serveur et affichage fermé. Goodbye")

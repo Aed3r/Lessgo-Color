@@ -33,4 +33,4 @@ if __name__ == '__main__':
     print("Affichage lancé. Lancement du site...")
     web.run_app(app)
     disp.do_run = False
-    print("Serveur et affichage fermé. Goodbye")
+    print("Serveur et affichage arreté. Goodbye")

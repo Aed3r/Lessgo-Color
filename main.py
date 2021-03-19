@@ -30,7 +30,7 @@ if __name__ == '__main__':
     disp = affichage()
     app = init_app()
     disp.start()
-    print("Affichage lancé. Lancement du site...")
+    print("Affichage démarré. Lancement du site...")
     web.run_app(app)
     disp.do_run = False
     print("Serveur et affichage arreté. Goodbye")

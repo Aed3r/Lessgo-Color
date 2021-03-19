@@ -1,9 +1,7 @@
 #Classe servant a instancier des joueurs
-***REMOVED***
 
 joueurs = []
 
-# TODO: tenir vecteur direction en plus de la position
 class Joueur(object): 
     def __init__(self, id, equipe, x = 0, y = 0):
         super().__init__()
@@ -11,6 +9,8 @@ class Joueur(object):
         self.x = x
         self.y = y
         self.dead = False
+        self.dX = 0
+        self.dY = 0
         #definition des constantes
         self.ID = id
         self.EQUIPE = equipe
@@ -26,9 +26,9 @@ class Joueur(object):
         else:
             print("ATTENTION MAUVAISE EQUIPE POUR LE JOUEUR", id)
             self.COLOR = (0,0,0)
-    def translation(self, dx, dy):
-        self.x += dx
-        self.y += dy
+    def move(self):
+        self.x += self.dX
+        self.y += self.dY
     def isDead(self):
         return self.dead
     def setDead(self, valeur):
@@ -39,8 +39,33 @@ class Joueur(object):
             self.y = -1
         else:
             pygame.draw.circle(fenetre, self.COLOR, [self.x, self.y], 5)
+    def setDirection (self, dx, dy):
+        self.dX = dx
+        self.dY = dy
+
+def placementInitial (j):
+    if j.EQUIPE == 1:
+        j.x = 12
+        j.y = 12
+    elif j.EQUIPE == 2:
+        j.x = 1900
+        j.y = 12
+    elif j.EQUIPE == 3:
+        j.x = 1900
+        j.y = 1000
+    elif j.EQUIPE == 4:
+        j.x = 12
+        j.y = 1000
+
+def comparJoueur(j):
+    return j.y
+
+def ajouterJoueur(joueur):
+   placementInitial(joueur)
+   joueurs.append(joueur)
 
 # Gestion du tableau de joueurs (ajout, enlever, placement initial suivant équipe, affichage)
+# deprecated
 class ListeJoueurs(object):
     def __init__(self):
         super().__init__()

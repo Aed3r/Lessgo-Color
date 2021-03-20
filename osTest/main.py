@@ -1,26 +1,23 @@
 import pygame
 
+#INITIALISATION
+
 pygame.init()
 pygame.display.set_caption("JEU_OS_TEST")
-resolution = (800,600)
-fenetre = pygame.display.set_mode(resolution,pygame.RESIZABLE) #FULLSCREEN
-
-pygame.display.flip() #actualise
-
+info = pygame.display.Info()                                                        #recupere l'information de la machine en cours
+resolution = (info.current_w,info.current_h)                                        #resolution de l'ecrant a partir de info
+fenetre = pygame.display.set_mode(resolution,pygame.FULLSCREEN)                     #FULLSCREEN
 boucler = True
 
+#BOUCLE PRINCIPALE
+
 while boucler:
-    
-    fenetre.fill((80,80,80)) #couleur fenetre
-    
-    # pygame.draw.line(fenetre,(0,0,0),[0,0],[800,600])
-
-    #pygame.draw.rect(fenetre,(0,0,0),pygame.Rect(10,10,2,2))
-
-    pygame.draw.circle(fenetre,(0,0,0),[150, 100], 5)
-    
-    pygame.display.flip() #actualise
-    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             boucler = False
+        if event.type == pygame.KEYDOWN:
+            boucler = False
+            
+    fenetre.fill((210,210,210))                                                     #couleur fenetre
+    pygame.draw.circle(fenetre,(0,0,0),[150, 100], 5)
+    pygame.display.flip()                                                           #actualise

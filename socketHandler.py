@@ -36,7 +36,7 @@ async def request_handler(ws_current, request):
             print ("[" + str(num_connection) + "] Paquet reçu: " + msg.data)
             data = json.loads(msg.data)
 
-            j.setDirection(data["dx"], data["dy"])
+            j.setDirection(data["dx"]/10, data["dy"]/10)
 
             print ("[" + str(num_connection) + "] Envoi de la position: (" + str(j.x) + ", " + str(j.y) + ")")
             await ws_current.send_json(({'action': 'position', 'x': j.x, 'y': j.y}))

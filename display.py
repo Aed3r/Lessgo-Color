@@ -9,7 +9,7 @@ from constantes import *
 ***REMOVED***                                                                                                         #initialise les module pygame
 pygame.display.set_caption("SPLAT_PGMOT")                                                                             #nom fenetre
 info = pygame.display.Info()                                                                                          #recupere l'information de la machine en cours
-#resolution = (info.current_w,info.current_h)                                                                          #resolution de l'ecrant a partir de info
+#resolution = (info.current_w, info.current_h)                                                                          #resolution de l'ecrant a partir de info
 #fenetre = pygame.display.set_mode(resolution,pygame.FULLSCREEN)                                                       #FULLSCREEN
 fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)                                                                                                           #Boolean boucle principale
 tailleCase = 20
@@ -22,7 +22,7 @@ def afficherJoueurs():
     joueurs.sort(key=comparJoueur) # Trie les joueurs suivant leurs ordonnées 
     for joueur in joueurs:
         joueur.move()
-        pygame.draw.circle(fenetre, joueur.COLOR, [joueur.x, joueur.y], 5)
+        pygame.draw.circle(fenetre, joueur.COLOR, [joueur.x, joueur.y], playerSize)
 
 def fond():                                                                                                              #Fonction initialise fond du terrain
     fenetre.fill((210,210,210))                                                                                           #couleur fond

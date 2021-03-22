@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-  <head>
+<head>
     <meta name="viewport" content="user-scalable=no" charset="utf-8">
     <title>splash_pgmot</title>
     <style>
-      * {
-          margin: 0;
-          padding: 0;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-      body {
-          opacity: 0;
-          background-color: #000000;
-          position: fixed;
-          -webkit-transition: opacity 1s ease-in;
-          -moz-transition: opacity 1s ease-in;
-          -o-transition: opacity 1s ease-in;
-          -ms-transition: opacity 1s ease-in;
-          transition: opacity 1s ease-in;
-      }
+        body {
+            opacity: 0;
+            background-color: #000000;
+            position: fixed;
+            -webkit-transition: opacity 1s ease-in;
+            -moz-transition: opacity 1s ease-in;
+            -o-transition: opacity 1s ease-in;
+            -ms-transition: opacity 1s ease-in;
+            transition: opacity 1s ease-in;
+        }
 
-      body.charger {
-          opacity: 1;
-      }
+        body.charger {
+            opacity: 1;
+        }
     </style>
-  </head>
+</head>
 
-  <body onload="chargementfini()">
+<body onload="chargementfini()">
     <canvas id="canvas">
-      Votre navigateur ne supporte pas canvas effectuez une mise a jour.
+        Votre navigateur ne supporte pas canvas effectuez une mise a jour.
     </canvas>
-  </body>
-  <script>
+</body>
+<script>
     /*
      fonctionnaliter : manette de jeu, jouable ecrant tactile ou souris
     */
@@ -50,10 +50,11 @@
     var xBouton = 210, yBouton = 200;                                //poisition x,y bouton
     var longeurBouton = 80, largeurBouton = 160;                     //largeur et longeur bouton
     var angle, xJoyMouvement, yJoyMouvement, vitesse;
+
     /*lorsque le chargement est fini on fait apparaitre en fondu + les élément de la manette de base*/
     function chargementfini() {
-	canvas = document.getElementById('canvas');
-	context = canvas.getContext('2d');
+        canvas = document.getElementById('canvas');
+        context = canvas.getContext('2d');
         //les ecouteurs des entrer ecrant tactile
         document.addEventListener('touchstart', debut);             //executer au toucher
         document.addEventListener('touchend', fin);                 //ececuter quand relacher
@@ -106,13 +107,13 @@
     }
     /*executer si un ecouteur de relacher click est lancer*/
     function fin() {
-	if (dessiner) {
-	    dessiner = false;
+        if (dessiner) {
+            dessiner = false;
             jj = false;
             manetteBase();
-	    vitesse = 0;
-	    envoyerDirection(0, 0);
-	}
+            vitesse = 0;
+            envoyerDirection(0, 0);
+        }
     }
     /*le fond de la manette, encoche des boutons*/
     function fond() {
@@ -186,67 +187,89 @@
                     yJoyMouvement = rayonE * Math.sin(angle) + yJoy;
                     joystickA(xJoyMouvement, yJoyMouvement);
                     // envoyerPosition(xJoyMouvement, yJoyMouvement, vitesse);
-		    if(angle<0){
-			angle+=2*pi;
-		    }
+                    if (angle < 0) {
+                        angle += 2 * pi;
+                    }
                 } else {
                     joystick();
                 }
             }
-	    envoyerDirection(2*pi - angle,vitesse);
+            envoyerDirection(2 * pi - angle, vitesse);
         }
     }
 
     var conn = null;
     var name = "UNKNOWN";
-    
-    function envoyerDirection (angle, vitesse) {
+    var msCooldown = 100;
+    var lastMsg;
+
+    // Envoi la direction choisie par le joueur au serveur
+    function envoyerDirection(angle, vitesse) {
+        // Vérification du cooldown
+        let now = Date.now();
+        if (now < lastMsg + msCooldown && vitesse != 0) {
+            console.log("cooldown")
+            return;
+        }
+
+        // On calcule le déplacement à effectuer 
         var dx = parseInt(Math.cos(angle) * vitesse);
         var dy = -parseInt(Math.sin(angle) * vitesse);
-        var paquet = {dx, dy};
-        var msg = JSON.stringify(paquet);
 
+        // On prépare le paquet à envoyer
+        var paquet = { dx, dy };
+        var msg = JSON.stringify(paquet);
         console.log("Envoi du déplacement " + msg);
+
+        // On envoie le paquet
         conn.send(msg);
+        lastMsg = now;
     }
 
-     function connect() {
+    // Etablie une connection websocket au serveur
+    function connect() {
         disconnect();
-        var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host;
+        var wsUri = (window.location.protocol == 'https:' && 'wss://' || 'ws://') + window.location.host;
         conn = new WebSocket(wsUri);
-        
+
         console.log("Tentative de connection...");
 
-        conn.onopen = function() {
+        // Lorsque la connection est établie
+        conn.onopen = function () {
             console.log("Connection établie.");
         };
-        conn.onmessage = function(e) {
+
+        // Lorsqu'un message est reçue
+        conn.onmessage = function (e) {
             console.log("Paquet Reçu: " + e.data);
 
             var data = JSON.parse(e.data);
-            
+
             switch (data.action) {
-            case 'position':
-            console.log("(" + data.x + ", " + data.y + ")");
-            break;
+                case 'position':
+                    console.log("(" + data.x + ", " + data.y + ")");
+                    break;
             }
         };
-        conn.onclose = function() {
+
+        // Lorsque la connection est fermé par le serveur
+        conn.onclose = function () {
             console.log("Connection fermé.")
             conn = null;
         };
-     }
+    }
 
-     function disconnect() {
+    // Déconnecte la connection websocket existante
+    function disconnect() {
         if (conn != null) {
             console.log("Déconnexion...");
             conn.close();
             conn = null;
             name = 'UNKNOWN';
         }
-     }
+    }
 
-     connect();
-  </script>
+    connect();
+</script>
 
 </html>

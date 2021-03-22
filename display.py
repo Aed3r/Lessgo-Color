@@ -14,6 +14,7 @@ info = pygame.display.Info()                                                    
 fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)                                                                                                           #Boolean boucle principale
 tailleCase = 20
 terrain = Terrain(200,400)
+msPerFrame = int(1000 / fps)
 
 #------------------------------------------------------------FONCTION--------------------------------------------------------------------------------------#
 
@@ -60,11 +61,15 @@ class affichage(threading.Thread):
     def run(self):  
         t = threading.currentThread()
         while getattr(t, "do_run", True):
+            start = time.time() * 1000
             # Affichage du plateau et des joueurs, s'arrête avec le serveur
             #afficheTerrain(terrain)
             fond()
             afficherJoueurs()
-            pygame.display.flip()                                                                                               #actualise
+            pygame.display.flip()                                                                                      #actualise  
+            end = time.time() * 1000
+            sleep = (msPerFrame - (end - start))/1000.
+            if (sleep > 0): time.sleep(sleep)
         
 #----------------------------------------------------------------------------------------------------------------------------------------------------------#
         

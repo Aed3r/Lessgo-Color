@@ -31,6 +31,12 @@ class Joueur(object):
     def move(self):
         self.x = int(self.x+self.dX)
         self.y = int(self.y+self.dY)
+
+        # Vérification de dépassemenrt des bordures
+        if (self.x > resolution[0] ): self.x = 0
+        if (self.x < 0): self.x = resolution[0]
+        if (self.y > resolution[1] ): self.y = 0
+        if (self.y < 0): self.y = resolution[1]
     def isDead(self):
         return self.dead
     def setDead(self, valeur):

@@ -202,49 +202,48 @@
     
     function envoyerDirection (angle, vitesse) {
         var dx = parseInt(Math.cos(angle) * vitesse);
-        var dy = parseInt(Math.sin(angle) * vitesse);
-	console.log(dx + " " + dy);
+        var dy = -parseInt(Math.sin(angle) * vitesse);
         var paquet = {dx, dy};
         var msg = JSON.stringify(paquet);
 
         console.log("Envoi du déplacement " + msg);
-        //conn.send(msg);
+        conn.send(msg);
     }
 
      function connect() {
-	 disconnect();
-	 var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host;
-	 conn = new WebSocket(wsUri);
-	 
-	 console.log("Tentative de connection...");
+        disconnect();
+        var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host;
+        conn = new WebSocket(wsUri);
+        
+        console.log("Tentative de connection...");
 
-	 conn.onopen = function() {
-	     console.log("Connection établie.");
-	 };
-	 conn.onmessage = function(e) {
-	     console.log("Paquet Reçu: " + e.data);
+        conn.onopen = function() {
+            console.log("Connection établie.");
+        };
+        conn.onmessage = function(e) {
+            console.log("Paquet Reçu: " + e.data);
 
-	     var data = JSON.parse(e.data);
-	     
-	     switch (data.action) {
-	     case 'position':
-		 console.log("(" + data.x + ", " + data.y + ")");
-		 break;
-	     }
-	 };
-	 conn.onclose = function() {
-	     console.log("Connection fermé.")
-	     conn = null;
-	 };
+            var data = JSON.parse(e.data);
+            
+            switch (data.action) {
+            case 'position':
+            console.log("(" + data.x + ", " + data.y + ")");
+            break;
+            }
+        };
+        conn.onclose = function() {
+            console.log("Connection fermé.")
+            conn = null;
+        };
      }
 
      function disconnect() {
-	 if (conn != null) {
-	     console.log("Déconnexion...");
-	     conn.close();
-	     conn = null;
-	     name = 'UNKNOWN';
-	 }
+        if (conn != null) {
+            console.log("Déconnexion...");
+            conn.close();
+            conn = null;
+            name = 'UNKNOWN';
+        }
      }
 
      connect();

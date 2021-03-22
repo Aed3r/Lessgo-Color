@@ -1,5 +1,7 @@
 #Classe servant a instancier des joueurs
 
+from constantes import *
+
 joueurs = []
 
 class Joueur(object): 
@@ -27,35 +29,29 @@ class Joueur(object):
             print("ATTENTION MAUVAISE EQUIPE POUR LE JOUEUR", id)
             self.COLOR = (0,0,0)
     def move(self):
-        self.x += self.dX
-        self.y += self.dY
+        self.x = int(self.x+self.dX)
+        self.y = int(self.y+self.dY)
     def isDead(self):
         return self.dead
     def setDead(self, valeur):
         self.dead = valeur
-    def afficher(self, fenetre):
-        if self.isDead():
-            self.x = -1
-            self.y = -1
-        else:
-            pygame.draw.circle(fenetre, self.COLOR, [self.x, self.y], 5)
     def setDirection (self, dx, dy):
         self.dX = dx
         self.dY = dy
 
 def placementInitial (j):
     if j.EQUIPE == 1:
-        j.x = 12
-        j.y = 12
+        j.x = 100
+        j.y = 100
     elif j.EQUIPE == 2:
-        j.x = 1900
-        j.y = 12
+        j.x = resolution[0] - 100
+        j.y = 100
     elif j.EQUIPE == 3:
-        j.x = 1900
-        j.y = 1000
+        j.x = resolution[0] - 100
+        j.y = resolution[1] - 100
     elif j.EQUIPE == 4:
-        j.x = 12
-        j.y = 1000
+        j.x = 100
+        j.y = resolution[1] - 100
 
 def comparJoueur(j):
     return j.y
@@ -63,6 +59,11 @@ def comparJoueur(j):
 def ajouterJoueur(joueur):
    placementInitial(joueur)
    joueurs.append(joueur)
+
+
+
+
+
 
 # Gestion du tableau de joueurs (ajout, enlever, placement initial suivant équipe, affichage)
 # deprecated

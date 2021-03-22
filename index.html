@@ -49,7 +49,7 @@
     var pi = Math.PI;                                           //PI
     var xBouton = 210, yBouton = 200;                                //poisition x,y bouton
     var longeurBouton = 80, largeurBouton = 160;                     //largeur et longeur bouton
-    var angle, xJoyMouvement, yJoyMouvement, vitesse, angleEnvoi;
+    var angle, xJoyMouvement, yJoyMouvement, vitesse;
     /*lorsque le chargement est fini on fait apparaitre en fondu + les élément de la manette de base*/
     function chargementfini() {
 	canvas = document.getElementById('canvas');
@@ -106,9 +106,13 @@
     }
     /*executer si un ecouteur de relacher click est lancer*/
     function fin() {
-        dessiner = false;
-        jj = false;
-        manetteBase();
+	if (dessiner) {
+	    dessiner = false;
+            jj = false;
+            manetteBase();
+	    vitesse = 0;
+	    envoyerDirection(0, 0);
+	}
     }
     /*le fond de la manette, encoche des boutons*/
     function fond() {
@@ -182,72 +186,65 @@
                     yJoyMouvement = rayonE * Math.sin(angle) + yJoy;
                     joystickA(xJoyMouvement, yJoyMouvement);
                     // envoyerPosition(xJoyMouvement, yJoyMouvement, vitesse);
-		    angleEnvoi=angle*57,2958;
-		    if(angleEnvoi<0){
-			angleEnvoi+=360;
+		    if(angle<0){
+			angle+=2*pi;
 		    }
-		    angleEnvoi=parseInt(angleEnvoi);
                 } else {
                     joystick();
                 }
             }
+	    envoyerDirection(2*pi - angle,vitesse);
         }
-	console.log("angle ");
-	console.log(angleEnvoi);
-	console.log("la vitesse :");
-	console.log(vitesse);
-	envoyerPosition(angle,vitesse);
     }
 
     var conn = null;
     var name = "UNKNOWN";
     
-    function envoyerPosition (angle, vitesse) {
-        var angleRad = (angle*pi)/180;
-        var dx = Math.cos(angleRad) * vitesse;
-        var dy = Math.sin(angleRad) * vitesse;
+    function envoyerDirection (angle, vitesse) {
+        var dx = parseInt(Math.cos(angle) * vitesse);
+        var dy = parseInt(Math.sin(angle) * vitesse);
+	console.log(dx + " " + dy);
         var paquet = {dx, dy};
         var msg = JSON.stringify(paquet);
 
         console.log("Envoi du déplacement " + msg);
-	console.log(angleRad);
-        conn.send(msg);
+        //conn.send(msg);
     }
 
      function connect() {
-     disconnect();
-     var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host;
-     conn = new WebSocket(wsUri);
-     
-     console.log("Tentative de connection...");
+	 disconnect();
+	 var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host;
+	 conn = new WebSocket(wsUri);
+	 
+	 console.log("Tentative de connection...");
 
-     conn.onopen = function() {
-     console.log("Connection établie.");
-     };
-     conn.onmessage = function(e) {
-     console.log("Paquet Reçu: " + e.data);
+	 conn.onopen = function() {
+	     console.log("Connection établie.");
+	 };
+	 conn.onmessage = function(e) {
+	     console.log("Paquet Reçu: " + e.data);
 
-     var data = JSON.parse(e.data);
-     
-     switch (data.action) {
-     case 'position':
-     console.log("(" + data.x + ", " + data.y + ")");
-     break;
-     }
-     };
-     conn.onclose = function() {
-     console.log("Connection fermé.")
-     conn = null;
-     };
+	     var data = JSON.parse(e.data);
+	     
+	     switch (data.action) {
+	     case 'position':
+		 console.log("(" + data.x + ", " + data.y + ")");
+		 break;
+	     }
+	 };
+	 conn.onclose = function() {
+	     console.log("Connection fermé.")
+	     conn = null;
+	 };
      }
 
      function disconnect() {
-     if (conn != null) {
-     console.log("Déconnexion...");
-     conn.close();
-     conn = null;
-     name = 'UNKNOWN';
-     }
+	 if (conn != null) {
+	     console.log("Déconnexion...");
+	     conn.close();
+	     conn = null;
+	     name = 'UNKNOWN';
+	 }
      }
 
      connect();

@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-<head>
+  <head>
     <meta name="viewport" content="user-scalable=no" charset="utf-8">
     <title>splash_pgmot</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
+      * {
+          margin: 0;
+          padding: 0;
+      }
 
-        body {
-            opacity: 0;
-            background-color: #000000;
-            position: fixed;
-            -webkit-transition: opacity 1s ease-in;
-            -moz-transition: opacity 1s ease-in;
-            -o-transition: opacity 1s ease-in;
-            -ms-transition: opacity 1s ease-in;
-            transition: opacity 1s ease-in;
-        }
+      body {
+          opacity: 0;
+          background-color: #000000;
+          position: fixed;
+          -webkit-transition: opacity 1s ease-in;
+          -moz-transition: opacity 1s ease-in;
+          -o-transition: opacity 1s ease-in;
+          -ms-transition: opacity 1s ease-in;
+          transition: opacity 1s ease-in;
+      }
 
-        body.charger {
-            opacity: 1;
-        }
+      body.charger {
+          opacity: 1;
+      }
     </style>
-</head>
+  </head>
 
-<body onload="chargementfini()">
+  <body onload="chargementfini()">
     <canvas id="canvas">
-        Votre navigateur ne supporte pas canvas effectuez une mise a jour.
+      Votre navigateur ne supporte pas canvas effectuez une mise a jour.
     </canvas>
-</body>
-<script>
+  </body>
+  <script>
     /*
      fonctionnaliter : manette de jeu, jouable ecrant tactile ou souris
     */
@@ -53,8 +53,8 @@
 
     /*lorsque le chargement est fini on fait apparaitre en fondu + les élément de la manette de base*/
     function chargementfini() {
-        canvas = document.getElementById('canvas');
-        context = canvas.getContext('2d');
+	canvas = document.getElementById('canvas');
+	context = canvas.getContext('2d');
         //les ecouteurs des entrer ecrant tactile
         document.addEventListener('touchstart', debut);             //executer au toucher
         document.addEventListener('touchend', fin);                 //ececuter quand relacher
@@ -196,6 +196,10 @@
             }
             envoyerDirection(2 * pi - angle, vitesse);
         }
+	console.log("angle ");
+	console.log(angleEnvoi);
+	console.log("la vitesse :");
+	console.log(vitesse);
     }
 
     var conn = null;
@@ -269,7 +273,7 @@
         }
     }
 
-    connect();
-</script>
+     connect();*/
+  </script>
 
 </html>

@@ -2,6 +2,7 @@ from aiohttp import web
 import socketHandler
 import threading 
 from display import affichage
+from constantes import *
 
 # Prépare les gestionnaires web
 async def init_app():
@@ -31,6 +32,6 @@ if __name__ == '__main__':
     app = init_app()
     disp.start()
     print("Affichage démarré. Lancement du site...")
-    web.run_app(app)
+    web.run_app(app, port=port)
     disp.do_run = False
     print("Serveur et affichage arreté. Goodbye")

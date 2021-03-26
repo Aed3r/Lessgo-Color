@@ -101,20 +101,20 @@ class ListeJoueurs(object):
         elif j.EQUIPE == 4:
             self.lekip[3].remove(j)
     def placementJoueurs(self):
-        for i in range(4):
+        for i in range(4):  
             for j in self.lekip[i]:
                 if j.EQUIPE == 1:
-                    j.x = 12
-                    j.y = 12
+                    j.x = placex1
+                    j.y = placey1
                 elif j.EQUIPE == 2:
-                    j.x = 1900
-                    j.y = 12
+                    j.x = placex2
+                    j.y = placey2
                 elif j.EQUIPE == 3:
-                    j.x = 1900
-                    j.y = 1000
+                    j.x = placex3
+                    j.y = placey3
                 elif j.EQUIPE == 4:
-                    j.x = 12
-                    j.y = 1000
+                    j.x = placex4
+                    j.y = placey4
     def afficher(self, fenetre):
         fenetre.fill((80,80,80)) #couleur fenetre
         for i in range(4):

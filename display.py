@@ -12,9 +12,7 @@ info = pygame.display.Info()                                                    
 #resolution = (info.current_w, info.current_h)                                                                          #resolution de l'ecrant a partir de info
 #fenetre = pygame.display.set_mode(resolution,pygame.FULLSCREEN)                                                       #FULLSCREEN
 fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)                                                                                                           #Boolean boucle principale
-tailleCase = 20
 terrain = Terrain(200,400)
-msPerFrame = int(1000 / fps)
 
 #------------------------------------------------------------FONCTION--------------------------------------------------------------------------------------#
 
@@ -32,7 +30,7 @@ def afficherJoueurs():
 #    pygame.draw.rect(fenetre,(100,100,0),pygame.Rect(resolution[0]-200,resolution[1]-200,200,200))                      #bas droit jaune
 
 def joueur(x,y):                                                                                                         #Fonction dessine un joueur en X,Y
-    pygame.draw.circle(fenetre,(0,0,0),[x, y], 5)                                                                         #joueur representer par un cercle
+    pygame.draw.circle(fenetre,(0,0,0),[x, y], 5)                                                                         #joueur représenté par un cercle
 
 def afficheTerrain(terrain):
     for i in range(terrain.larg):

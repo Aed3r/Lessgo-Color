@@ -51,18 +51,13 @@ class Terrain:
         return self.plateau[x][y].getType()
 
     def initTerrain(self):
-        for i in range(10):
-            for j in range(10):
+        taille = (int) (resolution[0] / tailleCase / propZoneInit)
+        for i in range(taille):
+            for j in range(taille):
                 self.setColor(i,j,1)
-        for i in range(self.larg-10,self.larg):
-            for j in range(10):
-                self.setColor(i,j,2)
-        for i in range(10):
-            for j in range(self.long-10,self.long):
-                self.setColor(i,j,3)
-        for i in range(self.larg-10,self.larg):
-            for j in range(self.long-10,self.long):
-                self.setColor(i,j,4)
+                self.setColor(self.larg-i-1, j, 2)
+                self.setColor(i, self.long-j-1, 3)
+                self.setColor(self.larg-i-1, self.long-j-1, 4)
 
 
     def afficheTerrain(self,fenetre):

@@ -71,9 +71,10 @@ def ajouterJoueur(joueur):
    placementInitial(joueur)
    joueurs.append(joueur)
 
-
-
-
+def moveJoueurs():
+    joueurs.sort(key=comparJoueur) # Trie les joueurs suivant leurs ordonnées 
+    for joueur in joueurs:
+        joueur.move()
 
 
 # Gestion du tableau de joueurs (ajout, enlever, placement initial suivant équipe, affichage)

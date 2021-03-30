@@ -13,6 +13,7 @@ info = pygame.display.Info()                                                    
 #fenetre = pygame.display.set_mode(resolution,pygame.FULLSCREEN)                                                       #FULLSCREEN
 fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)                                                                                                           #Boolean boucle principale
 terrain = Terrain(200,400)
+msPerFrame = int(1000 / fps)
 
 #------------------------------------------------------------FONCTION--------------------------------------------------------------------------------------#
 
@@ -31,20 +32,7 @@ def afficherJoueurs():
 
 def joueur(x,y):                                                                                                         #Fonction dessine un joueur en X,Y
     pygame.draw.circle(fenetre,(0,0,0),[x, y], 5)                                                                         #joueur représenté par un cercle
-
-def afficheTerrain(terrain):
-    for i in range(terrain.larg):
-            for j in range (terrain.long):
-                    if(terrain.getColor(i,j) == 1):
-                          pygame.draw.rect(fenetre,(100,0,0),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))    
-                    elif(terrain.getColor(i,j) == 2):
-                          pygame.draw.rect(fenetre,(0,100,0),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))    
-                    elif(terrain.getColor(i,j) == 3):
-                          pygame.draw.rect(fenetre,(0,0,100),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))    
-                    elif(terrain.getColor(i,j) == 4):
-                          pygame.draw.rect(fenetre,(100,100,0),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
-                    else : pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
-                    
+      
 def initTerrain(terrain):
      for i in range(10):
             for j in range(10):

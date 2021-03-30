@@ -67,10 +67,6 @@ def ajouterJoueur(joueur):
    joueurs.append(joueur)
 
 
-
-
-
-
 # Gestion du tableau de joueurs (ajout, enlever, placement initial suivant équipe, affichage)
 # deprecated
 class ListeJoueurs(object):

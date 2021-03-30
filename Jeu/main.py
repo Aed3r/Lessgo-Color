@@ -35,6 +35,9 @@ class BouclePrincipale(threading.Thread):
         t = threading.currentThread()
         
         while getattr(t, "do_run", True):
+            # Mise à jour des positions joueurs
+            moveJoueurs()
+
             # Mise à jour des cases de couleur
             for joueur in joueurs :
                 terrain.setColor((int) (joueur.x/resolution[0]*terrain.larg), (int) (joueur.y/resolution[1]*terrain.long), joueur.EQUIPE)      

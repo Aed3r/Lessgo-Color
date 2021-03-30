@@ -18,3 +18,6 @@ placex3 = 1900                          # equipe 3
 placey3 = 1000                          #
 placex4 = 12                            # equipe 4
 placey4 = 1000                          #
+# ----------------- plateau.py ----------------- #
+***REMOVED***
+***REMOVED***

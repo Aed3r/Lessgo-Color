@@ -26,7 +26,7 @@ class Terrain:
     def __init__(self,long,larg):
         self.long=long
         self.larg=larg
-        self.plateau = [[ Case(0,0) for x in range(long)] for y in range(larg)]
+        self.plateau = [[ Case(0,neutral) for x in range(long)] for y in range(larg)]
     
     def getCase(self,x,y):
         return self.plateau[x][y]
@@ -76,4 +76,7 @@ class Terrain:
                         elif(self.getColor(i,j) == 4):
                             pygame.draw.rect(fenetre,(0,230,0),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
                         else : pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
+
+                        if(self.getType(i,j) == 1):
+                            pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase)/2, (j*tailleCase)/2),9)
 

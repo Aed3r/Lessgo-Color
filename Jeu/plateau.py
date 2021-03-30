@@ -27,6 +27,7 @@ class Terrain:
         self.long=long
         self.larg=larg
         self.plateau = [[ Case(0,0) for x in range(long)] for y in range(larg)]
+        self.initTerrain()
     
     def getCase(self,x,y):
         return self.plateau[x][y]
@@ -49,19 +50,19 @@ class Terrain:
     def getType(self,x,y):
         return self.plateau[x][y].getType()
 
-    def initTerrain(terrain):
+    def initTerrain(self):
         for i in range(10):
             for j in range(10):
-                terrain.setColor(i,j,1)
-        for i in range(terrain.larg-10,terrain.larg):
+                self.setColor(i,j,1)
+        for i in range(self.larg-10,self.larg):
             for j in range(10):
-                terrain.setColor(i,j,2)
+                self.setColor(i,j,2)
         for i in range(10):
-            for j in range(terrain.long-10,terrain.long):
-                terrain.setColor(i,j,3)
-        for i in range(terrain.larg-10,terrain.larg):
-            for j in range(terrain.long-10,terrain.long):
-                terrain.setColor(i,j,4)
+            for j in range(self.long-10,self.long):
+                self.setColor(i,j,3)
+        for i in range(self.larg-10,self.larg):
+            for j in range(self.long-10,self.long):
+                self.setColor(i,j,4)
 
 
     def afficheTerrain(self,fenetre):
@@ -77,3 +78,4 @@ class Terrain:
                             pygame.draw.rect(fenetre,(0,230,0),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
                         else : pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
 
+terrain = Terrain(round(resolution[1]/tailleCase), round(resolution[0]/tailleCase))

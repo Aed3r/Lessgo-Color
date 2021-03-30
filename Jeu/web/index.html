@@ -207,8 +207,7 @@
     function envoyerDirection(angle, vitesse) {
         // Vérification du cooldown
         let now = Date.now();
-        if (now < lastMsg + msCooldown && vitesse != 0) {
-            console.log("cooldown")
+        if ((now < lastMsg + msCooldown && vitesse != 0) || angle == null || vitesse == null) {
             return;
         }
 

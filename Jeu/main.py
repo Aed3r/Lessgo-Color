@@ -21,7 +21,7 @@ async def index(request):
     ws_ready = ws_current.can_prepare(request)
     
     if not ws_ready.ok:
-        with open('index.html') as f:
+        with open('web/index.html') as f:
             return web.Response(text=f.read(), content_type='text/html')
     
     return await socketHandler.request_handler(ws_current, request)

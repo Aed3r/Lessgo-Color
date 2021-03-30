@@ -35,10 +35,10 @@ class Joueur(object):
         self.y = int(self.y+self.dY)
 
         # Vérification de dépassement des bordures
-        if (self.x > resolution[0] ): self.x = 0
-        if (self.x < 0): self.x = resolution[0] - 1
-        if (self.y > resolution[1] ): self.y = 0
-        if (self.y < 0): self.y = resolution[1] - 1
+        if (self.x >= resolution[0] ): self.x = 1
+        if (self.x <= 0): self.x = resolution[0] - 1
+        if (self.y >= resolution[1] ): self.y = 1
+        if (self.y <= 0): self.y = resolution[1] - 1
 
     def isDead(self):
         return self.dead

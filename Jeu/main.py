@@ -37,7 +37,7 @@ class BouclePrincipale(threading.Thread):
         while getattr(t, "do_run", True):
             # Mise à jour des cases de couleur
             for joueur in joueurs :
-                terrain.setColor(round(joueur.x/resolution[0]*terrain.larg), round(joueur.y/resolution[1]*terrain.long), joueur.EQUIPE)      
+                terrain.setColor((int) (joueur.x/resolution[0]*terrain.larg), (int) (joueur.y/resolution[1]*terrain.long), joueur.EQUIPE)      
 
             # Affichage du plateau et des joueurs
             drawAll()

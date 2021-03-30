@@ -13,7 +13,6 @@ info = pygame.display.Info()                                                    
 #fenetre = pygame.display.set_mode(resolution,pygame.FULLSCREEN)                                                       #FULLSCREEN
 fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)                                                                                                           #Boolean boucle principale
 terrain = Terrain(200,400)
-msPerFrame = int(1000 / fps)
 
 #------------------------------------------------------------FONCTION--------------------------------------------------------------------------------------#
 
@@ -32,43 +31,33 @@ def afficherJoueurs():
 
 def joueur(x,y):                                                                                                         #Fonction dessine un joueur en X,Y
     pygame.draw.circle(fenetre,(0,0,0),[x, y], 5)                                                                         #joueur représenté par un cercle
-      
-def initTerrain(terrain):
-     for i in range(10):
-            for j in range(10):
-                terrain.setColor(i,j,1)
-     for i in range(terrain.larg-10,terrain.larg):
-            for j in range(10):
-                terrain.setColor(i,j,2)
-     for i in range(10):
-            for j in range(terrain.long-10,terrain.long):
-                terrain.setColor(i,j,3)
-     for i in range(terrain.larg-10,terrain.larg):
-            for j in range(terrain.long-10,terrain.long):
-                terrain.setColor(i,j,4)
+
+
 
 class affichage(threading.Thread):  
     def __init__(self):  
         threading.Thread.__init__(self)
-        initTerrain(terrain)
 
 #------------------------------------------------------------BOUCLE PRINCIPALE-----------------------------------------------------------------------------#
 
     def run(self):  
         t = threading.currentThread()
-        terr=Terrain(30,50)
-        initTerrain(terr)
+        terr=Terrain(round(resolution[1]/tailleCase),round(resolution[0]/tailleCase))
+        terr.initTerrain()
         while getattr(t, "do_run", True):
             start = time.time() * 1000
             # Affichage du plateau et des joueurs, s'arrête avec le serveur
             #afficheTerrain(terrain)
             #fond()
-            afficheTerrain(terr)
+            terr.afficheTerrain(fenetre)
             afficherJoueurs()
             pygame.display.flip()                                                                                      #actualise  
             end = time.time() * 1000
             sleep = (msPerFrame - (end - start))/1000.
-            if (sleep > 0): time.sleep(sleep)
+            if (sleep > 0): 
+                time.sleep(sleep)
+                for joueur in joueurs :
+                    terr.setColor(joueur.x/resolution[1]*terr.larg,joueur.y/resolution[0]*terr.long,joueur.EQUIPE)
         
 #----------------------------------------------------------------------------------------------------------------------------------------------------------#
         

@@ -5,6 +5,7 @@ from constantes import *
 joueurs = []
 
 class Joueur(object): 
+
     def __init__(self, id, equipe, x = 0, y = 0):
         super().__init__()
         #Definition des variables
@@ -28,19 +29,23 @@ class Joueur(object):
         else:
             print("ATTENTION MAUVAISE EQUIPE POUR LE JOUEUR", id)
             self.COLOR = (0,0,0)
+
     def move(self):
         self.x = int(self.x+self.dX)
         self.y = int(self.y+self.dY)
 
-        # Vérification de dépassemenrt des bordures
+        # Vérification de dépassement des bordures
         if (self.x > resolution[0] ): self.x = 0
         if (self.x < 0): self.x = resolution[0]
         if (self.y > resolution[1] ): self.y = 0
         if (self.y < 0): self.y = resolution[1]
+
     def isDead(self):
         return self.dead
+
     def setDead(self, valeur):
         self.dead = valeur
+
     def setDirection (self, dx, dy):
         self.dX = dx
         self.dY = dy
@@ -67,9 +72,14 @@ def ajouterJoueur(joueur):
    joueurs.append(joueur)
 
 
+
+
+
+
 # Gestion du tableau de joueurs (ajout, enlever, placement initial suivant équipe, affichage)
 # deprecated
 class ListeJoueurs(object):
+
     def __init__(self):
         super().__init__()
         self.ekip1 = []
@@ -78,6 +88,7 @@ class ListeJoueurs(object):
         self.ekip4 = []
         #Liste des listes de chaque équipe
         self.lekip = [self.ekip1, self.ekip2, self.ekip3, self.ekip4]
+
     def ajouter(self, j):
         if j.EQUIPE == 1:
             self.lekip[0].append(j)
@@ -87,6 +98,7 @@ class ListeJoueurs(object):
             self.lekip[2].append(j)
         elif j.EQUIPE == 4:
             self.lekip[3].append(j)
+
     def enlever(self, j):
         if j.EQUIPE == 1:
             self.lekip[0].remove(j)
@@ -96,6 +108,7 @@ class ListeJoueurs(object):
             self.lekip[2].remove(j)
         elif j.EQUIPE == 4:
             self.lekip[3].remove(j)
+
     def placementJoueurs(self):
         for i in range(4):  
             for j in self.lekip[i]:
@@ -111,6 +124,7 @@ class ListeJoueurs(object):
                 elif j.EQUIPE == 4:
                     j.x = placex4
                     j.y = placey4
+
     def afficher(self, fenetre):
         fenetre.fill((80,80,80)) #couleur fenetre
         for i in range(4):

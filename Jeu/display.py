@@ -11,8 +11,8 @@ pygame.display.set_caption("SPLAT_PGMOT")                                       
 info = pygame.display.Info()                                                                                          #recupere l'information de la machine en cours
 #resolution = (info.current_w, info.current_h)                                                                          #resolution de l'ecrant a partir de info
 #fenetre = pygame.display.set_mode(resolution,pygame.FULLSCREEN)                                                       #FULLSCREEN
-fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)                                                                                                           #Boolean boucle principale
-terrain = Terrain(200,400)
+fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)
+msPerFrame = int(1000 / fps)
 
 #------------------------------------------------------------FONCTION--------------------------------------------------------------------------------------#
 
@@ -42,7 +42,7 @@ class affichage(threading.Thread):
 
     def run(self):  
         t = threading.currentThread()
-        terr=Terrain(round(resolution[1]/tailleCase),round(resolution[0]/tailleCase))
+        terr=Terrain(round(resolution[1]/tailleCase), round(resolution[0]/tailleCase))
         terr.initTerrain()
         while getattr(t, "do_run", True):
             start = time.time() * 1000
@@ -57,7 +57,7 @@ class affichage(threading.Thread):
             if (sleep > 0): 
                 time.sleep(sleep)
                 for joueur in joueurs :
-                    terr.setColor(joueur.x/resolution[1]*terr.larg,joueur.y/resolution[0]*terr.long,joueur.EQUIPE)
+                    terr.setColor(round(joueur.x/resolution[0]*terr.larg), round(joueur.y/resolution[1]*terr.long), joueur.EQUIPE)
         
 #----------------------------------------------------------------------------------------------------------------------------------------------------------#
         

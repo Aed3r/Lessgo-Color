@@ -11,8 +11,8 @@ pygame.display.set_caption("SPLAT_PGMOT")                                       
 info = pygame.display.Info()                                                                                          #recupere l'information de la machine en cours
 #resolution = (info.current_w, info.current_h)                                                                          #resolution de l'ecrant a partir de info
 #fenetre = pygame.display.set_mode(resolution,pygame.FULLSCREEN)                                                       #FULLSCREEN
-fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)                                                                                                           #Boolean boucle principale
-terrain = Terrain(200,400)
+fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)
+msPerFrame = int(1000 / fps)
 
 #------------------------------------------------------------FONCTION--------------------------------------------------------------------------------------#
 
@@ -34,30 +34,21 @@ def joueur(x,y):                                                                
 
 
 
-class affichage(threading.Thread):  
-    def __init__(self):  
-        threading.Thread.__init__(self)
+def drawAll():
+    # Mesure du temps d'affichage de la frame
+    start = time.time() * 1000
 
-#------------------------------------------------------------BOUCLE PRINCIPALE-----------------------------------------------------------------------------#
+    # Affichage du terrain
+    terrain.afficheTerrain(fenetre)
 
-    def run(self):  
-        t = threading.currentThread()
-        terr=Terrain(round(resolution[1]/tailleCase),round(resolution[0]/tailleCase))
-        terr.initTerrain()
-        while getattr(t, "do_run", True):
-            start = time.time() * 1000
-            # Affichage du plateau et des joueurs, s'arrête avec le serveur
-            #afficheTerrain(terrain)
-            #fond()
-            terr.afficheTerrain(fenetre)
-            afficherJoueurs()
-            pygame.display.flip()                                                                                      #actualise  
-            end = time.time() * 1000
-            sleep = (msPerFrame - (end - start))/1000.
-            if (sleep > 0): 
-                time.sleep(sleep)
-                for joueur in joueurs :
-                    terr.setColor(joueur.x/resolution[1]*terr.larg,joueur.y/resolution[0]*terr.long,joueur.EQUIPE)
-        
-#----------------------------------------------------------------------------------------------------------------------------------------------------------#
-        
+    # Affichage des joueurs
+    afficherJoueurs()
+
+    # Raffraichissment de la fenêtre
+    pygame.display.flip()
+
+    # Fin de la mesure du temps et attente pour afficher la prochaine frame
+    end = time.time() * 1000
+    sleep = (msPerFrame - (end - start))/1000.
+    if (sleep > 0): 
+        time.sleep(sleep)

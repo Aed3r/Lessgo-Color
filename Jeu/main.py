@@ -1,6 +1,7 @@
 from aiohttp import web
 import socketHandler
 import threading 
+import socket
 from display import *
 from constantes import *
 from plateau import * 
@@ -40,7 +41,8 @@ class BouclePrincipale(threading.Thread):
 
             # Mise à jour des cases de couleur
             for joueur in joueurs :
-                terrain.setColor((int) (joueur.x/resolution[0]*terrain.larg), (int) (joueur.y/resolution[1]*terrain.long), joueur.EQUIPE)      
+                terrain.setColor((int) (joueur.x/resolution[0]*terrain.larg), (int) (joueur.y/resolution[1]*terrain.long), joueur.EQUIPE)   
+                print("joueur x : ", joueur.x, "joueur y : ", joueur.y)
 
             # Affichage du plateau et des joueurs
             drawAll()
@@ -51,6 +53,8 @@ if __name__ == '__main__':
     app = init_app()
     boucle.start()
     print("Affichage démarré. Lancement du site...")
+    print(" -- ip : ", socket.gethostbyname(socket.gethostname()), " -- ")
     web.run_app(app, port=port)
+    print("resolution 0 : ", resolution[0], "resolution 1 : ", resolution[1])
     boucle.do_run = False
     print("Serveur et affichage arreté. Goodbye")

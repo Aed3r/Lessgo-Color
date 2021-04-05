@@ -45,6 +45,7 @@ async def index(request):
 
 class BouclePrincipale(threading.Thread): 
     nb_jaune = 0 
+    pourc_jaune = 0
     def __init__(self):  
         threading.Thread.__init__(self)
 
@@ -61,8 +62,11 @@ class BouclePrincipale(threading.Thread):
             drawAll()
             # Parcours le terrain et compte le nombre de couleur
             terrain.parcoursCouleur()
+            terrain.pourcentageCouleur()
             nb_jaune = terrain.getcj() #pb obligé de créer une variable dans le main
+            pourc_jaune = terrain.getpj() 
             print("MAIN || r : ", cr, "b : ", cb, "j : ", nb_jaune, "v : ", cv,)
+            print("POUR || r : ", pr, "b : ", pb, "j : ", "%.3f" % pourc_jaune, "v : ", pv,)
             
 
 if __name__ == '__main__':

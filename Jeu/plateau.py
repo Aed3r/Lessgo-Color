@@ -2,6 +2,7 @@
 from constantes import *
 # Compteurs de couleurs
 cr = 0; cb = 0; cj = 0; cv = 0
+pr = 0; pb = 0; pj = 0; pv = 0
 
 class Case:
     def __init__(self,startingColor,startingType):
@@ -86,6 +87,15 @@ class Terrain:
     def getcv(self):
         return cv
 
+    def getpb(self):
+        return pb  
+    def getpj(self):
+        return pj 
+    def getpr(self):
+        return pr 
+    def getpv(self):
+        return pv
+
     def parcoursCouleur(self):
         global cb; global cj; global cr; global cv
         cb = 0; cj = 0; cr = 0; cv = 0
@@ -100,6 +110,14 @@ class Terrain:
                     cr=cr+1
                 elif(self.getColor(i,j) == 4): #vert
                     cv=cv+1
+
+    def pourcentageCouleur(self):
+        global pr; global pb; global pj; global pv;
+        pr = 0; pb = 0; pj = 0; pv = 0
+        pb=cb*100/(resolution[0]*resolution[1])
+        pr=cr*100/(resolution[0]*resolution[1])
+        pj=cj*100/(resolution[0]*resolution[1])
+        pv=cv*100/(resolution[0]*resolution[1])
     # ----- fin rajout paul-antoine ----- #
 
 terrain = Terrain(round(resolution[1]/tailleCase), round(resolution[0]/tailleCase))

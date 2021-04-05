@@ -1,5 +1,7 @@
 import pygame
 from constantes import *
+# Compteurs de couleurs
+cr = 0; cb = 0; cj = 0; cv = 0
 
 class Case:
     def __init__(self,startingColor,startingType):
@@ -63,14 +65,41 @@ class Terrain:
     def afficheTerrain(self,fenetre):
         for i in range(self.larg):
                 for j in range (self.long):
-                        if(self.getColor(i,j) == 1):
+                        if(self.getColor(i,j) == 1): #bleu
                             pygame.draw.rect(fenetre,(0,0,255),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))    
-                        elif(self.getColor(i,j) == 2):
+                        elif(self.getColor(i,j) == 2): #jaune
                             pygame.draw.rect(fenetre,(240,240,0),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))    
-                        elif(self.getColor(i,j) == 3):
+                        elif(self.getColor(i,j) == 3): #rouge
                             pygame.draw.rect(fenetre,(160,11,11),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))    
-                        elif(self.getColor(i,j) == 4):
+                        elif(self.getColor(i,j) == 4): #vert
                             pygame.draw.rect(fenetre,(0,230,0),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
                         else : pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
+    
+    
+    # ----- rajout paul-antoine ----- #
+    def getcb(self):
+        return cb  
+    def getcj(self):
+        return cj 
+    def getcr(self):
+        return cr 
+    def getcv(self):
+        return cv
+
+    def parcoursCouleur(self):
+        global cb; global cj; global cr; global cv
+        cb = 0; cj = 0; cr = 0; cv = 0
+        for i in range(self.larg):
+            for j in range (self.long):
+                if(self.getColor(i,j) == 1): #bleu
+                    cb=cb+1
+                elif(self.getColor(i,j) == 2): #jaune
+                    cj=cj+1
+                    #print(cj)
+                elif(self.getColor(i,j) == 3): #rouge
+                    cr=cr+1
+                elif(self.getColor(i,j) == 4): #vert
+                    cv=cv+1
+    # ----- fin rajout paul-antoine ----- #
 
 terrain = Terrain(round(resolution[1]/tailleCase), round(resolution[0]/tailleCase))

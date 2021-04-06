@@ -23,3 +23,15 @@ placex3 = (int) (resolutionPlateau[0] * 0.9)
 placey3 = (int) (resolutionPlateau[1] * 0.9)
 placex4 = 12
 placey4 = (int) (resolutionPlateau[1] * 0.9)
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
+# ----------------- plateau.py ----------------- #
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***

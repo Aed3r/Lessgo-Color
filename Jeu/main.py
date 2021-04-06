@@ -5,6 +5,8 @@ from display import *
 from constantes import *
 from plateau import * 
 
+routes = web.RouteTableDef()
+
 # Prépare les gestionnaires web
 async def init_app():
     app = web.Application()
@@ -12,11 +14,12 @@ async def init_app():
     app['websockets'] = []
     
     app.on_shutdown.append(socketHandler.shutdown)
-    app.router.add_get('/', index)
+    app.add_routes(routes)
 
     return app
 
 # Sert index.html puis prépare le gestionnaire de socket
+@routes.get('/')
 async def index(request):
     ws_current = web.WebSocketResponse()
     ws_ready = ws_current.can_prepare(request)
@@ -26,6 +29,12 @@ async def index(request):
             return web.Response(text=f.read(), content_type='text/html')
     
     return await socketHandler.request_handler(ws_current, request)
+
+@routes.get('/{file}.js')
+async def jsGetHandler(request):
+    url = "web/{}.js".format(request.match_info['file'])
+    with open(url) as f:
+        return web.Response(text=f.read(), content_type='text/javascript')
 
 class BouclePrincipale(threading.Thread):  
     def __init__(self):  

@@ -30,11 +30,16 @@ async def index(request):
     
     return await socketHandler.request_handler(ws_current, request)
 
+# Sert tous les fichiers javascript demandé
 @routes.get('/{file}.js')
 async def jsGetHandler(request):
     url = "web/{}.js".format(request.match_info['file'])
-    with open(url) as f:
-        return web.Response(text=f.read(), content_type='text/javascript')
+    try:
+        with open(url) as f:
+            return web.Response(text=f.read(), content_type='text/javascript')
+    except:
+        return web.Response(text="404: '" + url + "' n'existe pas")
+
 
 class BouclePrincipale(threading.Thread):  
     def __init__(self):  

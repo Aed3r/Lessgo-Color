@@ -1,5 +1,7 @@
 #Classe servant a instancier des joueurs
 
+import asyncio
+
 from constantes import *
 
 joueurs = []
@@ -12,6 +14,7 @@ class Joueur(object):
         self.dead = False
         self.dX = 0
         self.dY = 0
+        self.PowerUp = [] # Liste des power ups actifs sur le joueur
         self.rayonCouleur = defRayonCouleur
         self.vitesse = defVitesse
         #definition des constantes
@@ -63,10 +66,17 @@ class Joueur(object):
     def getRayon(self):
         return self.r
 
-    def setPowerUp(self, pu):
+    async def setPowerUp(self, pu): #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
         if(pu != neutral & pu <= nbPowerup):
             self.rayonCouleur += listeValeurs[pu][0]
             self.rayonCouleur += listeValeurs[pu][1]
+            self.PowerUp.append(pu)
+
+            await asyncio.wait(listeValeurs[pu][2])
+            
+            self.rayonCouleur -= listeValeurs[pu][0]
+            self.rayonCouleur -= listeValeurs[pu][1]
+            self.PowerUp.remove(pu)
             
 
 

@@ -5,21 +5,28 @@ from joueur import *
 from plateau import *
 from constantes import *
 
-                                                                                                                     
+
+# Initialisation de la fenêtre                                                                                                                     
 pygame.init()                                                                                                         #initialise les module pygame
 pygame.display.set_caption("SPLAT_PGMOT")                                                                             #nom fenetre
-info = pygame.display.Info()                                                                                          #recupere l'information de la machine en cours
-#resolution = (info.current_w, info.current_h)                                                                          #resolution de l'ecrant a partir de info
-#fenetre = pygame.display.set_mode(resolution,pygame.FULLSCREEN)                                                       #FULLSCREEN
-fenetre = pygame.display.set_mode(resolution, pygame.RESIZABLE)
+
+if (pleinEcran):
+    info = pygame.display.Info()
+    resolution = (info.current_w, info.current_h)
+    modeFenetre = pygame.FULLSCREEN
+else:
+    # La résolution est celle du fichier constantes.py
+    modeFenetre = pygame.RESIZABLE
+
+fenetre = pygame.display.set_mode(resolution, modeFenetre)
+
+# Temps de calcul alloué pour une image
 msPerFrame = int(1000 / fps)
 
 #------------------------------------------------------------FONCTION--------------------------------------------------------------------------------------#
 
 def afficherJoueurs():
-    joueurs.sort(key=comparJoueur) # Trie les joueurs suivant leurs ordonnées 
     for joueur in joueurs:
-        joueur.move()
         pygame.draw.circle(fenetre, joueur.COLOR, [joueur.x, joueur.y], playerSize)
 
 #def fond():                                                                                                              #Fonction initialise fond du terrain

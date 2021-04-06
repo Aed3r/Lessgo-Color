@@ -1,23 +1,27 @@
 # ----------------- Display.py ----------------- #
-resolution = (1080, 720)
-playerSize = 5
-tailleCase = 20
-
+resolution = (1920, 1080)
+pleinEcran = 0 # Si 0 utilise la résolution définit ci-dessus
 fps = 60
 
 # ------------------ Main.py ------------------- #
 port = 8081
 
+# ------------------ Plateau ------------------- #
+tailleCase = 10
+propZoneInit = 8 # Contrôle la taille des zones initiales
+tailleBarre = 20
+
 # ------------------ Joueur.py ----------------- #
 #   placementInitial
-placex1 = 12                            # equipe1 
-placey1 = 12                            #
-placex2 = 1900                          # equipe 2
-placey2 = 12                            #
-placex3 = 1900                          # equipe 3
-placey3 = 1000                          #
-placex4 = 12                            # equipe 4
-placey4 = 1000                          #
+playerSize = 5
+placex1 = 12
+placey1 = 12
+placex2 = (int) ((resolution[0] - tailleBarre) * 0.9)
+placey2 = 12
+placex3 = (int) ((resolution[0] - tailleBarre) * 0.9)
+placey3 = (int) ((resolution[1] - tailleBarre) * 0.9)
+placex4 = 12
+placey4 = (int) ((resolution[1] - tailleBarre) * 0.9)
 #Valeurs par défaut
 defRayonCouleur = 1
 defVitesse = 1

@@ -55,13 +55,19 @@ class Joueur(object):
     def setDead(self, valeur):
         self.dead = valeur
 
-    def setDirection (self, dx, dy):
+    def setDirection(self, dx, dy):
         self.dX = dx
         self.dY = dy
-
-    def setRayon(int r){
+        
+    def setRayon(self, r):
         self.rayonCouleur = r
-    }
+
+    def setPowerUp(self, pu):
+        if(pu != neutral & pu <= nbPowerup):
+            self.setRayon(listeValeurs[pu][1])
+            
+
+
 
 def placementInitial (j):
     if j.EQUIPE == 1:

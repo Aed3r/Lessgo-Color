@@ -8,22 +8,7 @@ from constantes import *
 # Temps de calcul alloué pour une image
 msPerFrame = int(1000 / fps)
 
-def initFenetre ():
-    # Initialisation de la fenêtre                                                                                                                     
-    ***REMOVED***                                                                                                         #initialise les module pygame
-    pygame.display.set_caption("SPLAT_PGMOT")                                                                             #nom fenetre
-
-    if (pleinEcran):
-        info = pygame.display.Info()
-        resolution = (info.current_w, info.current_h)
-        modeFenetre = pygame.FULLSCREEN
-    else:
-        # La résolution est celle du fichier constantes.py
-        modeFenetre = pygame.RESIZABLE
-
-    return pygame.display.set_mode(resolution, modeFenetre)
-
-def afficherJoueurs():
+def afficherJoueurs(fenetre):
     for joueur in joueurs:
         pygame.draw.circle(fenetre, joueur.COLOR, [joueur.x, joueur.y], playerSize)
 
@@ -34,12 +19,11 @@ def afficherJoueurs():
 #    pygame.draw.rect(fenetre,(0,0,100),pygame.Rect(0,resolution[1]-200,200,200))                                         #bas gauche bleu
 #    pygame.draw.rect(fenetre,(100,100,0),pygame.Rect(resolution[0]-200,resolution[1]-200,200,200))                      #bas droit jaune
 
-def joueur(x,y):                                                                                                         #Fonction dessine un joueur en X,Y
+def joueur(fenetre, x, y):                                                                                                         #Fonction dessine un joueur en X,Y
     pygame.draw.circle(fenetre,(0,0,0),[x, y], 5)                                                                         #joueur représenté par un cercle
 
 
-
-def drawAll():
+def drawAll(fenetre):
     # Mesure du temps d'affichage de la frame
     start = time.time() * 1000
 
@@ -47,7 +31,7 @@ def drawAll():
     terrain.afficheTerrain(fenetre)
 
     # Affichage des joueurs
-    afficherJoueurs()
+    afficherJoueurs(fenetre)
 
     # Raffraichissment de la fenêtre
     pygame.display.flip()
@@ -57,11 +41,3 @@ def drawAll():
     sleep = (msPerFrame - (end - start))/1000.
     if (sleep > 0): 
         time.sleep(sleep)
-
-
-# Ecran d'attente
-
-
-def afficherBlocsCouleurs():
-    for i in range(4):
-        pygame.draw.rect(fenetre, )

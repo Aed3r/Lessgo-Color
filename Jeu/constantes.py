@@ -20,10 +20,12 @@ placex4 = 12                            # equipe 4
 placey4 = 1000                          #
 ***REMOVED***
 ***REMOVED***
+***REMOVED***
 # ----------------- plateau.py ----------------- #
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
-listeValeurs = [[0, 0], [0, 1]]
+***REMOVED***
+***REMOVED***

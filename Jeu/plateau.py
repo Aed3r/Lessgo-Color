@@ -101,6 +101,28 @@ class Terrain:
     def getpv(self):
         return pv
 
+    def modifCompteur(self,x,y,color):
+        colorNow = self.getColor(x,y)
+        if(colorNow == 1): #bleu
+            cb=cb-1
+        elif(colorNow == 2): #jaune
+            cj=cj-1
+            #print(cj)
+        elif(colorNow == 3): #rouge
+            cr=cr-1
+        elif(colorNow == 4): #vert
+            cv=cv-1
+
+        if(color == 1): #bleu
+            cb=cb+1
+        elif(color == 2): #jaune
+            cj=cj+1
+            #print(cj)
+        elif(color == 3): #rouge
+            cr=cr+1
+        elif(color == 4): #vert
+            cv=cv+1
+
     def parcoursCouleur(self):
         global cb; global cj; global cr; global cv
         cb = 0; cj = 0; cr = 0; cv = 0

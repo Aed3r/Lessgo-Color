@@ -1,8 +1,11 @@
 import pygame
 from constantes import *
+
 # Compteurs de couleurs
 cr = 0; cb = 0; cj = 0; cv = 0
 pr = 0; pb = 0; pj = 0; pv = 0
+
+resolutionPlateau = (resolution[0], resolution[1] - tailleBarre)
 
 class Case:
     def __init__(self,startingColor,startingType):
@@ -54,7 +57,7 @@ class Terrain:
         return self.plateau[x][y].getType()
 
     def initTerrain(self):
-        taille = (int) (resolution[0] / tailleCase / propZoneInit)
+        taille = (int) (resolutionPlateau[0] / tailleCase / propZoneInit)
         for i in range(taille):
             for j in range(taille):
                 self.setColor(i,j,1)
@@ -114,10 +117,10 @@ class Terrain:
     def pourcentageCouleur(self):
         global pr; global pb; global pj; global pv;
         pr = 0; pb = 0; pj = 0; pv = 0
-        pb=cb*100/(resolution[0]*resolution[1])
-        pr=cr*100/(resolution[0]*resolution[1])
-        pj=cj*100/(resolution[0]*resolution[1])
-        pv=cv*100/(resolution[0]*resolution[1])
+        pb=cb*100/(resolutionPlateau[0]*resolutionPlateau[1])
+        pr=cr*100/(resolutionPlateau[0]*resolutionPlateau[1])
+        pj=cj*100/(resolutionPlateau[0]*resolutionPlateau[1])
+        pv=cv*100/(resolutionPlateau[0]*resolutionPlateau[1])
     # ----- fin rajout paul-antoine ----- #
 
-terrain = Terrain(round(resolution[1]/tailleCase), round(resolution[0]/tailleCase))
+terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))

@@ -41,6 +41,9 @@ async def jsGetHandler(request):
     except:
         return web.Response(text="404: '" + url + "' n'existe pas")
 
+nb_jaune = 0 
+pourc_jaune = 0
+
 def majCouleurs():
     # Couleurs des cases du terrain
     for joueur in joueurs :
@@ -54,9 +57,19 @@ def majCouleurs():
     #print("MAIN || r : ", cr, "b : ", cb, "j : ", nb_jaune, "v : ", cv,)
     #print("POUR || r : ", pr, "b : ", pb, "j : ", "%.3f" % pourc_jaune, "v : ", pv)
 
+# Boucle lancé initialement en attendant les joueurs
+class BoucleAttente(threading.Thread): 
+    def __init__(self):  
+        threading.Thread.__init__(self)
+
+    def run(self):  
+        t = threading.currentThread()
+        
+        while getattr(t, "do_run", True):
+            continue
+
+# Boucle principale s'occupant de l'affichage et de la gestion des joueurs
 class BouclePrincipale(threading.Thread): 
-    nb_jaune = 0 
-    pourc_jaune = 0
     def __init__(self):  
         threading.Thread.__init__(self)
 
@@ -79,8 +92,8 @@ if __name__ == '__main__':
     boucle = BouclePrincipale()
     app = init_app()
     boucle.start() 
+    print("Résolution : ", resolution)
     print("Affichage démarré. Lancement du site...")
     web.run_app(app, port=port)
-    print("resolution 0 : ", resolution[0], "resolution 1 : ", resolution[1])
     boucle.do_run = False
     print("Serveur et affichage arreté. Goodbye")

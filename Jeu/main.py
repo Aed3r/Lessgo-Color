@@ -2,11 +2,32 @@ from aiohttp import web
 import socketHandler
 import threading 
 import socket
-from display import *
 from constantes import *
+from affichageJeu import *
 from plateau import * 
+from ecranAttente import *
 
 routes = web.RouteTableDef()
+
+# Initialise la fenêtre
+def initFenetre ():
+    global resolution 
+    
+    # Initialisation de la fenêtre                                                                                                                     
+    pygame.init()                                                                                                         #initialise les module pygame
+    pygame.display.set_caption("SPLAT_PGMOT")                                                                                 #nom fenetre
+
+    if (pleinEcran):
+        info = pygame.display.Info()
+        resolution = (info.current_w, info.current_h)
+        modeFenetre = pygame.FULLSCREEN
+    else:
+        # La résolution est celle du fichier constantes.py
+        modeFenetre = pygame.RESIZABLE
+
+    return pygame.display.set_mode(resolution, modeFenetre)
+
+fenetre = initFenetre()
 
 # Prépare les gestionnaires web
 async def init_app():
@@ -66,7 +87,7 @@ class BoucleAttente(threading.Thread):
         t = threading.currentThread()
         
         while getattr(t, "do_run", True):
-            continue
+            toutDessiner(fenetre)
 
 # Boucle principale s'occupant de l'affichage et de la gestion des joueurs
 class BouclePrincipale(threading.Thread): 
@@ -84,12 +105,12 @@ class BouclePrincipale(threading.Thread):
             majCouleurs()
 
             # Affichage du plateau et des joueurs
-            drawAll()
+            drawAll(fenetre)
 
 
 if __name__ == '__main__':
     print("Initialisations...")
-    boucle = BouclePrincipale()
+    boucle = BoucleAttente()
     app = init_app()
     boucle.start() 
     print("Résolution : ", resolution)

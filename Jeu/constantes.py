@@ -22,3 +22,14 @@ placex3 = (int) ((resolution[0] - tailleBarre) * 0.9)
 placey3 = (int) ((resolution[1] - tailleBarre) * 0.9)
 placex4 = 12
 placey4 = (int) ((resolution[1] - tailleBarre) * 0.9)
+***REMOVED***
+***REMOVED***
+***REMOVED***
+# ----------------- plateau.py ----------------- #
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***

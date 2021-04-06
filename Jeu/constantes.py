@@ -23,3 +23,15 @@ placex3 = (int) (resolutionPlateau[0] * 0.9)
 placey3 = (int) (resolutionPlateau[1] * 0.9)
 placex4 = 12
 placey4 = (int) (resolutionPlateau[1] * 0.9)
+
+#Valeurs par défaut
+defRayonCouleur = 1
+defVitesse = 1
+# ----------------- plateau.py ----------------- #
+msPowerup = 10000
+nbPowerup = 1
+neutral = 0
+paintMore = 1
+gottaGoFast = 2
+# Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon]
+listeValeurs = [[0, 0], [0, 1], [1, 0]]

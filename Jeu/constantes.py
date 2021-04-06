@@ -20,10 +20,12 @@ placex4 = 12                            # equipe 4
 placey4 = 1000                          #
 #Valeurs par défaut
 defRayonCouleur = 1
+defVitesse = 1
 # ----------------- plateau.py ----------------- #
 msPowerup = 10000
 nbPowerup = 1
 neutral = 0
 paintMore = 1
+gottaGoFast = 2
 # Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon]
-listeValeurs = [[0, 0], [0, 1]]
+listeValeurs = [[0, 0], [0, 1], [1, 0]]

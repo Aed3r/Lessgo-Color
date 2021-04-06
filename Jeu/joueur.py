@@ -13,6 +13,7 @@ class Joueur(object):
         self.dX = 0
         self.dY = 0
         self.rayonCouleur = defRayonCouleur
+        self.vitesse = defVitesse
         #definition des constantes
         self.ID = id
         self.EQUIPE = equipe
@@ -40,8 +41,8 @@ class Joueur(object):
             self.y = y
 
     def move(self):
-        self.x = int(self.x+self.dX)
-        self.y = int(self.y+self.dY)
+        self.x = int(self.x+self.dX)*self.vitesse
+        self.y = int(self.y+self.dY)*self.vitesse
 
         # Vérification de dépassement des bordures
         if (self.x >= resolution[0] ): self.x = 1
@@ -59,12 +60,13 @@ class Joueur(object):
         self.dX = dx
         self.dY = dy
         
-    def setRayon(self, r):
-        self.rayonCouleur = r
+    def getRayon(self):
+        return self.r
 
     def setPowerUp(self, pu):
         if(pu != neutral & pu <= nbPowerup):
-            self.setRayon(listeValeurs[pu][1])
+            self.rayonCouleur += listeValeurs[pu][0]
+            self.rayonCouleur += listeValeurs[pu][1]
             
 
 

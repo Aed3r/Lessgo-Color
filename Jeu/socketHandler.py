@@ -16,9 +16,8 @@ async def request_handler(ws_current, request):
     j = Joueur(num_connection, (nb_connections%4) + 1)
     ajouterJoueur(j)
 
-    print ("[" + str(num_connection) + "] Nouvelle connexion. Ouverture du websocket...");
+    print ("[" + str(num_connection) + "] Nouvelle connexion", end=", ")
     await ws_current.prepare(request)
-    print ("[" + str(num_connection) + "] Websocket ouvert. Envoi du paquet initial...");
 
     #for ws in request.app['websockets'].values():
     #    await ws.send_json({'action': 'join', 'name': name})
@@ -27,18 +26,14 @@ async def request_handler(ws_current, request):
 
     await ws_current.send_json(({'action': 'position', 'x': j.x, 'y': j.y}))
 
-    print ("[" + str(num_connection) + "] Paquet envoyé. Attente de requêtes...")
-
     while True:
         msg = await ws_current.receive();
 
         if msg.type == aiohttp.WSMsgType.text:
-            print ("[" + str(num_connection) + "] Paquet reçu: " + msg.data)
             data = json.loads(msg.data)
 
             j.setDirection(data["dx"]/10, data["dy"]/10)
 
-            print ("[" + str(num_connection) + "] Envoi de la position: (" + str(j.x) + ", " + str(j.y) + ")")
             await ws_current.send_json(({'action': 'position', 'x': j.x, 'y': j.y}))
         else:
             break

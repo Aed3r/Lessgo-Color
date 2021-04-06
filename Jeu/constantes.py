@@ -10,15 +10,16 @@ port = 8081
 tailleCase = 10
 propZoneInit = 8 # Contrôle la taille des zones initiales
 tailleBarre = 20
+resolutionPlateau = (resolution[0], resolution[1] - tailleBarre)
 
 # ------------------ Joueur.py ----------------- #
 #   placementInitial
 playerSize = 5
 placex1 = 12
 placey1 = 12
-placex2 = (int) ((resolution[0] - tailleBarre) * 0.9)
+placex2 = (int) (resolutionPlateau[0] * 0.9)
 placey2 = 12
-placex3 = (int) ((resolution[0] - tailleBarre) * 0.9)
-placey3 = (int) ((resolution[1] - tailleBarre) * 0.9)
+placex3 = (int) (resolutionPlateau[0] * 0.9)
+placey3 = (int) (resolutionPlateau[1] * 0.9)
 placex4 = 12
-placey4 = (int) ((resolution[1] - tailleBarre) * 0.9)
+placey4 = (int) (resolutionPlateau[1] * 0.9)

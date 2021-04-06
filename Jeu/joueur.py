@@ -50,6 +50,9 @@ class Joueur(object):
         self.dX = dx
         self.dY = dy
 
+    def getPosPourcentage(self):
+        return (self.x / resolutionPlateau[0], self.y / resolutionPlateau[1])
+
 def placementInitial (j):
     if j.EQUIPE == 1:
         j.x = 100

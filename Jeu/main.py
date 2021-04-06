@@ -53,11 +53,14 @@ class BouclePrincipale(threading.Thread):
             moveJoueurs()
 
             # Mise à jour des cases de couleur
-            for joueur in joueurs :
-                terrain.setColor((int) (joueur.x/resolution[0]*terrain.larg), (int) (joueur.y/resolution[1]*terrain.long), joueur.EQUIPE)      
+            majCouleurs()
 
             # Affichage du plateau et des joueurs
             drawAll()
+
+    def majCouleurs():
+        for joueur in joueurs :
+                terrain.setColor((int) (joueur.x/resolution[0]*terrain.larg), (int) (joueur.y/resolution[1]*terrain.long), joueur.EQUIPE)      
 
 if __name__ == '__main__':
     print("Initialisations...")

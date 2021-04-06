@@ -49,12 +49,10 @@ def majCouleurs():
             
     
     # Parcours le terrain et compte le nombre de couleur
-    #terrain.pourcentageCouleur() calcul les pourcentages
-    nb_jaune = terrain.getcj() #pb obligé de créer une variable dans le main
-    nb_rouge = terrain.getcr()
-    pourc_jaune = terrain.getpj() 
-    print("MAIN || r : ", nb_rouge, "b : ", cb, "j : ", nb_jaune, "v : ", cv,)
-    #print("POUR || r : ", pr, "b : ", pb, "j : ", "%.3f" % pourc_jaune, "v : ", pv)
+        #terrain.pourcentageCouleur() calcul les pourcentages
+        # exemple récupération compteur/pourcentage
+            # nb_jaune = terrain.getcj() 
+            #pourc_jaune = terrain.getpj() 
 
 class BouclePrincipale(threading.Thread): 
     nb_jaune = 0 

@@ -100,7 +100,6 @@ class Terrain:
         return pr 
     def getpv(self):
         return pv
-
     # ----- Fin accesseurs compteurs proportion de couleurs ----- #
 
     def modifCompteur(self,x,y,color):

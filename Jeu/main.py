@@ -41,8 +41,19 @@ async def jsGetHandler(request):
     except:
         return web.Response(text="404: '" + url + "' n'existe pas")
 
+def majCouleurs():
+    # Couleurs des cases du terrain
+    for joueur in joueurs :
+            terrain.setColor((int) (joueur.x/resolutionPlateau[0]*terrain.larg), (int) (joueur.y/resolutionPlateau[1]*terrain.long), joueur.EQUIPE)      
+    
+    # Parcours le terrain et compte le nombre de couleur
+    terrain.parcoursCouleur()
+    terrain.pourcentageCouleur()
+    nb_jaune = terrain.getcj() #pb obligé de créer une variable dans le main
+    pourc_jaune = terrain.getpj() 
+    #print("MAIN || r : ", cr, "b : ", cb, "j : ", nb_jaune, "v : ", cv,)
+    #print("POUR || r : ", pr, "b : ", pb, "j : ", "%.3f" % pourc_jaune, "v : ", pv)
 
-class BouclePrincipale(threading.Thread):  
 class BouclePrincipale(threading.Thread): 
     nb_jaune = 0 
     pourc_jaune = 0
@@ -61,20 +72,6 @@ class BouclePrincipale(threading.Thread):
 
             # Affichage du plateau et des joueurs
             drawAll()
-            
-
-    def majCouleurs():
-        # Couleurs des cases du terrain
-        for joueur in joueurs :
-                terrain.setColor((int) (joueur.x/resolution[0]*terrain.larg), (int) (joueur.y/resolution[1]*terrain.long), joueur.EQUIPE)      
-        
-        # Parcours le terrain et compte le nombre de couleur
-        terrain.parcoursCouleur()
-        terrain.pourcentageCouleur()
-        nb_jaune = terrain.getcj() #pb obligé de créer une variable dans le main
-        pourc_jaune = terrain.getpj() 
-        print("MAIN || r : ", cr, "b : ", cb, "j : ", nb_jaune, "v : ", cv,)
-        print("POUR || r : ", pr, "b : ", pb, "j : ", "%.3f" % pourc_jaune, "v : ", pv,)
 
 
 if __name__ == '__main__':
@@ -83,8 +80,7 @@ if __name__ == '__main__':
     app = init_app()
     boucle.start() 
     print("Affichage démarré. Lancement du site...")
-    print("--- ip : ", get_ip(), " --- ")
     web.run_app(app, port=port)
     print("resolution 0 : ", resolution[0], "resolution 1 : ", resolution[1])
-deplacement    boucle.do_run = False
+    boucle.do_run = False
     print("Serveur et affichage arreté. Goodbye")

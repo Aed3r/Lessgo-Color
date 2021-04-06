@@ -2,6 +2,7 @@ from aiohttp import web
 import aiohttp
 import json
 from joueur import *
+import util
 
 nb_connections = 0
 
@@ -22,9 +23,10 @@ async def request_handler(ws_current, request):
     #for ws in request.app['websockets'].values():
     #    await ws.send_json({'action': 'join', 'name': name})
     request.app['websockets'].append(ws_current)
-    print(request.app['websockets'])
+    #print(request.app['websockets'])
 
-    await ws_current.send_json(({'action': 'position', 'x': j.x, 'y': j.y}))
+    await ws_current.send_json(({'action': 'init', 'x': j.x, 'y': j.y, 
+                                 'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1]}))
 
     while True:
         msg = await ws_current.receive();
@@ -34,7 +36,8 @@ async def request_handler(ws_current, request):
 
             j.setDirection(data["dx"]/10, data["dy"]/10)
 
-            await ws_current.send_json(({'action': 'position', 'x': j.x, 'y': j.y}))
+            pos = j.getPosPourcentage()
+            await ws_current.send_json(({'action': 'position', 'x': pos[0], 'y': pos[1]}))
         else:
             break
     

@@ -9,26 +9,35 @@ class Joueur(object):
     def __init__(self, id, equipe, x = 0, y = 0):
         super().__init__()
         #Definition des variables
-        self.x = x
-        self.y = y
         self.dead = False
         self.dX = 0
         self.dY = 0
+        self.rayonCouleur = defRayonCouleur
         #definition des constantes
         self.ID = id
         self.EQUIPE = equipe
-        #On assigne une couleur au joueur selon son équipe
+        #On assigne une couleur au joueur selon son équipe et on le place dans la zone de son équipe
         if equipe == 1:
             self.COLOR = (0, 127, 255)
+            self.x = placex1
+            self.y = placey1
         elif equipe == 2:
             self.COLOR = (255, 255, 0)
+            self.x = placex2
+            self.y = placey2
         elif equipe == 3:
             self.COLOR = (187, 11, 11)
+            self.x = placex3
+            self.y = placey3
         elif equipe == 4:
             self.COLOR = (0,255,0) 
+            self.x = placex4
+            self.y = placey4
         else:
             print("ATTENTION MAUVAISE EQUIPE POUR LE JOUEUR", id)
             self.COLOR = (0,0,0)
+            self.x = x
+            self.y = y
 
     def move(self):
         self.x = int(self.x+self.dX)
@@ -49,6 +58,10 @@ class Joueur(object):
     def setDirection (self, dx, dy):
         self.dX = dx
         self.dY = dy
+
+    def setRayon(int r){
+        self.rayonCouleur = r
+    }
 
 def placementInitial (j):
     if j.EQUIPE == 1:

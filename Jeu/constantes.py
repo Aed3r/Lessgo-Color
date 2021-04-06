@@ -18,6 +18,8 @@ placex3 = 1900                          # equipe 3
 placey3 = 1000                          #
 placex4 = 12                            # equipe 4
 placey4 = 1000                          #
+#Valeurs par défaut
+defRayonCouleur = 1
 # ----------------- plateau.py ----------------- #
 neutral = 0
 paintMore = 1

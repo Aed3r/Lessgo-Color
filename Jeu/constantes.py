@@ -23,3 +23,7 @@ placey4 = 1000                          #
 # ----------------- plateau.py ----------------- #
 ***REMOVED***
 ***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+listeValeurs = [[0, 0], [0, 1]]

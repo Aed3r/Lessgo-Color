@@ -55,7 +55,7 @@ class Terrain:
         return self.plateau[x][y].getType()
 
     def initTerrain(self):
-        taille = (int) (resolutionPlateau[0] / tailleCase / propZoneInit)
+        taille = (int) (resolutionPlateau[0] / tailleCase * propZoneInit)
         for i in range(taille):
             for j in range(taille):
                 self.setColor(i,j,1)

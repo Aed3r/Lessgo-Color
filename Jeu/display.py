@@ -5,25 +5,23 @@ from joueur import *
 from plateau import *
 from constantes import *
 
-
-# Initialisation de la fenêtre                                                                                                                     
-***REMOVED***                                                                                                         #initialise les module pygame
-pygame.display.set_caption("SPLAT_PGMOT")                                                                             #nom fenetre
-
-if (pleinEcran):
-    info = pygame.display.Info()
-    resolution = (info.current_w, info.current_h)
-    modeFenetre = pygame.FULLSCREEN
-else:
-    # La résolution est celle du fichier constantes.py
-    modeFenetre = pygame.RESIZABLE
-
-fenetre = pygame.display.set_mode(resolution, modeFenetre)
-
 # Temps de calcul alloué pour une image
 msPerFrame = int(1000 / fps)
 
-#------------------------------------------------------------FONCTION--------------------------------------------------------------------------------------#
+def initFenetre ():
+    # Initialisation de la fenêtre                                                                                                                     
+    ***REMOVED***                                                                                                         #initialise les module pygame
+    pygame.display.set_caption("SPLAT_PGMOT")                                                                             #nom fenetre
+
+    if (pleinEcran):
+        info = pygame.display.Info()
+        resolution = (info.current_w, info.current_h)
+        modeFenetre = pygame.FULLSCREEN
+    else:
+        # La résolution est celle du fichier constantes.py
+        modeFenetre = pygame.RESIZABLE
+
+    return pygame.display.set_mode(resolution, modeFenetre)
 
 def afficherJoueurs():
     for joueur in joueurs:
@@ -59,3 +57,11 @@ def drawAll():
     sleep = (msPerFrame - (end - start))/1000.
     if (sleep > 0): 
         time.sleep(sleep)
+
+
+# Ecran d'attente
+
+
+def afficherBlocsCouleurs():
+    for i in range(4):
+        pygame.draw.rect(fenetre, )

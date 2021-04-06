@@ -65,6 +65,8 @@ class Terrain:
                 self.setColor(i, self.long-j-1, 3)
                 self.setColor(self.larg-i-1, self.long-j-1, 4)
 
+        self.setType(int(self.larg/2), int(self.long/2), paintMore)
+
 
     def afficheTerrain(self,fenetre):
         for i in range(self.larg):
@@ -78,6 +80,8 @@ class Terrain:
                         elif(self.getColor(i,j) == 4): #vert
                             pygame.draw.rect(fenetre,(0,230,0),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
                         else : pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(i*tailleCase,j*tailleCase,tailleCase,tailleCase))
+                        if(self.getType(i,j) == paintMore):
+                            pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
     
     
     # ----- rajout paul-antoine ----- #

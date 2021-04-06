@@ -5,8 +5,6 @@ from constantes import *
 cr = 0; cb = 0; cj = 0; cv = 0
 pr = 0; pb = 0; pj = 0; pv = 0
 
-***REMOVED***
-
 class Case:
     def __init__(self,startingColor,startingType):
         self.type=startingType

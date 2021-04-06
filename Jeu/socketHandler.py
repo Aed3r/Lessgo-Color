@@ -2,7 +2,6 @@ from aiohttp import web
 import aiohttp
 import json
 from joueur import *
-import util
 
 nb_connections = 0
 

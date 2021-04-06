@@ -82,7 +82,7 @@ class Terrain:
                             pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
     
     
-    # ----- rajout paul-antoine ----- #
+    # ----- Accesseurs compteurs proportion de couleurs ----- #
     def getcb(self):
         return cb  
     def getcj(self):
@@ -101,16 +101,20 @@ class Terrain:
     def getpv(self):
         return pv
 
+    # ----- Fin accesseurs compteurs proportion de couleurs ----- #
+
     def modifCompteur(self,x,y,color):
-        colorNow = self.getColor(x,y)
-        if(colorNow == 1): #bleu
+        global cb; global cj; global cr; global cv
+        colorNow = self.getColor((int) (x/resolutionPlateau[0]*self.larg), (int) (y/resolutionPlateau[1]*self.long))
+
+        if(colorNow == 1 and cb>=0): #bleu
             cb=cb-1
-        elif(colorNow == 2): #jaune
+        elif(colorNow == 2 and cj>=0): #jaune
             cj=cj-1
             #print(cj)
-        elif(colorNow == 3): #rouge
+        elif(colorNow == 3 and cr>=0): #rouge
             cr=cr-1
-        elif(colorNow == 4): #vert
+        elif(colorNow == 4 and cv>=0): #vert
             cv=cv-1
 
         if(color == 1): #bleu
@@ -123,21 +127,7 @@ class Terrain:
         elif(color == 4): #vert
             cv=cv+1
 
-    def parcoursCouleur(self):
-        global cb; global cj; global cr; global cv
-        cb = 0; cj = 0; cr = 0; cv = 0
-        for i in range(self.larg):
-            for j in range (self.long):
-                if(self.getColor(i,j) == 1): #bleu
-                    cb=cb+1
-                elif(self.getColor(i,j) == 2): #jaune
-                    cj=cj+1
-                    #print(cj)
-                elif(self.getColor(i,j) == 3): #rouge
-                    cr=cr+1
-                elif(self.getColor(i,j) == 4): #vert
-                    cv=cv+1
-
+    # Calcul les pourcentages à partir des compteurs
     def pourcentageCouleur(self):
         global pr; global pb; global pj; global pv;
         pr = 0; pb = 0; pj = 0; pv = 0
@@ -145,6 +135,5 @@ class Terrain:
         pr=cr*100/(resolutionPlateau[0]*resolutionPlateau[1])
         pj=cj*100/(resolutionPlateau[0]*resolutionPlateau[1])
         pv=cv*100/(resolutionPlateau[0]*resolutionPlateau[1])
-    # ----- fin rajout paul-antoine ----- #
 
 terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))

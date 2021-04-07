@@ -1,6 +1,6 @@
 /*
-  fonctionnaliter : manette de jeu, jouable ecrant tactile ou souris
-*/
+     fonctionnaliter : manette de jeu, jouable ecrant tactile ou souris
+    */
 var canvas, contex;
 /*dimention de la fenetre*/
 var largeur = 0, hauteur = 0;
@@ -144,7 +144,6 @@ function manetteUtiliser(event) {
         if (dist < rayonE) {
             vitesse = parseInt(((dist / rayonE) * 100), 10);                                                      //calcul de la vitesse
             joystickA(xClient, yClient);
-            //envoyerPosition(xClient, yClient, vitesse);
             jj = true;
         } else {
             if (jj) {
@@ -162,76 +161,3 @@ function manetteUtiliser(event) {
         envoyerDirection(2 * pi - angle, vitesse);
     }
 }
-
-var conn = null;
-var name = "UNKNOWN";
-var msCooldown = 100;
-var lastMsg;
-
-// Envoi la direction choisie par le joueur au serveur
-function envoyerDirection(angle, vitesse) {
-    // Vérification du cooldown
-    let now = Date.now();
-    if (now < lastMsg + msCooldown && vitesse != 0) {
-        console.log("cooldown")
-        return;
-    }
-
-    // On calcule le déplacement à effectuer 
-    var dx = parseInt(Math.cos(angle) * vitesse);
-    var dy = -parseInt(Math.sin(angle) * vitesse);
-
-    // On prépare le paquet à envoyer
-    var paquet = { dx, dy };
-    var msg = JSON.stringify(paquet);
-    console.log("Envoi du déplacement " + msg);
-
-    // On envoie le paquet
-    conn.send(msg);
-    lastMsg = now;
-}
-
-// Etablie une connection websocket au serveur
-function connect() {
-    disconnect();
-    var wsUri = (window.location.protocol == 'https:' && 'wss://' || 'ws://') + window.location.host;
-    conn = new WebSocket(wsUri);
-
-    console.log("Tentative de connection...");
-
-    // Lorsque la connection est établie
-    conn.onopen = function () {
-        console.log("Connection établie.");
-    };
-
-    // Lorsqu'un message est reçue
-    conn.onmessage = function (e) {
-        console.log("Paquet Reçu: " + e.data);
-
-        var data = JSON.parse(e.data);
-
-        switch (data.action) {
-        case 'position':
-            console.log("(" + data.x + ", " + data.y + ")");
-            break;
-        }
-    };
-
-    // Lorsque la connection est fermé par le serveur
-    conn.onclose = function () {
-        console.log("Connection fermé.")
-        conn = null;
-    };
-}
-
-// Déconnecte la connection websocket existante
-function disconnect() {
-    if (conn != null) {
-        console.log("Déconnexion...");
-        conn.close();
-        conn = null;
-        name = 'UNKNOWN';
-    }
-}
-
-connect();

@@ -1,6 +1,6 @@
 # ----------------- Affichage ----------------- #
 resolution = (1920, 1080)
-pleinEcran = True # Si False utilise la résolution définit ci-dessus
+pleinEcran = False # Si False utilise la résolution définit ci-dessus
 fps = 60
 couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]
 couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
@@ -31,4 +31,4 @@ gottaGoFast = 2
 listeValeurs = [[0, 0], [0, 1], [1, 0]]
 
 # ----------------- Ecran d'attente ----------------- #
-margins = {'left': 0.05, 'right': 0.05, 'top': 0.2, 'bottom': 0.1} # En *100 %
+margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %

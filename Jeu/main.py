@@ -2,6 +2,7 @@ from aiohttp import web
 import socketHandler
 import threading 
 import socket
+import os, signal
 from constantes import *
 from affichageJeu import *
 from plateau import * 
@@ -88,6 +89,13 @@ class BoucleAttente(threading.Thread):
         
         while getattr(t, "do_run", True):
             toutDessiner(fenetre)
+
+            # Ferme le jeu si le bouton 'fermé' est appuyé
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    # Arrête le serveur et l'affichage
+                    os.kill(os.getpid(), signal.SIGINT)
+
 
 # Boucle principale s'occupant de l'affichage et de la gestion des joueurs
 class BouclePrincipale(threading.Thread): 

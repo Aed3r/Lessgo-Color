@@ -8,10 +8,10 @@ from constantes import *
 msPerFrame = int(1000 / fps)
 
 # MAJ des marges en fonction de la taille d'écran
-margins['left'] = margins['left'] * resolution[0]
-margins['right'] = margins['right'] * resolution[0]
-margins['top'] = margins['top'] * resolution[1]
-margins['bottom'] = margins['bottom'] * resolution[1]
+margins['left'] = margins['left'] / 100 * resolution[0]
+margins['right'] = margins['right'] / 100 * resolution[0]
+margins['top'] = margins['top'] / 100 * resolution[1]
+margins['bottom'] = margins['bottom'] / 100 * resolution[1]
 
 # Taille des blocs de couleurs
 blockW = (resolution[0] - (margins['left'] * 5)) / 4

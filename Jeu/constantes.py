@@ -1,6 +1,9 @@
 ***REMOVED***
-resolution = (1920, 1080)
-pleinEcran = False # Si False utilise la résolution définit ci-dessus
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
@@ -32,3 +35,7 @@ pleinEcran = False # Si False utilise la résolution définit ci-dessus
 
 ***REMOVED***
 ***REMOVED***
+
+# ----------------- Police ----------------- #
+police = pygame.font.Font("Data/Fonts/Quicksand-VariableFont_wght.ttf", 30)
+couleurPolice = (0, 0, 0)

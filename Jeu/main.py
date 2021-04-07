@@ -6,7 +6,7 @@ import socket
 from constantes import *
 from affichageJeu import *
 from plateau import * 
-from ecranAttente import *
+import ecranAttente
 
 routes = web.RouteTableDef()
 
@@ -15,18 +15,9 @@ def initFenetre ():
     global resolution 
     
     # Initialisation de la fenêtre                                                                                                                     
-    ***REMOVED***                                                                                                         #initialise les module pygame
     pygame.display.set_caption("SPLAT_PGMOT")                                                                                 #nom fenetre
-
-    if (pleinEcran):
-        info = pygame.display.Info()
-        resolution = (info.current_w, info.current_h)
-        modeFenetre = pygame.FULLSCREEN
-    else:
-        # La résolution est celle du fichier constantes.py
-        modeFenetre = pygame.RESIZABLE
-
-    return pygame.display.set_mode(resolution, modeFenetre)
+        
+    return pygame.display.set_mode(resolution, pygame.FULLSCREEN if pleinEcran else pygame.RESIZABLE)
 
 fenetre = initFenetre()
 
@@ -85,16 +76,26 @@ class BoucleAttente(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):  
+        ecranAttente.initValeurs()
         t = threading.currentThread()
+        altPressed = False
         
         while getattr(t, "do_run", True):
-            toutDessiner(fenetre)
+            ecranAttente.toutDessiner(fenetre)
 
-            # Ferme le jeu si le bouton 'fermé' est appuyé
+            # Ferme le jeu si le bouton 'fermé' ou alt+F4 sont appuyé
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     # Arrête le serveur et l'affichage
                     os.kill(os.getpid(), signal.SIGINT)
+                elif event.type == pygame.KEYDOWN:
+                    if event.mod == pygame.KMOD_ALT:
+                        altPressed = True
+                    if event.key == pygame.K_F4:
+                        os.kill(os.getpid(), signal.SIGINT)
+                elif event.type == pygame.KEYUP:
+                    if event.mod == pygame.KMOD_ALT:
+                        altPressed = False
 
 
 # Boucle principale s'occupant de l'affichage et de la gestion des joueurs

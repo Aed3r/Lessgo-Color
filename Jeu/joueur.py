@@ -14,7 +14,7 @@ spawn = [(spawnXOffset, spawnYOffset),
 
 class Joueur(object): 
 
-    def __init__(self, id, equipe, x = 0, y = 0):
+    def __init__(self, id, nom, equipe):
         super().__init__()
         #Definition des variables
         self.dead = False
@@ -22,15 +22,16 @@ class Joueur(object):
         self.dY = 0
         self.rayonCouleur = defRayonCouleur
         self.vitesse = defVitesse
+        self.nom = nom
 
         #definition des constantes
         self.ID = id
         self.EQUIPE = equipe
 
         #On assigne une couleur au joueur selon son équipe et on le place dans la zone de son équipe
-        self.COLOR = couleursJoueurs[equipe-1]
-        self.x = spawn[equipe-1][0]
-        self.y = spawn[equipe-1][1]
+        self.COLOR = couleursJoueurs[equipe]
+        self.x = spawn[equipe][0]
+        self.y = spawn[equipe][1]
 
     def move(self):
         # Application du vecteur déplacement
@@ -54,7 +55,7 @@ class Joueur(object):
         self.dY = dy
         
     def getRayon(self):
-        return self.r
+        return self.nom
 
     def setPowerUp(self, pu):
         if(pu != neutral & pu <= nbPowerup):
@@ -63,6 +64,12 @@ class Joueur(object):
             
     def getPosPourcentage(self):
         return (self.x / resolutionPlateau[0], self.y / resolutionPlateau[1])
+
+    def getEquipe(self):
+        return self.EQUIPE
+
+    def getNom(self):
+        return self.nom
 
 def comparJoueur(j):
     return j.y

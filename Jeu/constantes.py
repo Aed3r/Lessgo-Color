@@ -1,6 +1,9 @@
+import pygame
+
 # ----------------- Affichage ----------------- #
-resolution = (1920, 1080)
-pleinEcran = False # Si False utilise la résolution définit ci-dessus
+pleinEcran = False # Si False utilise la résolution définit ci-dessous
+pygame.init()
+resolution = (pygame.display.Info().current_w, pygame.display.Info().current_h) if pleinEcran else (1500, 1000)
 fps = 60
 couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]
 couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
@@ -32,3 +35,7 @@ listeValeurs = [[0, 0], [0, 1], [1, 0]]
 
 # ----------------- Ecran d'attente ----------------- #
 margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %
+
+# ----------------- Police ----------------- #
+police = pygame.font.Font("Data/Fonts/Quicksand-VariableFont_wght.ttf", 30)
+couleurPolice = (0, 0, 0)

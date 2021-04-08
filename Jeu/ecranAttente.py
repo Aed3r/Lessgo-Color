@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 import threading
 import time
 import joueur as j
@@ -10,8 +10,6 @@ msPerFrame = int(1000 / fps)
 # Taille des blocs de couleurs
 blockW = None
 blockH = None
-
-blur = pygame.image.load("Data/Images/blur.png")
 
 def initValeurs():
     global blockH, blockW
@@ -27,11 +25,11 @@ def initValeurs():
     blockH = resolution[1] - margins['top'] - margins['bottom']
 
 def clear (fenetre):
-    pygame.draw.rect(fenetre, (255, 255, 255), pygame.Rect(0, 0, resolution[0], resolution[1]))
+    pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, resolution[0], resolution[1]))
 
 def afficherBlocsCouleurs(fenetre):
     for i in range(4):
-        pygame.draw.rect(fenetre, couleursPlateau[i], pygame.Rect(margins['left'] + i * (blockW+margins['left']), 
+        pg.draw.rect(fenetre, couleursPlateau[i], pg.Rect(margins['left'] + i * (blockW+margins['left']), 
                                                                   margins['top'], 
                                                                   blockW, 
                                                                   blockH))
@@ -39,31 +37,83 @@ def afficherBlocsCouleurs(fenetre):
 def afficherNomsJoueurs(fenetre):
     offsetListes = [0, 0, 0, 0]
     for joueur in j.joueurs:
-        text = police.render(joueur.getNom(), True, couleurPolice)
         e = joueur.getEquipe() # Indice d'équipe du joueur
+
+        # Préparation de la couleur de texte (inverse du bloc)
+        couleurBloc = couleursPlateau[e]
+        couleurPolice = (255-couleurBloc[0], 255-couleurBloc[1], 255-couleurBloc[2])
+
+        # Préparation de la surface du texte avec redimensionnement si besoin
+        text = policeNoms.render(joueur.getNom(), True, couleurPolice)
         tailleTexte = text.get_size()
-        posX = margins['left'] + e * (blockW+margins['left']) + blockW/2 - tailleTexte[0]/2
-        posY = margins['top'] + offsetListes[e]
+        if (tailleTexte[0] > blockW):
+            text = pg.transform.smoothscale(text, (int(blockW-10), int((tailleTexte[1] / tailleTexte[0]) * (blockW-10))))
+        
+        # Préparation de l'emplacement du texte
+        tailleTexte = text.get_size()
+        posBloc = margins['left'] + e * (blockW+margins['left'])
+        posX = posBloc + blockW/2 - tailleTexte[0]/2
+        posY = margins['top']
 
-        # On ajuste le flou à la taille du texte
-        nBlur = pygame.Surface(((int) (tailleTexte[0]*1.5), tailleTexte[1])).convert_alpha()
-        pygame.transform.smoothscale(blur, ((int) (tailleTexte[0]*1.5), tailleTexte[1]), nBlur)
+        # Affichage du texte
+        if (offsetListes[e] + tailleTexte[1] < blockH):
+            fenetre.blit(text, (posX, posY + offsetListes[e]))
+        else:
+            # On bouge la liste de noms vers le haut
+            extra = offsetListes[e] + tailleTexte[1] - blockH # Ce qui dépasse du bloc
+            tempSurface = pg.Surface((blockW, blockH-extra))
+            tempSurface.blit(fenetre, (0, 0), pg.Rect(posBloc, posY+extra, blockW, blockH-extra))
+            fenetre.blit(tempSurface, (posBloc, posY))
+            offsetListes[e] -= extra
+            # On enlève le fond
+            pg.draw.rect(fenetre, couleursPlateau[e], pg.Rect(posBloc, posY+offsetListes[e], blockW, extra))
+            # Texte
+            fenetre.blit(text, (posX, posY + blockH - tailleTexte[1]))
 
-        # On affiche le flou derrière le texte
-        fenetre.blit(nBlur, ((int) (posX-tailleTexte[0]*0.25), posY))
-        fenetre.blit(text, (posX, posY))
         offsetListes[e] += tailleTexte[1]
 
+def afficherTitre (fenetre):
+    textSurface = policeTitres.render("En attente de joueurs...", True, (49, 51, 53));
+    tailleTexte = textSurface.get_size()
+    fenetre.blit(textSurface, (resolution[0]/2-tailleTexte[0]/2, margins['top']/2-tailleTexte[1]/2))
+
+def afficherMenu(fenetre):
+    alphaSurface = pygame.Surface(resolution, pygame.SRCALPHA)
+    alphaSurface.fill((0, 0, 0, 128))
+    fenetre.blit(alphaSurface, (0, 0))
+
+escPressed = False
+showMenu = False
+
+def clickHandler():
+    global escPressed, showMenu
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE and not escPressed:
+            escPressed = True
+            showMenu = not showMenu
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE and escPressed:
+            escPressed = False
+
+
+
 def toutDessiner(fenetre):
+    global showMenu
+
     # Mesure du temps d'affichage de la frame
     start = time.time() * 1000
 
     clear(fenetre)
     afficherBlocsCouleurs(fenetre)
     afficherNomsJoueurs(fenetre)
+    afficherTitre(fenetre)
+
+    # Gestion des clics
+    clickHandler()
+    if (showMenu):
+        afficherMenu(fenetre)
 
     # Raffraichissment de la fenêtre
-    pygame.display.flip()
+    pg.display.flip()
 
     # Fin de la mesure du temps et attente pour afficher la prochaine frame
     end = time.time() * 1000

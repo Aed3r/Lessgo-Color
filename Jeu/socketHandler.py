@@ -13,7 +13,7 @@ async def request_handler(ws_current, request):
     nb_connections += 1
     num_connection = nb_connections
 
-    j = Joueur(num_connection, "Placeholder", (nb_connections-1)%4)
+    j = Joueur(num_connection, "Placeholder #" + str(num_connection), (nb_connections-1)%4)
     ajouterJoueur(j)
 
     print ("[" + str(num_connection) + "] Nouvelle connexion", end="... ")

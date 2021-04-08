@@ -37,5 +37,5 @@
 ***REMOVED***
 
 # ----------------- Police ----------------- #
-police = pygame.font.Font("Data/Fonts/Quicksand-VariableFont_wght.ttf", 30)
-couleurPolice = (0, 0, 0)
+policeNoms = pygame.font.Font("Data/Fonts/Quicksand-VariableFont_wght.ttf", 30)
+policeTitres = pygame.font.Font("Data/Fonts/Quicksand-VariableFont_wght.ttf", 60)

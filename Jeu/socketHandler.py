@@ -13,19 +13,19 @@ async def request_handler(ws_current, request):
     nb_connections += 1
     num_connection = nb_connections
 
-    j = Joueur(num_connection, (nb_connections%4) + 1)
+    j = Joueur(num_connection, "Placeholder #" + str(num_connection), (nb_connections-1)%4)
     ajouterJoueur(j)
 
-    print ("[" + str(num_connection) + "] Nouvelle connexion", end=", ")
+    print ("[" + str(num_connection) + "] Nouvelle connexion", end="... ")
     await ws_current.prepare(request)
 
     #for ws in request.app['websockets'].values():
     #    await ws.send_json({'action': 'join', 'name': name})
     request.app['websockets'].append(ws_current)
-    #print(request.app['websockets'])
 
     await ws_current.send_json(({'action': 'init', 'x': j.x, 'y': j.y, 
                                  'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1]}))
+    print("Initialisation réussi.")
 
     while True:
         msg = await ws_current.receive();

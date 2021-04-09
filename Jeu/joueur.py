@@ -75,9 +75,15 @@ def comparJoueur(j):
     return j.y
 
 def ajouterJoueur(joueur):
-   joueurs.append(joueur)
+    global joueurs
+    joueurs.append(joueur)
 
 def moveJoueurs():
+    global joueurs
     #joueurs.sort(key=comparJoueur) # Trie les joueurs suivant leurs ordonnées 
     for joueur in joueurs:
         joueur.move()
+
+def getJoueurs():
+    global joueurs
+    return joueurs

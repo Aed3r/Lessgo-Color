@@ -33,9 +33,6 @@ def drawAll(fenetre):
     # Affichage des joueurs
     afficherJoueurs(fenetre)
 
-    # Raffraichissment de la fenêtre
-    pygame.display.flip()
-
     # Fin de la mesure du temps et attente pour afficher la prochaine frame
     end = time.time() * 1000
     sleep = (msPerFrame - (end - start))/1000.

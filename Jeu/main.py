@@ -111,19 +111,17 @@ class BoucleAttente(threading.Thread):
                     os.kill(os.getpid(), signal.SIGINT)
                 elif event.type == pygame.KEYDOWN:
                     # Alt-F4
-                    if event.mod == pygame.KMOD_ALT:
+                    if event.key == pygame.K_LALT:
                         altPressed = True
-                        print("alt pressed")
-                    if event.key == pygame.K_F4 and altPressed:
+                    elif event.key == pygame.K_F4 and altPressed:
                         os.kill(os.getpid(), signal.SIGINT)
+                    # Menu pause
                     elif event.key == pygame.K_ESCAPE:
-                        # Menu pause
                         if not jeuLance:
                             mp.toggleAttente(policeTitres)
                 elif event.type == pygame.KEYUP:
-                    if event.mod == pygame.KMOD_ALT:
+                    if event.key == pygame.K_LALT:
                         altPressed = False
-                        print("alt let go")
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Si le bouton 'lancer jeu' a été appuyé on lance la boucle principale
                     if not jeuLance and mp.verifClic(event.pos) != None:

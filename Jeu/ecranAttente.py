@@ -78,28 +78,6 @@ def afficherTitre (fenetre):
     tailleTexte = textSurface.get_size()
     fenetre.blit(textSurface, (resolution[0]/2-tailleTexte[0]/2, margins['top']/2-tailleTexte[1]/2))
 
-boutonLancerJeu = Bouton("Lancer le jeu", policeTitres, (255, 255, 255))
-rectBouton = None
-
-def afficherMenu(fenetre):
-    global boutonLancerJeu, rectBouton
-
-    # Fond noir
-    alphaSurface = pygame.Surface(resolution, pygame.SRCALPHA)
-    alphaSurface.fill((0, 0, 0, 128))
-    fenetre.blit(alphaSurface, (0, 0))
-
-    # Bouton
-    rectBouton = boutonLancerJeu.draw(fenetre, (resolution[0]/2, resolution[1]/2))
-
-def verifClic(position):
-    global rectBouton
-
-    if rectBouton != None:
-        return rectBouton.collidepoint(position)
-    else:
-        return False
-
 
 showMenu = False
 
@@ -124,9 +102,6 @@ def toutDessiner(fenetre):
         afficherMenu(fenetre)
     else:
         rectBouton = None
-
-    # Raffraichissment de la fenêtre
-    pg.display.flip()
 
     # Fin de la mesure du temps et attente pour afficher la prochaine frame
     end = time.time() * 1000

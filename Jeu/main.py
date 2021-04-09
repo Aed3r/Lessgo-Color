@@ -4,9 +4,11 @@ import threading
 import socket
 import os, signal
 from constantes import *
-from affichageJeu import *
+import affichageJeu
 from plateau import * 
 import ecranAttente
+import UI.menuPause as mp
+import joueur
 
 routes = web.RouteTableDef()
 
@@ -59,9 +61,9 @@ pourc_jaune = 0
 
 def majCouleurs():
     # Couleurs des cases du terrain
-    for joueur in joueurs :
-            terrain.modifCompteur(joueur.x,joueur.y,joueur.EQUIPE)
-            terrain.setColor((int) (joueur.x/resolutionPlateau[0]*terrain.larg), (int) (joueur.y/resolutionPlateau[1]*terrain.long), joueur.EQUIPE) 
+    for j in joueur.getJoueurs() :
+            terrain.modifCompteur(j.x,j.y,j.EQUIPE)
+            terrain.setColor((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE) 
             
     
     # Parcours le terrain et compte le nombre de couleur
@@ -79,11 +81,28 @@ class BoucleAttente(threading.Thread):
         ecranAttente.initValeurs()
         t = threading.currentThread()
         altPressed = False
-        bouclePrinc = None
+        jeuLance = False
         
         while getattr(t, "do_run", True):
-            if bouclePrinc == None:
+            # S'occupe de l'affichage du jeu et de la gestion des joueurs
+            if jeuLance:
+                # Mise à jour des positions joueurs
+                joueur.moveJoueurs()
+
+                # Mise à jour des cases de couleur
+                majCouleurs()
+
+                # Affichage du plateau et des joueurs
+                affichageJeu.drawAll(fenetre)
+            # Affiche l'écran d'attente
+            else:
                 ecranAttente.toutDessiner(fenetre)
+
+            # Affiche (potentiellement) un menu
+            mp.afficherMenu(fenetre)
+
+            # Raffraichissment de la fenêtre
+            pygame.display.flip()
 
             # Ferme le jeu si le bouton 'fermé' ou alt+F4 sont appuyé
             for event in pygame.event.get():
@@ -94,40 +113,25 @@ class BoucleAttente(threading.Thread):
                     # Alt-F4
                     if event.mod == pygame.KMOD_ALT:
                         altPressed = True
-                    if event.key == pygame.K_F4:
+                        print("alt pressed")
+                    if event.key == pygame.K_F4 and altPressed:
                         os.kill(os.getpid(), signal.SIGINT)
                     elif event.key == pygame.K_ESCAPE:
-                        ecranAttente.setMenu()
+                        # Menu pause
+                        if not jeuLance:
+                            mp.toggleAttente(policeTitres)
                 elif event.type == pygame.KEYUP:
                     if event.mod == pygame.KMOD_ALT:
                         altPressed = False
+                        print("alt let go")
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Si le bouton 'lancer jeu' a été appuyé on lance la boucle principale
-                    if (ecranAttente.verifClic(event.get_pos())):
-                        bouclePrinc = BouclePrincipale()
-                        bouclePrinc.start()
-        # On arrête la boucle principale lorsque cette boucle s'arrête
-        if bouclePrinc != None:
-            bouclePrinc.do_run = False
+                    if not jeuLance and mp.verifClic(event.pos) != None:
+                        # On cache le menu de l'écran d'attente
+                        mp.toggleAttente(None)
 
-
-# Boucle principale s'occupant de l'affichage et de la gestion des joueurs
-class BouclePrincipale(threading.Thread): 
-    def __init__(self):  
-        threading.Thread.__init__(self)
-
-    def run(self):  
-        t = threading.currentThread()
-        
-        while getattr(t, "do_run", True):
-            # Mise à jour des positions joueurs
-            moveJoueurs()
-
-            # Mise à jour des cases de couleur
-            majCouleurs()
-
-            # Affichage du plateau et des joueurs
-            drawAll(fenetre)
+                        # On lance le jeu
+                        jeuLance = True
 
 
 if __name__ == '__main__':

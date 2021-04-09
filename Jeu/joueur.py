@@ -57,6 +57,9 @@ class Joueur(object):
     def getRayon(self):
         return self.nom
 
+    def getPos(self):
+        return (self.x, self.y)
+
     def setPowerUp(self, pu):
         if(pu != neutral & pu <= nbPowerup):
             self.rayonCouleur += listeValeurs[pu][0]
@@ -70,6 +73,9 @@ class Joueur(object):
 
     def getNom(self):
         return self.nom
+
+    def getCouleur(self):
+        return self.COLOR
 
 def comparJoueur(j):
     return j.y

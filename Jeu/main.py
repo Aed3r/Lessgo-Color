@@ -79,9 +79,11 @@ class BoucleAttente(threading.Thread):
         ecranAttente.initValeurs()
         t = threading.currentThread()
         altPressed = False
+        bouclePrinc = None
         
         while getattr(t, "do_run", True):
-            ecranAttente.toutDessiner(fenetre)
+            if bouclePrinc == None:
+                ecranAttente.toutDessiner(fenetre)
 
             # Ferme le jeu si le bouton 'fermé' ou alt+F4 sont appuyé
             for event in pygame.event.get():
@@ -89,13 +91,24 @@ class BoucleAttente(threading.Thread):
                     # Arrête le serveur et l'affichage
                     os.kill(os.getpid(), signal.SIGINT)
                 elif event.type == pygame.KEYDOWN:
+                    # Alt-F4
                     if event.mod == pygame.KMOD_ALT:
                         altPressed = True
                     if event.key == pygame.K_F4:
                         os.kill(os.getpid(), signal.SIGINT)
+                    elif event.key == pygame.K_ESCAPE:
+                        ecranAttente.setMenu()
                 elif event.type == pygame.KEYUP:
                     if event.mod == pygame.KMOD_ALT:
                         altPressed = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Si le bouton 'lancer jeu' a été appuyé on lance la boucle principale
+                    if (ecranAttente.verifClic(event.get_pos())):
+                        bouclePrinc = BouclePrincipale()
+                        bouclePrinc.start()
+        # On arrête la boucle principale lorsque cette boucle s'arrête
+        if bouclePrinc != None:
+            bouclePrinc.do_run = False
 
 
 # Boucle principale s'occupant de l'affichage et de la gestion des joueurs

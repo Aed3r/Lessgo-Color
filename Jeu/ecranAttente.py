@@ -3,6 +3,7 @@ import threading
 import time
 import joueur as j
 from constantes import *
+from UI.bouton import *
 
 # Temps de calcul alloué pour une image
 msPerFrame = int(1000 / fps)
@@ -77,27 +78,39 @@ def afficherTitre (fenetre):
     tailleTexte = textSurface.get_size()
     fenetre.blit(textSurface, (resolution[0]/2-tailleTexte[0]/2, margins['top']/2-tailleTexte[1]/2))
 
+boutonLancerJeu = Bouton("Lancer le jeu", policeTitres, (255, 255, 255))
+rectBouton = None
+
 def afficherMenu(fenetre):
+    global boutonLancerJeu, rectBouton
+
+    # Fond noir
     alphaSurface = pygame.Surface(resolution, pygame.SRCALPHA)
     alphaSurface.fill((0, 0, 0, 128))
     fenetre.blit(alphaSurface, (0, 0))
 
-escPressed = False
+    # Bouton
+    rectBouton = boutonLancerJeu.draw(fenetre, (resolution[0]/2, resolution[1]/2))
+
+def verifClic(position):
+    global rectBouton
+
+    if rectBouton != None:
+        return rectBouton.collidepoint(position)
+    else:
+        return False
+
+
 showMenu = False
 
-def clickHandler():
-    global escPressed, showMenu
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE and not escPressed:
-            escPressed = True
-            showMenu = not showMenu
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE and escPressed:
-            escPressed = False
+def setMenu():
+    global showMenu
+    showMenu = not showMenu
 
 
 
 def toutDessiner(fenetre):
-    global showMenu
+    global showMenu, rectBouton
 
     # Mesure du temps d'affichage de la frame
     start = time.time() * 1000
@@ -107,10 +120,10 @@ def toutDessiner(fenetre):
     afficherNomsJoueurs(fenetre)
     afficherTitre(fenetre)
 
-    # Gestion des clics
-    clickHandler()
     if (showMenu):
         afficherMenu(fenetre)
+    else:
+        rectBouton = None
 
     # Raffraichissment de la fenêtre
     pg.display.flip()

@@ -9,6 +9,7 @@ from plateau import *
 import ecranAttente
 import UI.menuPause as mp
 import joueur
+import asyncio
 
 routes = web.RouteTableDef()
 app = None
@@ -31,6 +32,7 @@ async def init_app():
     app['websockets'] = []
     app.on_shutdown.append(socketHandler.shutdown)
     app.add_routes(routes)
+    return app
 
 # Sert index.html puis prépare le gestionnaire de socket
 @routes.get('/')
@@ -43,6 +45,16 @@ async def index(request):
             return web.Response(text=f.read(), content_type='text/html')
     
     return await socketHandler.request_handler(ws_current, request)
+
+# Sert tous les fichiers html demandé
+@routes.get('/{file}.html')
+async def htmlGetHandler(request):
+    url = "web/{}.html".format(request.match_info['file'])
+    try:
+        with open(url) as f:
+            return web.Response(text=f.read(), content_type='text/html')
+    except:
+        return web.Response(text="404: '" + url + "' n'existe pas")
 
 # Sert tous les fichiers javascript demandé
 @routes.get('/{file}.js')
@@ -143,14 +155,13 @@ def lancerJeu():
     mp.toggleAttente(None)
 
     # On avertit les clients
-    socketHandler.avertirClients(app)
+    coroutine = socketHandler.avertirClients(app)
+    asyncio.run(coroutine)
 
 if __name__ == '__main__':
-    global app
-
     print("Initialisations...")
     boucle = BouclePrincipale()
-    init_app()
+    app = init_app()
     boucle.start() 
     print("Résolution : ", resolution)
     print("Affichage démarré. Lancement du site...")

@@ -2,13 +2,14 @@ from aiohttp import web
 import aiohttp
 import json
 import joueur as j
+from constantes import *
 
 # Liste des addresses IP des joueurs connectés
 clients = []
 
 # Attend et répond aux requêtes client
 async def request_handler(ws_current, request):
-    player = null
+    player = None
 
     await ws_current.prepare(request)
     request.app['websockets'].append(ws_current)
@@ -16,14 +17,13 @@ async def request_handler(ws_current, request):
     # On vérifie si le joueur ne s'est pas connecté auparavant
     if request.remote in clients:
         # On envoie la position initiale du joueur, ainsi que la taille de l'écran
-        await ws_current.send_json(({'action': 'init', 'x': j.x, 'y': j.y,
-                            'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1]}))
         player = j.getJoueur(request.remote)
+        await ws_current.send_json(({'action': 'init', 'x': player.getPos()[0], 'y': player.getPos()[1],
+                            'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1]}))
 
     while True:
+        msg = await ws_current.receive()
         if msg.type == aiohttp.WSMsgType.text:
-            msg = await ws_current.receive()
-
             data = json.loads(msg.data)
 
             if data["action"] == None:
@@ -48,7 +48,7 @@ async def request_handler(ws_current, request):
 
     return ws_current
 
-def avertirClients(app):
+async def avertirClients(app):
     for ws in app['websockets']:
         await ws.send_json({'action': 'go'})
 

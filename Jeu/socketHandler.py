@@ -33,7 +33,8 @@ async def request_handler(ws_current, request):
         if msg.type == aiohttp.WSMsgType.text:
             data = json.loads(msg.data)
 
-            j.setDirection(data["dx"]/10, data["dy"]/10)
+            if isinstance(data["dx"], int) and isinstance(data["dy"], int):
+                j.setDirection(data["dx"]/10, data["dy"]/10)
 
             pos = j.getPosPourcentage()
             await ws_current.send_json(({'action': 'position', 'x': pos[0], 'y': pos[1]}))

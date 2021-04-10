@@ -1,4 +1,5 @@
 import pygame
+import os
 
 # ----------------- Affichage ----------------- #
 pleinEcran = False # Si False utilise la résolution définit ci-dessous
@@ -35,7 +36,10 @@ listeValeurs = [[0, 0], [0, 1], [1, 0]]
 
 # ----------------- Ecran d'attente ----------------- #
 margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %
+tailleCompteur = 0.05 # En % de la hauteur de la fenêtre
+titleColor = (49, 51, 53) # Couleurs du texte sur fond blanc
+margeCompteur = 5
 
 # ----------------- Polices ----------------- #
-policeNoms = pygame.font.Font("Data/Fonts/Quicksand-VariableFont_wght.ttf", 30)
-policeTitres = pygame.font.Font("Data/Fonts/Quicksand-VariableFont_wght.ttf", 60)
+policeNoms = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 30)
+policeTitres = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 60)

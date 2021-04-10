@@ -4,7 +4,7 @@ from constantes import *
 
 joueurs = []
 
-# Placements initaux
+# Placements initiaux
 spawnXOffset = resolutionPlateau[0] * propZoneInit / 2
 spawnYOffset = resolutionPlateau[1] * propZoneInit / 2
 spawn = [(spawnXOffset, spawnYOffset),
@@ -77,19 +77,36 @@ class Joueur(object):
     def getCouleur(self):
         return self.COLOR
 
+    def getID (self):
+        return self.ID
+
+# Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):
     return j.y
 
-def ajouterJoueur(joueur):
+# Ajoute le joueur j passé en paramètres et renvoie son numéro
+def ajouterJoueur(j):
     global joueurs
-    joueurs.append(joueur)
+    joueurs.append(j)
 
+# Avance tous les joueurs suivant leurs déplacements dX et dY
 def moveJoueurs():
     global joueurs
     #joueurs.sort(key=comparJoueur) # Trie les joueurs suivant leurs ordonnées 
     for joueur in joueurs:
         joueur.move()
 
+# Renvoi la liste de tous les joueurs
 def getJoueurs():
     global joueurs
     return joueurs
+
+# Renvoie le joueur indentifié par id
+def getJoueur(id):
+    global joueurs
+    return next(j for j in joueurs if j.getID() == id)
+
+# Renvoi le nombre de joueurs s'ayant connectés
+def getNombreJoueurs():
+    global joueurs
+    return len(joueurs)

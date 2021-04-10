@@ -4,6 +4,7 @@ import time
 import joueur as j
 from constantes import *
 from UI.bouton import *
+import os
 
 # Temps de calcul alloué pour une image
 msPerFrame = int(1000 / fps)
@@ -12,8 +13,9 @@ msPerFrame = int(1000 / fps)
 blockW = None
 blockH = None
 
+# Doit être appelé avant les autres fonction pour initialiser les variables nécessitant la globale resolution
 def initValeurs():
-    global blockH, blockW
+    global blockH, blockW, ico
     
     # MAJ des marges en fonction de la taille d'écran
     margins['left'] = margins['left'] / 100 * resolution[0]
@@ -24,6 +26,11 @@ def initValeurs():
     # Taille des blocs de couleurs
     blockW = (resolution[0] - (margins['left'] * 5)) / 4
     blockH = resolution[1] - margins['top'] - margins['bottom']
+
+    # Icône
+    # https://www.flaticon.com/free-icon/user_1077114?term=user&page=1&position=1&page=1&position=1&related_id=1077114&origin=search
+    ico = pygame.image.load(os.path.join('Data', 'Images', 'user.png')).convert_alpha() # Récupération
+    ico = pygame.transform.smoothscale(ico, (int(resolution[1]*tailleCompteur), int(resolution[1]*tailleCompteur))) # Redimensionnement
 
 def clear (fenetre):
     pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, resolution[0], resolution[1]))
@@ -74,18 +81,27 @@ def afficherNomsJoueurs(fenetre):
         offsetListes[e] += tailleTexte[1]
 
 def afficherTitre (fenetre):
-    textSurface = policeTitres.render("En attente de joueurs...", True, (49, 51, 53));
+    global titleColor
+    textSurface = policeTitres.render("En attente de joueurs...", True, titleColor);
     tailleTexte = textSurface.get_size()
     fenetre.blit(textSurface, (resolution[0]/2-tailleTexte[0]/2, margins['top']/2-tailleTexte[1]/2))
 
+ico = None
 
-showMenu = False
+def afficherCompteJoueurs (fenetre):
+    global titleColor
 
-def setMenu():
-    global showMenu
-    showMenu = not showMenu
+    # Icône
+    tailleIco = ico.get_size()
+    fenetre.blit(ico, (resolution[0]-tailleIco[0]-margeCompteur, margeCompteur))
 
-
+    # Compteur
+    textSurface = policeTitres.render(str(j.getNombreJoueurs()), True, titleColor);
+    tailleTexte = textSurface.get_size()
+    newHeight = resolution[1]*tailleCompteur
+    textSurface = pygame.transform.smoothscale(textSurface, 
+                    (int((tailleTexte[0]/tailleTexte[1])*newHeight), int(newHeight)))
+    fenetre.blit(textSurface, (resolution[0]-tailleIco[0]-tailleTexte[0]-margeCompteur, margeCompteur))
 
 def toutDessiner(fenetre):
     global showMenu, rectBouton
@@ -97,11 +113,7 @@ def toutDessiner(fenetre):
     afficherBlocsCouleurs(fenetre)
     afficherNomsJoueurs(fenetre)
     afficherTitre(fenetre)
-
-    if (showMenu):
-        afficherMenu(fenetre)
-    else:
-        rectBouton = None
+    afficherCompteJoueurs(fenetre)
 
     # Fin de la mesure du temps et attente pour afficher la prochaine frame
     end = time.time() * 1000

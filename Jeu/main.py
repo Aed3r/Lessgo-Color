@@ -11,6 +11,7 @@ import UI.menuPause as mp
 import joueur
 
 routes = web.RouteTableDef()
+app = None
 
 # Initialise la fenêtre
 def initFenetre ():
@@ -25,14 +26,11 @@ fenetre = initFenetre()
 
 # Prépare les gestionnaires web
 async def init_app():
+    global app
     app = web.Application()
-
     app['websockets'] = []
-    
     app.on_shutdown.append(socketHandler.shutdown)
     app.add_routes(routes)
-
-    return app
 
 # Sert index.html puis prépare le gestionnaire de socket
 @routes.get('/')
@@ -41,7 +39,7 @@ async def index(request):
     ws_ready = ws_current.can_prepare(request)
     
     if not ws_ready.ok:
-        with open('web/index.html') as f:
+        with open('web/introduction.html') as f:
             return web.Response(text=f.read(), content_type='text/html')
     
     return await socketHandler.request_handler(ws_current, request)
@@ -49,7 +47,7 @@ async def index(request):
 # Sert tous les fichiers javascript demandé
 @routes.get('/{file}.js')
 async def jsGetHandler(request):
-    url = "web/{}.js".format(request.match_info['file'])
+    url = "web/js/{}.js".format(request.match_info['file'])
     try:
         with open(url) as f:
             return web.Response(text=f.read(), content_type='text/javascript')
@@ -59,7 +57,7 @@ async def jsGetHandler(request):
 # Sert tous les fichiers css demandé
 @routes.get('/{file}.css')
 async def cssGetHandler(request):
-    url = "web/{}.css".format(request.match_info['file'])
+    url = "web/css/{}.css".format(request.match_info['file'])
     try:
         with open(url) as f:
             return web.Response(text=f.read(), content_type='text/css')
@@ -82,8 +80,8 @@ def majCouleurs():
             # nb_jaune = terrain.getcj() 
             #pourc_jaune = terrain.getpj() 
 
-# Boucle lancé initialement en attendant les joueurs
-class BoucleAttente(threading.Thread): 
+# Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
+class BouclePrincipale(threading.Thread): 
     def __init__(self):  
         threading.Thread.__init__(self)
 
@@ -114,7 +112,7 @@ class BoucleAttente(threading.Thread):
             # Raffraichissment de la fenêtre
             pygame.display.flip()
 
-            # Ferme le jeu si le bouton 'fermé' ou alt+F4 sont appuyé
+            # Gestionnaire des entrées
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     # Arrête le serveur et l'affichage
@@ -135,17 +133,24 @@ class BoucleAttente(threading.Thread):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Si le bouton 'lancer jeu' a été appuyé on lance la boucle principale
                     if not jeuLance and mp.verifClic(event.pos) != None:
-                        # On cache le menu de l'écran d'attente
-                        mp.toggleAttente(None)
-
-                        # On lance le jeu
+                        lancerJeu()
                         jeuLance = True
 
+def lancerJeu():
+    global app
+
+    # On cache le menu de l'écran d'attente
+    mp.toggleAttente(None)
+
+    # On avertit les clients
+    socketHandler.avertirClients(app)
 
 if __name__ == '__main__':
+    global app
+
     print("Initialisations...")
-    boucle = BoucleAttente()
-    app = init_app()
+    boucle = BouclePrincipale()
+    init_app()
     boucle.start() 
     print("Résolution : ", resolution)
     print("Affichage démarré. Lancement du site...")

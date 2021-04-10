@@ -3,17 +3,23 @@
     */
 var canvas, contex;
 /*dimention de la fenetre*/
-var largeur = 0, hauteur = 0;
+var largeur = 0,
+    hauteur = 0;
 /*variable de configuration*/
-var dessiner = false;                                       //test si on est entraint de dessiner
-var jj = false;                                             //test d'entrer dans la boucle
-var xJoy = 100, yJoy = 300;                                     //position x,y joyistick
-var xClient = 0, yClient = 0;                                //position souris ou tactile utilisateur
-var rayonM = 55, rayonE = 60;                                    //rayon millieu et exterieur joyistick
-var dist = 0;                                               //distnance d'un point avec un autre
-var pi = Math.PI;                                           //PI
-var xBouton = 210, yBouton = 200;                                //poisition x,y bouton
-var longeurBouton = 80, largeurBouton = 160;                     //largeur et longeur bouton
+var dessiner = false; //test si on est entraint de dessiner
+var jj = false; //test d'entrer dans la boucle
+var xJoy = 100,
+    yJoy = 300; //position x,y joyistick
+var xClient = 0,
+    yClient = 0; //position souris ou tactile utilisateur
+var rayonM = 55,
+    rayonE = 60; //rayon millieu et exterieur joyistick
+var dist = 0; //distnance d'un point avec un autre
+var pi = Math.PI; //PI
+var xBouton = 210,
+    yBouton = 200; //poisition x,y bouton
+var longeurBouton = 80,
+    largeurBouton = 160; //largeur et longeur bouton
 var angle, xJoyMouvement, yJoyMouvement, vitesse;
 
 /*lorsque le chargement est fini on fait apparaitre en fondu + les élément de la manette de base*/
@@ -21,25 +27,27 @@ function chargementfini() {
     canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
     //les ecouteurs des entrer ecrant tactile
-    document.addEventListener('touchstart', debut);             //executer au toucher
-    document.addEventListener('touchend', fin);                 //ececuter quand relacher
-    document.addEventListener('touchcancel', fin);              //execution a l'interuption
-    document.addEventListener('touchmove', manetteUtiliser);    //executer lors d'un mouvement sur l'ecrant
+    document.addEventListener('touchstart', debut); //executer au toucher
+    document.addEventListener('touchend', fin); //ececuter quand relacher
+    document.addEventListener('touchcancel', fin); //execution a l'interuption
+    document.addEventListener('touchmove', manetteUtiliser); //executer lors d'un mouvement sur l'ecrant
     /*executer lors du redimentionage de la fenetre*/
     window.addEventListener('resize', redimentionne);
     /*les ecouteur des entrer souris*/
-    document.addEventListener('mousedown', debut);              //executer au click souris
-    document.addEventListener('mouseup', fin);                  //executer lorsque la souris est relacher
-    document.addEventListener('mousemove', manetteUtiliser);    //executer lorsqu'un mouvement de souris est effectuer
-    document.body.className += " charger";                      //effet fondu
+    document.addEventListener('mousedown', debut); //executer au click souris
+    document.addEventListener('mouseup', fin); //executer lorsque la souris est relacher
+    document.addEventListener('mousemove', manetteUtiliser); //executer lorsqu'un mouvement de souris est effectuer
+    document.body.className += " charger"; //effet fondu
     redimentionne();
     manetteBase();
 }
+
 function manetteBase() {
     fond();
     joystick();
     bouton();
 }
+
 function redimentionne() {
     /*full canvas*/
     largeur = (window.innerWidth) - 10;
@@ -47,12 +55,12 @@ function redimentionne() {
     canvas.width = largeur;
     canvas.height = hauteur;
     /*dimention*/
-    if (hauteur < largeur) {                                        //verification si téléphone/tablette/ecrant est en mode "horizontal" et choisit les dimention en sorte d'obtenir le bonne affichage 
+    if (hauteur < largeur) { //verification si téléphone/tablette/ecrant est en mode "horizontal" et choisit les dimention en sorte d'obtenir le bonne affichage 
         rayonM = (hauteur / 100) * 10;
         rayonE = rayonM - 5;
         longeurBouton = rayonM * 1.5;
         largeurBouton = rayonM * 3;
-    } else {                                                        //verification si téléphone/tablette/ecrant est en mode "verticale" et choisit les dimention en sorte d'obtenir le bonne affichage
+    } else { //verification si téléphone/tablette/ecrant est en mode "verticale" et choisit les dimention en sorte d'obtenir le bonne affichage
         rayonM = (largeur / 100) * 10;
         rayonE = rayonM - 5;
         longeurBouton = rayonM * 1.5;
@@ -105,6 +113,7 @@ function joystick() {
     context.stroke();
     context.closePath();
 }
+
 function joystickA(xJoyMouvement, yJoyMouvement) {
     context.beginPath();
     context.fillStyle = "#333333";
@@ -123,6 +132,7 @@ function bouton() {
     context.fillRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
     context.strokeRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
 }
+
 function boutonA() {
     context.fillStyle = "#333333";
     context.fillRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
@@ -142,7 +152,7 @@ function manetteUtiliser(event) {
             bouton();
         }
         if (dist < rayonE) {
-            vitesse = parseInt(((dist / rayonE) * 100), 10);                                                      //calcul de la vitesse
+            vitesse = parseInt(((dist / rayonE) * 100), 10); //calcul de la vitesse
             joystickA(xClient, yClient);
             jj = true;
         } else {
@@ -158,6 +168,6 @@ function manetteUtiliser(event) {
                 joystick();
             }
         }
-        envoyerDirection(2 * pi - angle, vitesse);
+        envoyerDirection(angle, vitesse);
     }
 }

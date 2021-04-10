@@ -6,6 +6,10 @@ var res = null
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
+    // Vérifications
+    if (angle == null || vitesse == null)
+        return;
+
     // On calcule le déplacement à effectuer 
     var dx = parseInt(Math.cos(angle) * vitesse);
     var dy = parseInt(Math.sin(angle) * vitesse);
@@ -19,11 +23,11 @@ function envoyerDirection(angle, vitesse) {
 function envoyerPaquet(packet) {
     // Vérification du cooldown
     let now = Date.now();
-    if ((now < lastMsg + msCooldown && vitesse != 0) || angle == null || vitesse == null)
+    if ((now < lastMsg + msCooldown && vitesse != 0))
         return;
 
     // On prépare le paquet à envoyer
-    var msg = JSON.stringify(paquet);
+    var msg = JSON.stringify(packet);
     console.log("Envoi du paquet " + msg);
 
     // On envoie le paquet
@@ -55,7 +59,7 @@ function connect() {
 
         switch (data.action) {
             case 'init':
-                res = (resX, resY);
+                res = (data.resX, data.resY);
             case 'position':
                 pos = (data.x, data.y);
                 break;

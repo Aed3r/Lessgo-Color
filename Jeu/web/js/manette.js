@@ -216,5 +216,5 @@ function utiliser(event) {
     if (!bout) {
         bouton();
     }
-    envoyerDirection(2 * pi - angle, vitesse);
+    envoyerDirection(angle, vitesse);
 }

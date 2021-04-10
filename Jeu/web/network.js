@@ -2,6 +2,8 @@ var conn = null;
 var name = "UNKNOWN";
 var msCooldown = 100;
 var lastMsg;
+var pos = null
+var res = null
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -34,28 +36,40 @@ function connect() {
     console.log("Tentative de connection...");
 
     // Lorsque la connection est établie
-    conn.onopen = function () {
+    conn.onopen = function() {
         console.log("Connection établie.");
     };
 
     // Lorsqu'un message est reçue
-    conn.onmessage = function (e) {
+    conn.onmessage = function(e) {
         console.log("Paquet Reçu: " + e.data);
 
         var data = JSON.parse(e.data);
 
         switch (data.action) {
+            case 'init':
+                res = (resX, resY);
             case 'position':
-                console.log("(" + data.x + ", " + data.y + ")");
+                pos = (data.x, data.y);
                 break;
         }
     };
 
     // Lorsque la connection est fermé par le serveur
-    conn.onclose = function () {
+    conn.onclose = function() {
         console.log("Connection fermé.")
         conn = null;
     };
+}
+
+// Renvoie la position actuel du joueur (en % de l'écran)
+function getPos() {
+    return pos;
+}
+
+// Renvoie la taille de l'écran (en pixels)
+function getRes() {
+    return res;
 }
 
 // Déconnecte la connection websocket existante

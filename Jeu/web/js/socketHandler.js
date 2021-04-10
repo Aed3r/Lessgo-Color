@@ -1,6 +1,8 @@
 var conn = null;
 var msCooldown = 100;
 var lastMsg;
+var pos = null
+var res = null
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -52,8 +54,10 @@ function connect() {
         var data = JSON.parse(e.data);
 
         switch (data.action) {
+            case 'init':
+                res = (resX, resY);
             case 'position':
-                console.log("(" + data.x + ", " + data.y + ")");
+                pos = (data.x, data.y);
                 break;
             case 'go':
                 window.location.pathname = '/manette.html';
@@ -65,6 +69,16 @@ function connect() {
         console.log("Connection fermé.")
         conn = null;
     };
+}
+
+// Renvoie la position actuel du joueur (en % de l'écran)
+function getPos() {
+    return pos;
+}
+
+// Renvoie la taille de l'écran (en pixels)
+function getRes() {
+    return res;
 }
 
 // Déconnecte la connection websocket existante

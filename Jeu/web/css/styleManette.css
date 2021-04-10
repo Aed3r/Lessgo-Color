@@ -17,3 +17,7 @@ body {
 body.charger {
     opacity: 1;
 }
+
+#canvas1 {
+    background-color: #ffffff;
+}

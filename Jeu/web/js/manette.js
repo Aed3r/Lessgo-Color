@@ -177,6 +177,19 @@ function joystickA(xJoyMouvement, yJoyMouvement) {
     jooy = true;
 }
 
+function miniMap(){
+    var servWidth,servHeight, servPosX, servPosY;
+    servWidth,servHeight = getRes();
+    servPosX, servPosY = getPos();
+
+    context1.clearRect(0, 0, widthCanvas1, heightCanvas1);
+    context1.beginPath();
+    context1.fillStyle = 'rgba(100, 100, 100, 1)';
+    context1.arc(servPosX, servPosY, 2, 0, 2 * pi);
+    context1.fill();
+    context1.closePath();
+}
+
 function utiliser(event) {
     for (i = 0; i < event.touches.length; i++) {
         xClient = event.touches[i].clientX;

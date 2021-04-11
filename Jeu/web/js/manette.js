@@ -17,9 +17,14 @@ var rayonInterieur = 0,
 var jj = false;
 var jooy = false;
 var bout = false;
+var dessine = false;
 var dist = 0;
 var pi = Math.PI;
 var i = 0;
+var servPosX = 0,
+    servPosY = 0;
+var posJX = 0,
+    posJY = 0;
 
 function chargementfini() {
     canvas1 = document.getElementById('canvas1');
@@ -34,12 +39,13 @@ function chargementfini() {
     canvas2.addEventListener('touchcancel', finBouton);
     canvas3.addEventListener('touchend', finJoy);
     canvas3.addEventListener('touchcancel', finJoy);
-    //document.addEventListener('mousedown', debut); //executer au click souris
-    //document.addEventListener('mouseup', fin); //executer lorsque la souris est relacher
-    //document.addEventListener('mousemove', debut); //executer lorsqu'un mouvement de souris est effectuer
+    document.addEventListener('mousedown', debut);
+    document.addEventListener('mouseup', fin);
+    document.addEventListener('mousemove', utiliser);
     document.body.className += " charger";
     window.addEventListener('resize', redimentionne);
     redimentionne();
+    miniMap();
 }
 
 function redimentionne() {
@@ -87,15 +93,18 @@ function redimentionne() {
 }
 
 function debut(event) {
+    dessine = true;
     utiliser(event);
 }
 
 function finBouton(event) {
+    dessine = false;
     bout = false;
     utiliser(event);
 }
 
 function finJoy(event) {
+    dessine = false;
     jj = false;
     jooy = false;
     vitesse = 0;
@@ -104,6 +113,7 @@ function finJoy(event) {
 }
 
 function fin(event) {
+    dessine = false;
     jj = false;
     jooy = false;
     bout = false;
@@ -177,23 +187,35 @@ function joystickA(xJoyMouvement, yJoyMouvement) {
     jooy = true;
 }
 
-function miniMap(){
-    var servWidth,servHeight, servPosX, servPosY;
-    servWidth,servHeight = getRes();
-    servPosX, servPosY = getPos();
+function miniMap() {
+    servPosX = getPosX();
+    servPosY = getPosY();
+
+    posJX = servPosX * widthCanvas1;
+    if (posJX > widthCanvas1) {
+        posJX - widthCanvas1;
+    }
+    posJY = servPosY * heightCanvas1;
+    if (posJY > heightCanvas1) {
+        posJY - heightCanvas1;
+    }
 
     context1.clearRect(0, 0, widthCanvas1, heightCanvas1);
     context1.beginPath();
     context1.fillStyle = 'rgba(100, 100, 100, 1)';
-    context1.arc(servPosX, servPosY, 2, 0, 2 * pi);
+    context1.arc(posJX, posJY, 10, 0, 2 * pi);
     context1.fill();
     context1.closePath();
+    setInterval( 'miniMap()' ,10);
 }
 
 function utiliser(event) {
-    for (i = 0; i < event.touches.length; i++) {
-        xClient = event.touches[i].clientX;
-        yClient = event.touches[i].clientY;
+    if (dessine) {
+        // for (i = 0; i < event.touches.length; i++) {
+        //xClient = event.touches[i].clientX;
+        //yClient = event.touches[i].clientY;
+        xClient = event.clientX;
+        yClient = event.clientY;
         xClientJoy = (xClient - largeur + widthCanvas2);
         yClientJoy = (yClient - hauteur + heightCanvas1);
         if (xClient > 0 && xClient < widthCanvas2) {
@@ -204,9 +226,9 @@ function utiliser(event) {
                 }
             }
         }
+        angle = Math.atan2((yClientJoy - yJoy), (xClientJoy - xJoy));
+        dist = Math.sqrt(Math.pow(xClientJoy - xJoy, 2) + Math.pow(yClientJoy - yJoy, 2));
         if (xClient > widthCanvas2 && xClient < largeur) {
-            angle = Math.atan2((yClientJoy - yJoy), (xClientJoy - xJoy));
-            dist = Math.sqrt(Math.pow(xClientJoy - xJoy, 2) + Math.pow(yClientJoy - yJoy, 2));
             if (dist < rayonExterieur) {
                 vitesse = parseInt(((dist / rayonExterieur) * 100), 10);
                 joystickA(xClientJoy, yClientJoy);
@@ -222,6 +244,8 @@ function utiliser(event) {
                 }
             }
         }
+        // }
+        envoyerDirection(angle, vitesse);
     }
     if (!jooy) {
         joystick();
@@ -229,5 +253,4 @@ function utiliser(event) {
     if (!bout) {
         bouton();
     }
-    envoyerDirection(angle, vitesse);
 }

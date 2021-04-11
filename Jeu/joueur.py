@@ -48,10 +48,10 @@ class Joueur(object):
         self.y = int(self.y+self.dY)*self.vitesse
 
         # Vérification de dépassement des bordures
-        if (self.x >= resolutionPlateau[0] ): self.x = 1
-        if (self.x <= 0): self.x = resolutionPlateau[0] - 1
-        if (self.y >= resolutionPlateau[1] ): self.y = 1
-        if (self.y <= 0): self.y = resolutionPlateau[1] - 1
+        if (self.x >= resolution[0] ): self.x = 1
+        if (self.x <= 0): self.x = resolution[0] - 1
+        if (self.y >= resolution[1] ): self.y = 1
+        if (self.y <= 0): self.y = resolution[1] - 1
 
     def isDead(self):
         return self.dead
@@ -72,7 +72,7 @@ class Joueur(object):
             self.rayonCouleur += listeValeurs[pu][1]
             self.PowerUp.append(pu)
 
-            await asyncio.wait(listeValeurs[pu][2])
+            await asyncio.sleep(listeValeurs[pu][2])
             
             self.rayonCouleur -= listeValeurs[pu][0]
             self.rayonCouleur -= listeValeurs[pu][1]
@@ -86,14 +86,14 @@ def placementInitial (j):
         j.x = 100
         j.y = 100
     elif j.EQUIPE == 2:
-        j.x = resolutionPlateau[0] - 100
+        j.x = resolution[0] - 100
         j.y = 100
     elif j.EQUIPE == 3:
-        j.x = resolutionPlateau[0] - 100
-        j.y = resolutionPlateau[1] - 100
+        j.x = resolution[0] - 100
+        j.y = resolution[1] - 100
     elif j.EQUIPE == 4:
         j.x = 100
-        j.y = resolutionPlateau[1] - 100
+        j.y = resolution[1] - 100
 
 def comparJoueur(j):
     return j.y

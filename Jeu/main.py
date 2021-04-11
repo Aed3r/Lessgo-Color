@@ -2,6 +2,7 @@ from aiohttp import web
 import socketHandler
 import threading 
 import socket
+import asyncio
 from display import *
 from constantes import *
 from plateau import * 
@@ -42,9 +43,12 @@ async def jsGetHandler(request):
         return web.Response(text="404: '" + url + "' n'existe pas")
 
 def majCouleurs():
-    # Couleurs des cases du terrain
+    # Couleurs des cases du terrain et Passage sur powerup
     for joueur in joueurs :
-            terrain.setColor((int) (joueur.x/resolutionPlateau[0]*terrain.larg), (int) (joueur.y/resolutionPlateau[1]*terrain.long), joueur.EQUIPE)      
+            terrain.setColor((int) (joueur.x/resolutionPlateau[0]*terrain.larg), (int) (joueur.y/resolutionPlateau[1]*terrain.long), joueur.EQUIPE)
+            type = terrain.getType((int) (joueur.x/resolutionPlateau[0]*terrain.larg), (int) (joueur.y/resolutionPlateau[1]*terrain.long))
+            if(type > 0 & type < nbPowerup):
+                terrain.setType((int) (joueur.x/resolutionPlateau[0]*terrain.larg), (int) (joueur.y/resolutionPlateau[1]*terrain.long), neutral)
     
     # Parcours le terrain et compte le nombre de couleur
     terrain.parcoursCouleur()

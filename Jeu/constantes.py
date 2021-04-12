@@ -1,31 +1,31 @@
-# ----------------- Display.py ----------------- #
-resolution = (1920, 1080)
-pleinEcran = 0 # Si 0 utilise la résolution définit ci-dessus
-fps = 60
+import pygame
+import os
 
-# ------------------ Main.py ------------------- #
+# ----------------- Affichage ----------------- #
+pleinEcran = False # Si False utilise la résolution définit ci-dessous
+pygame.init()
+resolution = (pygame.display.Info().current_w, pygame.display.Info().current_h) if pleinEcran else (1500, 1000)
+fps = 60
+couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]
+couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
+
+# ------------------ Main ------------------- #
 port = 8081
 
 # ------------------ Plateau ------------------- #
 tailleCase = 10
-propZoneInit = 8 # Contrôle la taille des zones initiales
+propZoneInit = 0.2 # Contrôle la taille des zones initiales en *100 %
 tailleBarre = 20
+resolutionPlateau = (resolution[0], resolution[1] - tailleBarre)
 
-# ------------------ Joueur.py ----------------- #
-#   placementInitial
+# ------------------ Joueur ----------------- #
 playerSize = 5
-placex1 = 12
-placey1 = 12
-placex2 = (int) ((resolution[0] - tailleBarre) * 0.9)
-placey2 = 12
-placex3 = (int) ((resolution[0] - tailleBarre) * 0.9)
-placey3 = (int) ((resolution[1] - tailleBarre) * 0.9)
-placex4 = 12
-placey4 = (int) ((resolution[1] - tailleBarre) * 0.9)
+
 #Valeurs par défaut
 defRayonCouleur = 1
 defVitesse = 1
-# ----------------- plateau.py ----------------- #
+
+# ----------------- Gameplay ----------------- #
 nbPowerup = 3
 neutral = 0
 paintMore = 1
@@ -33,3 +33,13 @@ gottaGoFast = 2
 mildPower = 3
 # Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon, Durée(sec)]
 listeValeurs = [[0, 0, 0], [0, 2, 10], [2, 0, 10], [1, 1, 10]]
+
+# ----------------- Ecran d'attente ----------------- #
+margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %
+tailleCompteur = 0.05 # En % de la hauteur de la fenêtre
+titleColor = (49, 51, 53) # Couleurs du texte sur fond blanc
+margeCompteur = 5
+
+# ----------------- Polices ----------------- #
+policeNoms = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 30)
+policeTitres = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 60)

@@ -1,0 +1,23 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    opacity: 0;
+    background-color: #000000;
+    position: fixed;
+    -webkit-transition: opacity 1s ease-in;
+    -moz-transition: opacity 1s ease-in;
+    -o-transition: opacity 1s ease-in;
+    -ms-transition: opacity 1s ease-in;
+    transition: opacity 1s ease-in;
+}
+
+body.charger {
+    opacity: 1;
+}
+
+#canvas1 {
+    background-color: #ffffff;
+}

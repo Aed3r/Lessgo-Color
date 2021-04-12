@@ -21,3 +21,9 @@ body.charger {
 #canvas1 {
     background-color: #ffffff;
 }
+
+#affichagePing {
+    position: absolute;
+    top: 0;
+    right: 0;
+}

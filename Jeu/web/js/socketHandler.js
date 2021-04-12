@@ -3,6 +3,7 @@ var msCooldown = 100;
 var lastMsg;
 var posX = null, posY = null;
 var resX = null, resY = null;
+var t1;
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -17,6 +18,9 @@ function envoyerDirection(angle, vitesse) {
     // On prépare le paquet à envoyer
     var paquet = { "action": "deplacement", dx, dy };
     envoyerPaquet(paquet);
+
+    // On démarre un timer
+    t1 = performance.now();
 }
 
 // Envoi le paquet donné au serveur si assez de temps s'est écoulé depuis le dernier
@@ -62,11 +66,16 @@ function connect() {
                 resX = data.resX; 
                 resY = data.resY;
             case 'position':
+                // On arrête le timer et on affiche le ping
+                if (t1) document.getElementById("affichagePing").innerHTML = (performance.now() - t1) + "ms";
                 posX = data.x;
                 posY = data.y;
                 break;
             case 'go':
                 window.location.pathname = '/manette.html';
+                break;
+            default:
+                return;
         }
     };
 

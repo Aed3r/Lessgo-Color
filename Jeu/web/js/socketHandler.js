@@ -32,7 +32,6 @@ function envoyerPaquet(packet) {
 
     // On prépare le paquet à envoyer
     var msg = JSON.stringify(packet);
-    console.log("Envoi du paquet " + msg);
 
     // On envoie le paquet
     if (conn != null)
@@ -57,8 +56,6 @@ function connect() {
 
     // Lorsqu'un message est reçue
     conn.onmessage = function(e) {
-        console.log("Paquet Reçu: " + e.data);
-
         var data = JSON.parse(e.data);
 
         switch (data.action) {

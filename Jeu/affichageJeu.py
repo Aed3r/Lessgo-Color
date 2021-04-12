@@ -1,4 +1,4 @@
-import pygame
+***REMOVED***
 import threading
 import time
 import joueur

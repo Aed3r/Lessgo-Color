@@ -1,4 +1,4 @@
-import pygame
+***REMOVED***
 
 class Bouton:  # Classe permettant de créer des boutons
     def __init__(self, text, font, color):

@@ -1,8 +1,8 @@
-import pygame
+***REMOVED***
 from pygame.constants import JOYBUTTONDOWN
 from joueur import *
 
-pygame.init()
+***REMOVED***
 pygame.display.set_caption("Tutut")
 resolution = (1920,1080)
 fenetre = pygame.display.set_mode(resolution,pygame.RESIZABLE) #FULLSCREEN

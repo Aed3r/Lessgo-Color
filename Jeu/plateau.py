@@ -1,4 +1,4 @@
-import pygame
+***REMOVED***
 from constantes import *
 
 # Compteurs de couleurs

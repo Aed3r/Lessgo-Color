@@ -1,4 +1,4 @@
-import pygame
+***REMOVED***
 import UI.bouton as b
 
 boutons = []

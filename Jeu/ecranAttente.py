@@ -1,10 +1,10 @@
-import pygame as pg
+***REMOVED*** as pg
 import threading
 import time
 import joueur as j
 from constantes import *
 from UI.bouton import *
-import os
+***REMOVED***
 
 # Temps de calcul alloué pour une image
 msPerFrame = int(1000 / fps)

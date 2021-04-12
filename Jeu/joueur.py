@@ -1,5 +1,6 @@
 #Classe servant a instancier des joueurs
 
+import time
 from constantes import *
 
 joueurs = []
@@ -23,6 +24,7 @@ class Joueur(object):
         self.rayonCouleur = defRayonCouleur
         self.vitesse = defVitesse
         self.nom = nom
+        self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
 
         #definition des constantes
         self.ID = id
@@ -34,6 +36,13 @@ class Joueur(object):
         self.y = spawn[equipe][1]
 
     def move(self):
+        #On vérifie si on doit enlever un poweup
+        for pu in self.PowerUp:
+            if(pu[1] - time.time() >= listeValeurs[pu[0]]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
+                self.rayonCouleur += listeValeurs[pu][0]
+                self.rayonCouleur += listeValeurs[pu][1]
+                self.PowerUp.remove(pu)
+
         # Application du vecteur déplacement
         self.x = int(self.x + self.dX) * self.vitesse
         self.y = int(self.y + self.dY) * self.vitesse
@@ -64,7 +73,7 @@ class Joueur(object):
         if(pu != neutral & pu <= nbPowerup):
             self.rayonCouleur += listeValeurs[pu][0]
             self.rayonCouleur += listeValeurs[pu][1]
-            self.PowerUp.append(pu)
+            self.PowerUp.append((pu, time.time()))
 
             
     def getPosPourcentage(self):

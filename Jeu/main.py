@@ -80,13 +80,18 @@ nb_jaune = 0
 pourc_jaune = 0
 
 def majCouleurs():
-    # Couleurs des cases du terrain
+    # Couleurs des cases du terrain + Power ups pour economiser une boucle
     for j in joueur.getJoueurs() :
             terrain.modifCompteur(j.x,j.y,j.EQUIPE)
-            terrain.setColor((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE) 
+            terrain.setColor((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE)
+            #Si le joueur passe sur un PowerUp il le récupère 
+            type = terrain.getType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long))
+            if(type > 0 & type < nbPowerup):
+                joueur.setPowerUp = type
+                terrain.setType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE, neutral)
             
     
-    # Parcours le terrain et compte le nombre de couleur
+    # Parcoure le terrain et compte le nombre de couleur
         #terrain.pourcentageCouleur() calcul les pourcentages
         # exemple récupération compteur/pourcentage
             # nb_jaune = terrain.getcj() 

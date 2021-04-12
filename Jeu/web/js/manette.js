@@ -17,7 +17,7 @@ var rayonInterieur = 0,
 var jj = false;
 var jooy = false;
 var bout = false;
-//var dessine = false;
+var dessine = false;
 var dist = 0;
 var pi = Math.PI;
 var i = 0;
@@ -210,7 +210,7 @@ function miniMap() {
 }
 
 function utiliser(event) {
-    //if (dessine) {
+    if (dessine) {
     for (i = 0; i < event.touches.length; i++) {
         xClient = event.touches[i].clientX;
         yClient = event.touches[i].clientY;
@@ -246,7 +246,7 @@ function utiliser(event) {
         }
     }
     envoyerDirection(angle, vitesse);
-    //}
+    }
     if (!jooy) {
         joystick();
     }

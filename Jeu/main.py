@@ -2,7 +2,7 @@ from aiohttp import web
 import socketHandler
 import threading 
 import socket
-***REMOVED***, signal
+import os, signal
 from constantes import *
 import affichageJeu
 from plateau import * 

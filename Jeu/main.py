@@ -82,7 +82,6 @@ pourc_jaune = 0
 def majCouleurs():
     # Couleurs des cases du terrain + Power ups pour economiser une boucle
     for j in joueur.getJoueurs() :
-            terrain.modifCompteur(j.x,j.y,j.EQUIPE)
             terrain.setColor((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE)
             #Si le joueur passe sur un PowerUp il le récupère 
             type = terrain.getType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long))

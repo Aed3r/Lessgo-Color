@@ -226,9 +226,9 @@ function utiliser(event) {
                 }
             }
         }
-        angle = Math.atan2((yClientJoy - yJoy), (xClientJoy - xJoy));
-        dist = Math.sqrt(Math.pow(xClientJoy - xJoy, 2) + Math.pow(yClientJoy - yJoy, 2));
         if (xClient > widthCanvas2 && xClient < largeur) {
+            angle = Math.atan2((yClientJoy - yJoy), (xClientJoy - xJoy));
+            dist = Math.sqrt(Math.pow(xClientJoy - xJoy, 2) + Math.pow(yClientJoy - yJoy, 2));
             if (dist < rayonExterieur) {
                 vitesse = parseInt(((dist / rayonExterieur) * 100), 10);
                 joystickA(xClientJoy, yClientJoy);

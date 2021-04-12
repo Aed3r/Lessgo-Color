@@ -17,7 +17,7 @@ var rayonInterieur = 0,
 var jj = false;
 var jooy = false;
 var bout = false;
-var dessine = false;
+//var dessine = false;
 var dist = 0;
 var pi = Math.PI;
 var i = 0;
@@ -39,9 +39,9 @@ function chargementfini() {
     canvas2.addEventListener('touchcancel', finBouton);
     canvas3.addEventListener('touchend', finJoy);
     canvas3.addEventListener('touchcancel', finJoy);
-    document.addEventListener('mousedown', debut);
-    document.addEventListener('mouseup', fin);
-    document.addEventListener('mousemove', utiliser);
+    //document.addEventListener('mousedown', debut);
+    //document.addEventListener('mouseup', fin);
+    //document.addEventListener('mousemove', utiliser);
     document.body.className += " charger";
     window.addEventListener('resize', redimentionne);
     redimentionne();
@@ -111,7 +111,7 @@ function finJoy(event) {
     envoyerDirection(0, 0);
     utiliser(event);
 }
-
+/*
 function fin(event) {
     dessine = false;
     jj = false;
@@ -120,7 +120,7 @@ function fin(event) {
     vitesse = 0;
     envoyerDirection(0, 0);
     utiliser(event);
-}
+}*/
 
 function bouton() {
     context2.clearRect(0, 0, widthCanvas2, heightCanvas2);
@@ -206,16 +206,16 @@ function miniMap() {
     context1.arc(posJX, posJY, 10, 0, 2 * pi);
     context1.fill();
     context1.closePath();
-    setInterval( 'miniMap()' ,10);
+    setInterval('miniMap()', 10);
 }
 
 function utiliser(event) {
-    if (dessine) {
-        // for (i = 0; i < event.touches.length; i++) {
-        //xClient = event.touches[i].clientX;
-        //yClient = event.touches[i].clientY;
-        xClient = event.clientX;
-        yClient = event.clientY;
+    //if (dessine) {
+    for (i = 0; i < event.touches.length; i++) {
+        xClient = event.touches[i].clientX;
+        yClient = event.touches[i].clientY;
+        //xClient = event.clientX;
+        //yClient = event.clientY;
         xClientJoy = (xClient - largeur + widthCanvas2);
         yClientJoy = (yClient - hauteur + heightCanvas1);
         if (xClient > 0 && xClient < widthCanvas2) {
@@ -244,9 +244,9 @@ function utiliser(event) {
                 }
             }
         }
-        // }
-        envoyerDirection(angle, vitesse);
     }
+    envoyerDirection(angle, vitesse);
+    //}
     if (!jooy) {
         joystick();
     }

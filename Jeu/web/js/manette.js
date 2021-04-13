@@ -211,41 +211,41 @@ function miniMap() {
 
 function utiliser(event) {
     if (dessine) {
-    for (i = 0; i < event.touches.length; i++) {
-        xClient = event.touches[i].clientX;
-        yClient = event.touches[i].clientY;
-        //xClient = event.clientX;
-        //yClient = event.clientY;
-        xClientJoy = (xClient - largeur + widthCanvas2);
-        yClientJoy = (yClient - hauteur + heightCanvas1);
-        if (xClient > 0 && xClient < widthCanvas2) {
-            if (((xClient > xBouton + 5) && (xClient < xBouton + largeurBouton)) && ((yClient > heightCanvas1 + yBouton + 5) && (yClient < heightCanvas1 + yBouton + longeurBouton))) {
-                boutonA();
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
+        for (i = 0; i < event.touches.length; i++) {
+            xClient = event.touches[i].clientX;
+            yClient = event.touches[i].clientY;
+            //xClient = event.clientX;
+            //yClient = event.clientY;
+            xClientJoy = (xClient - largeur + widthCanvas2);
+            yClientJoy = (yClient - hauteur + heightCanvas1);
+            if (xClient > 0 && xClient < widthCanvas2) {
+                if (((xClient > xBouton + 5) && (xClient < xBouton + largeurBouton)) && ((yClient > heightCanvas1 + yBouton + 5) && (yClient < heightCanvas1 + yBouton + longeurBouton))) {
+                    boutonA();
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen();
+                    }
                 }
             }
-        }
-        if (xClient > widthCanvas2 && xClient < largeur) {
-            angle = Math.atan2((yClientJoy - yJoy), (xClientJoy - xJoy));
-            dist = Math.sqrt(Math.pow(xClientJoy - xJoy, 2) + Math.pow(yClientJoy - yJoy, 2));
-            if (dist < rayonExterieur) {
-                vitesse = parseInt(((dist / rayonExterieur) * 100), 10);
-                joystickA(xClientJoy, yClientJoy);
-                jj = true;
-            } else {
-                if (jj) {
-                    xJoyMouvement = rayonExterieur * Math.cos(angle) + xJoy;
-                    yJoyMouvement = rayonExterieur * Math.sin(angle) + yJoy;
-                    joystickA(xJoyMouvement, yJoyMouvement);
-                    if (angle < 0) {
-                        angle += 2 * pi;
+            if (xClient > widthCanvas2 && xClient < largeur) {
+                angle = Math.atan2((yClientJoy - yJoy), (xClientJoy - xJoy));
+                dist = Math.sqrt(Math.pow(xClientJoy - xJoy, 2) + Math.pow(yClientJoy - yJoy, 2));
+                if (dist < rayonExterieur) {
+                    vitesse = parseInt(((dist / rayonExterieur) * 100), 10);
+                    joystickA(xClientJoy, yClientJoy);
+                    jj = true;
+                } else {
+                    if (jj) {
+                        xJoyMouvement = rayonExterieur * Math.cos(angle) + xJoy;
+                        yJoyMouvement = rayonExterieur * Math.sin(angle) + yJoy;
+                        joystickA(xJoyMouvement, yJoyMouvement);
+                        if (angle < 0) {
+                            angle += 2 * pi;
+                        }
                     }
                 }
             }
         }
-    }
-    envoyerDirection(angle, vitesse);
+        envoyerDirection(angle, vitesse);
     }
     if (!jooy) {
         joystick();

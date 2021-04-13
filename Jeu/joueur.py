@@ -4,35 +4,39 @@ from constantes import *
 
 joueurs = []
 
+# Placements initiaux
+spawnXOffset = resolutionPlateau[0] * propZoneInit / 2
+spawnYOffset = resolutionPlateau[1] * propZoneInit / 2
+spawn = [(spawnXOffset, spawnYOffset),
+         (resolutionPlateau[0] - spawnXOffset, spawnYOffset),
+         (spawnXOffset, resolutionPlateau[1] - spawnYOffset),
+         (resolutionPlateau[0] - spawnXOffset, resolutionPlateau[1] - spawnYOffset)]
+
 class Joueur(object): 
 
-    def __init__(self, id, equipe, x = 0, y = 0):
+    def __init__(self, id, nom, equipe):
         super().__init__()
         #Definition des variables
-        self.x = x
-        self.y = y
         self.dead = False
         self.dX = 0
         self.dY = 0
+        self.rayonCouleur = defRayonCouleur
+        self.vitesse = defVitesse
+        self.nom = nom
+
         #definition des constantes
         self.ID = id
         self.EQUIPE = equipe
-        #On assigne une couleur au joueur selon son équipe
-        if equipe == 1:
-            self.COLOR = (0, 127, 255)
-        elif equipe == 2:
-            self.COLOR = (255, 255, 0)
-        elif equipe == 3:
-            self.COLOR = (187, 11, 11)
-        elif equipe == 4:
-            self.COLOR = (0,255,0) 
-        else:
-            print("ATTENTION MAUVAISE EQUIPE POUR LE JOUEUR", id)
-            self.COLOR = (0,0,0)
+
+        #On assigne une couleur au joueur selon son équipe et on le place dans la zone de son équipe
+        self.COLOR = couleursJoueurs[equipe]
+        self.x = spawn[equipe][0]
+        self.y = spawn[equipe][1]
 
     def move(self):
-        self.x = int(self.x+self.dX)
-        self.y = int(self.y+self.dY)
+        # Application du vecteur déplacement
+        self.x = int(self.x + self.dX) * self.vitesse
+        self.y = int(self.y + self.dY) * self.vitesse
 
         # Vérification de dépassement des bordures
         if (self.x >= resolutionPlateau[0] ): self.x = 1
@@ -46,88 +50,63 @@ class Joueur(object):
     def setDead(self, valeur):
         self.dead = valeur
 
-    def setDirection (self, dx, dy):
+    def setDirection(self, dx, dy):
         self.dX = dx
         self.dY = dy
+        
+    def getRayon(self):
+        return self.nom
 
-def placementInitial (j):
-    if j.EQUIPE == 1:
-        j.x = 100
-        j.y = 100
-    elif j.EQUIPE == 2:
-        j.x = resolutionPlateau[0] - 100
-        j.y = 100
-    elif j.EQUIPE == 3:
-        j.x = resolutionPlateau[0] - 100
-        j.y = resolutionPlateau[1] - 100
-    elif j.EQUIPE == 4:
-        j.x = 100
-        j.y = resolutionPlateau[1] - 100
+    def getPos(self):
+        return (self.x, self.y)
 
+    def setPowerUp(self, pu):
+        if(pu != neutral & pu <= nbPowerup):
+            self.rayonCouleur += listeValeurs[pu][0]
+            self.rayonCouleur += listeValeurs[pu][1]
+            
+    def getPosPourcentage(self):
+        return (self.x / resolutionPlateau[0], self.y / resolutionPlateau[1])
+
+    def getEquipe(self):
+        return self.EQUIPE
+
+    def getNom(self):
+        return self.nom
+
+    def getCouleur(self):
+        return self.COLOR
+
+    def getID (self):
+        return self.ID
+
+# Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):
     return j.y
 
-def ajouterJoueur(joueur):
-   placementInitial(joueur)
-   joueurs.append(joueur)
+# Ajoute le joueur j passé en paramètres et renvoie son numéro
+def ajouterJoueur(j):
+    global joueurs
+    joueurs.append(j)
 
+# Avance tous les joueurs suivant leurs déplacements dX et dY
 def moveJoueurs():
-    joueurs.sort(key=comparJoueur) # Trie les joueurs suivant leurs ordonnées 
+    global joueurs
+    #joueurs.sort(key=comparJoueur) # Trie les joueurs suivant leurs ordonnées 
     for joueur in joueurs:
         joueur.move()
 
+# Renvoi la liste de tous les joueurs
+def getJoueurs():
+    global joueurs
+    return joueurs
 
-# Gestion du tableau de joueurs (ajout, enlever, placement initial suivant équipe, affichage)
-# deprecated
-class ListeJoueurs(object):
+# Renvoie le joueur indentifié par id
+def getJoueur(id):
+    global joueurs
+    return next(j for j in joueurs if j.getID() == id)
 
-    def __init__(self):
-        super().__init__()
-        self.ekip1 = []
-        self.ekip2 = []
-        self.ekip3 = []
-        self.ekip4 = []
-        #Liste des listes de chaque équipe
-        self.lekip = [self.ekip1, self.ekip2, self.ekip3, self.ekip4]
-
-    def ajouter(self, j):
-        if j.EQUIPE == 1:
-            self.lekip[0].append(j)
-        elif j.EQUIPE == 2:
-            self.lekip[1].append(j)
-        elif j.EQUIPE == 3:
-            self.lekip[2].append(j)
-        elif j.EQUIPE == 4:
-            self.lekip[3].append(j)
-
-    def enlever(self, j):
-        if j.EQUIPE == 1:
-            self.lekip[0].remove(j)
-        elif j.EQUIPE == 2:
-            self.lekip[1].remove(j)
-        elif j.EQUIPE == 3:
-            self.lekip[2].remove(j)
-        elif j.EQUIPE == 4:
-            self.lekip[3].remove(j)
-
-    def placementJoueurs(self):
-        for i in range(4):  
-            for j in self.lekip[i]:
-                if j.EQUIPE == 1:
-                    j.x = placex1
-                    j.y = placey1
-                elif j.EQUIPE == 2:
-                    j.x = placex2
-                    j.y = placey2
-                elif j.EQUIPE == 3:
-                    j.x = placex3
-                    j.y = placey3
-                elif j.EQUIPE == 4:
-                    j.x = placex4
-                    j.y = placey4
-
-    def afficher(self, fenetre):
-        fenetre.fill((80,80,80)) #couleur fenetre
-        for i in range(4):
-            for j in self.lekip[i]:
-                j.afficher(fenetre)
+# Renvoi le nombre de joueurs s'ayant connectés
+def getNombreJoueurs():
+    global joueurs
+    return len(joueurs)

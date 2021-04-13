@@ -77,18 +77,12 @@ class Terrain:
                 # if(self.getType(i,j) == paintMore):
                 #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
 
-<<<<<<< HEAD
     def afficheProp(self,fenetre):
-        self.pourcentageCouleur()
+        listePour=self.pourcentageCouleur()
         tot=0
-        pygame.draw.rect(fenetre,couleursPlateau[0],pygame.Rect(0,resolution[1]-20,resolution[0]*pr,20))
-        tot=pr
-        pygame.draw.rect(fenetre,couleursPlateau[1],pygame.Rect(tot*resolution[0],resolution[1]-20,resolution[0]*pb,20))
-        tot+=pb
-        pygame.draw.rect(fenetre,couleursPlateau[2],pygame.Rect(tot*resolution[0],resolution[1]-20,resolution[0]*pj,20))
-        tot+=pj
-        pygame.draw.rect(fenetre,couleursPlateau[3],pygame.Rect(tot*resolution[0],resolution[1]-20,resolution[0]*pv,20))
-        tot+=pv
+        for p in listePour:
+            pygame.draw.rect(fenetre,couleursPlateau[0],pygame.Rect(tot*resolution[0],resolution[1]-20,resolution[0]*p,20))
+            tot+=p
         pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-20,resolution[0],20))
 
 
@@ -112,9 +106,6 @@ class Terrain:
 
     def getpj(self):
         return pj
-=======
-    # ----- Fin accesseurs compteurs proportion de couleurs ----- #
->>>>>>> f67f3738ed8c2f68f5a70e2fc14496d9a93e97c5
 
     def modifCompteur(self, pos, color):
         colorNow = self.getColor(pos[0], pos[1])

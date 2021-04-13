@@ -33,15 +33,15 @@ function chargementfini() {
     context2 = canvas2.getContext('2d');
     canvas3 = document.getElementById('canvas3');
     context3 = canvas3.getContext('2d');
-    document.addEventListener('touchstart', debut);
-    document.addEventListener('touchmove', debut);
-    canvas2.addEventListener('touchend', finBouton);
-    canvas2.addEventListener('touchcancel', finBouton);
-    canvas3.addEventListener('touchend', finJoy);
-    canvas3.addEventListener('touchcancel', finJoy);
-    //document.addEventListener('mousedown', debut);
-    //document.addEventListener('mouseup', fin);
-    //document.addEventListener('mousemove', utiliser);
+    //document.addEventListener('touchstart', debut);
+    //document.addEventListener('touchmove', debut);
+    //canvas2.addEventListener('touchend', finBouton);
+    //canvas2.addEventListener('touchcancel', finBouton);
+    //canvas3.addEventListener('touchend', finJoy);
+    //canvas3.addEventListener('touchcancel', finJoy);
+    document.addEventListener('mousedown', debut);
+    document.addEventListener('mouseup', fin);
+    document.addEventListener('mousemove', utiliser);
     document.body.className += " charger";
     window.addEventListener('resize', redimentionne);
     redimentionne();
@@ -96,7 +96,7 @@ function debut(event) {
     dessine = true;
     utiliser(event);
 }
-
+/*
 function finBouton(event) {
     dessine = false;
     bout = false;
@@ -110,8 +110,8 @@ function finJoy(event) {
     vitesse = 0;
     envoyerDirection(0, 0);
     utiliser(event);
-}
-/*
+}*/
+
 function fin(event) {
     dessine = false;
     jj = false;
@@ -120,7 +120,7 @@ function fin(event) {
     vitesse = 0;
     envoyerDirection(0, 0);
     utiliser(event);
-}*/
+}
 
 function bouton() {
     context2.clearRect(0, 0, widthCanvas2, heightCanvas2);
@@ -211,11 +211,11 @@ function miniMap() {
 
 function utiliser(event) {
     if (dessine) {
-    for (i = 0; i < event.touches.length; i++) {
-        xClient = event.touches[i].clientX;
-        yClient = event.touches[i].clientY;
-        //xClient = event.clientX;
-        //yClient = event.clientY;
+        //for (i = 0; i < event.touches.length; i++) {
+        //xClient = event.touches[i].clientX;
+        //yClient = event.touches[i].clientY;
+        xClient = event.clientX;
+        yClient = event.clientY;
         xClientJoy = (xClient - largeur + widthCanvas2);
         yClientJoy = (yClient - hauteur + heightCanvas1);
         if (xClient > 0 && xClient < widthCanvas2) {
@@ -244,8 +244,8 @@ function utiliser(event) {
                 }
             }
         }
-    }
-    envoyerDirection(angle, vitesse);
+        //}
+        envoyerDirection(angle, vitesse);
     }
     if (!jooy) {
         joystick();

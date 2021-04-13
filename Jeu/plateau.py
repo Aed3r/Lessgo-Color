@@ -80,10 +80,12 @@ class Terrain:
     def afficheProp(self,fenetre):
         listePour=self.pourcentageCouleur()
         tot=0
+        i=0
         for p in listePour:
-            pygame.draw.rect(fenetre,couleursPlateau[0],pygame.Rect(tot*resolution[0],resolution[1]-20,resolution[0]*p,20))
+            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
             tot+=p
-        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-20,resolution[0],20))
+            i+=1
+        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))
 
 
 
@@ -120,7 +122,7 @@ class Terrain:
         listePourc = []
         nbCases = self.getLong() * self.getLarg()
         for i in range(4):
-            listePourc.append(self.nbCasesColorie[i] * 100 / nbCases)
+            listePourc.append(self.nbCasesColorie[i]/ nbCases)
         return listePourc
 
 

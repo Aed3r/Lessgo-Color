@@ -48,6 +48,9 @@ def drawAll():
     # Affichage du terrain
     terrain.afficheTerrain(fenetre)
 
+    # Affiche les proportions des zones coloriées
+    terrain.afficheProp()
+
     # Affichage des joueurs
     afficherJoueurs()
 

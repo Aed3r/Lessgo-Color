@@ -82,10 +82,10 @@ pourc_jaune = 0
 def majCouleurs():
     # Couleurs des cases du terrain
     for j in joueur.getJoueurs() :
-            #terrain.modifCompteur(j.x,j.y,j.EQUIPE)
+            terrain.modifCompteur(j.x,j.y,j.EQUIPE)
             terrain.setColor((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE) 
+
             
-    
     # Parcours le terrain et compte le nombre de couleur
         #terrain.pourcentageCouleur() calcul les pourcentages
         # exemple récupération compteur/pourcentage

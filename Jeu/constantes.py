@@ -24,8 +24,7 @@ playerSize = 5
 
 #Valeurs par défaut
 defRayonCouleur = 1
-defVitesse = 1
-
+defVitesse = 1.2
 # ----------------- Gameplay ----------------- #
 msPowerup = 10000
 nbPowerup = 1

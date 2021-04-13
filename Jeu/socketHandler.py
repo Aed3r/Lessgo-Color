@@ -18,8 +18,8 @@ async def request_handler(ws_current, request):
     if request.remote in clients:
         # On envoie la position initiale du joueur, ainsi que la taille de l'écran
         player = j.getJoueur(request.remote)
-        await ws_current.send_json(({'action': 'init', 'x': player.getPos()[0], 'y': player.getPos()[1],
-                            'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1]}))
+        await envoyerPaquet(ws_current, {'action': 'init', 'x': player.getPos()[0], 'y': player.getPos()[1],
+                                         'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1]})
 
     while True:
         msg = await ws_current.receive()
@@ -37,7 +37,7 @@ async def request_handler(ws_current, request):
                 player.setDirection(data["dx"]/10, data["dy"]/10)
                 # On renvoie la position actuelle
                 pos = player.getPosPourcentage()
-                await ws_current.send_json(({'action': 'position', 'x': pos[0], 'y': pos[1]}))
+                await envoyerPaquet(ws_current, {'action': 'position', 'x': pos[0], 'y': pos[1]})
             elif data["action"] == "init":
                 # On enregistre le nouveau joueur
                 player = j.Joueur(request.remote, data["nom"], data["team"])
@@ -48,9 +48,15 @@ async def request_handler(ws_current, request):
 
     return ws_current
 
+# Vérifie que la socket est ouverte puis envoie le paquet
+async def envoyerPaquet (websocket, paquet):
+    if not websocket.closed:
+        await websocket.send_json(paquet)
+
+# Signifie à tous les clients d'afficher la manette
 async def avertirClients(app):
     for ws in app['websockets']:
-        await ws.send_json({'action': 'go'})
+        await envoyerPaquet(ws, {'action': 'go'})
 
 # Avertit les clients de la fermeture du serveur
 async def shutdown(app):

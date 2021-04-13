@@ -1,8 +1,10 @@
 var conn = null;
 var msCooldown = 100;
 var lastMsg;
-var posX = null, posY = null;
-var resX = null, resY = null;
+var posX = null,
+    posY = null;
+var resX = null,
+    resY = null;
 var t1;
 
 // Envoi la direction choisie par le joueur au serveur
@@ -60,7 +62,7 @@ function connect() {
 
         switch (data.action) {
             case 'init':
-                resX = data.resX; 
+                resX = data.resX;
                 resY = data.resY;
             case 'position':
                 // On arrête le timer et on affiche le ping
@@ -69,7 +71,11 @@ function connect() {
                 posY = data.y;
                 break;
             case 'go':
-                window.location.pathname = '/manette.html';
+                device = getDeviceType()
+                if (device == "mobile" || device == "tablet")
+                    window.location.pathname = '/manette.html';
+                else
+                    window.location.pathname = '/manette_pc.html';
                 break;
             default:
                 return;
@@ -87,6 +93,7 @@ function connect() {
 function getPosX() {
     return posX;
 }
+
 function getPosY() {
     return posY;
 }
@@ -95,6 +102,7 @@ function getPosY() {
 function getResX() {
     return resX;
 }
+
 function getResY() {
     return resY;
 }
@@ -106,5 +114,22 @@ function disconnect() {
         conn = null;
     }
 }
+
+// Vérifie si l'appareil actuel est un smartphone ou une tablette
+// https: //dev.to/itsabdessalam/detect-current-device-type-with-javascript-490j
+const getDeviceType = () => {
+    const ua = navigator.userAgent;
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+        return "tablet";
+    }
+    if (
+        /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+            ua
+        )
+    ) {
+        return "mobile";
+    }
+    return "desktop";
+};
 
 connect();

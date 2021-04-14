@@ -35,8 +35,8 @@ class Joueur(object):
 
     def move(self):
         # Application du vecteur déplacement
-        self.x = int(self.x + self.dX) * self.vitesse
-        self.y = int(self.y + self.dY) * self.vitesse
+        self.x = int(self.x + self.dX * self.vitesse)
+        self.y = int(self.y + self.dY * self.vitesse)
 
         # Vérification de dépassement des bordures
         if (self.x >= resolutionPlateau[0] ): self.x = 1

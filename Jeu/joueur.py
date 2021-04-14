@@ -38,9 +38,9 @@ class Joueur(object):
     def move(self):
         #On vérifie si on doit enlever un poweup
         for pu in self.PowerUp:
-            if(pu[1] - time.time() >= listeValeurs[pu[0]]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
-                self.rayonCouleur += listeValeurs[pu][0]
-                self.rayonCouleur += listeValeurs[pu][1]
+            if(pu[1] - time.time() >= listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
+                self.rayonCouleur -= listeValeurs[pu][0]
+                self.rayonCouleur -= listeValeurs[pu][1]
                 self.PowerUp.remove(pu)
 
         # Application du vecteur déplacement

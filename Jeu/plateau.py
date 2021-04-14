@@ -83,8 +83,8 @@ class Terrain:
                 pygame.draw.rect(fenetre, col, pygame.Rect(
                     i*tailleCase, j*tailleCase, tailleCase, tailleCase))                   
 
-                if(self.getType(i,j) == paintMore):
-                    pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,taillecase/2)
+                if(self.getType(i,j) > 0 & self.getType(i, j) < nbPowerup):
+                    pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,tailleCase/2)
 
     # ----- Accesseurs compteurs proportion de couleurs ----- #
 

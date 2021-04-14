@@ -86,8 +86,8 @@ def majCouleurs():
             #Si le joueur passe sur un PowerUp il le récupère 
             type = terrain.getType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long))
             if(type > 0 & type < nbPowerup):
-                joueur.setPowerUp = type
-                terrain.setType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE, neutral)
+                j.setPowerUp(type)
+                terrain.setType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), neutral)
             
     
     # Parcoure le terrain et compte le nombre de couleur

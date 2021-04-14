@@ -82,21 +82,9 @@ pourc_jaune = 0
 def majCouleurs():
     # Couleurs des cases du terrain
     for j in joueur.getJoueurs() :
-<<<<<<< HEAD
-            #terrain.modifCompteur(j.x,j.y,j.EQUIPE)
-            terrain.setColor((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE) 
-            
-    
-    # Parcours le terrain et compte le nombre de couleur
-        #terrain.pourcentageCouleur() calcul les pourcentages
-        # exemple récupération compteur/pourcentage
-            # nb_jaune = terrain.getcj() 
-            #pourc_jaune = terrain.getpj() 
-=======
         posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
         terrain.modifCompteur(posCase,j.EQUIPE)
         terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
->>>>>>> 5ed695c3bd5f66a7aa678eb5df2442c93e7f2a90
 
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
 class BouclePrincipale(threading.Thread): 

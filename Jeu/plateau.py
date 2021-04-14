@@ -1,20 +1,6 @@
 import pygame
 from constantes import *
 
-<<<<<<< HEAD
-# Compteurs de couleurs
-cr = 0
-cb = 0
-cj = 0
-cv = 0
-pr = 0
-pb = 0
-pj = 0
-pv = 0
-
-
-=======
->>>>>>> 5ed695c3bd5f66a7aa678eb5df2442c93e7f2a90
 class Case:
     def __init__(self, startingType):
         self.type = startingType

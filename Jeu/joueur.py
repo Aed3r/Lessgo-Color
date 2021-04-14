@@ -40,7 +40,7 @@ class Joueur(object):
         for pu in self.PowerUp:
             if(pu[1] - time.time() >= listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
                 self.rayonCouleur -= listeValeurs[pu][0]
-                self.rayonCouleur -= listeValeurs[pu][1]
+                self.vitesse -= listeValeurs[pu][1]
                 self.PowerUp.remove(pu)
 
         # Application du vecteur déplacement
@@ -72,7 +72,7 @@ class Joueur(object):
     def setPowerUp(self, pu): #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
         if(pu != neutral & pu <= nbPowerup):
             self.rayonCouleur += listeValeurs[pu][0]
-            self.rayonCouleur += listeValeurs[pu][1]
+            self.vitesse += listeValeurs[pu][1]
             self.PowerUp.append((pu, time.time()))
 
             

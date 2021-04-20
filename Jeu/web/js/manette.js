@@ -53,13 +53,13 @@ function redimentionne() {
     if (largeur > hauteur) {
         canvas2.width = largeur * 0.5;
         canvas2.height = hauteur;
-        longeurBouton = canvas2.height * 0.5;
-        largeurBouton = canvas2.width * 0.7;
+        longeurBouton = canvas2.height * 0.2;
+        largeurBouton = canvas2.width * 0.4;
         xBouton = canvas2.width * 0.5 - largeurBouton * 0.5;
         yBouton = canvas2.height * 0.5 - longeurBouton * 0.5;
         canvas3.width = largeur * 0.5;
         canvas3.height = hauteur;
-        rayonInterieur = canvas3.height * 0.3;
+        rayonInterieur = canvas3.height * 0.2;
         rayonExterieur = rayonInterieur + 5;
         xJoy = canvas3.width * 0.5;
         yJoy = canvas3.height * 0.5;
@@ -68,13 +68,13 @@ function redimentionne() {
     } else {
         canvas2.width = largeur * 0.5;
         canvas2.height = hauteur;
-        longeurBouton = canvas2.width * 0.5;
-        largeurBouton = canvas2.height*0.7;
+        longeurBouton = canvas2.width * 0.2;
+        largeurBouton = canvas2.height*0.4;
         xBouton = canvas2.width * 0.5 - largeurBouton * 0.5;
         yBouton = canvas2.height * 0.5 - longeurBouton * 0.5;
         canvas3.width = largeur * 0.5;
         canvas3.height = hauteur;
-        rayonInterieur = canvas3.width * 0.3;
+        rayonInterieur = canvas3.width * 0.2;
         rayonExterieur = rayonInterieur + 5;
         xJoy = canvas3.width * 0.5;
         yJoy = canvas3.height*0.5;

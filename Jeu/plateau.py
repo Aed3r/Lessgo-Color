@@ -1,4 +1,5 @@
 import pygame
+import time
 from constantes import *
 
 class Case:
@@ -72,8 +73,8 @@ class Terrain:
                 else:
                     col = couleurFond # Blanc
                 pygame.draw.rect(fenetre, col, pygame.Rect(
-                    i*tailleCase, j*tailleCase, tailleCase, tailleCase))                   
-
+                    i*tailleCase, j*tailleCase, tailleCase, tailleCase))
+        
                 # if(self.getType(i,j) == paintMore):
                 #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
 

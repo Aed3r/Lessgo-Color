@@ -87,10 +87,10 @@ def majCouleurs():
         terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
 
         #Si le joueur passe sur un PowerUp il le récupère 
-            type = terrain.getType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long))
-            if(type > 0 & type < nbPowerup):
-                j.setPowerUp(type)
-                terrain.setType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), neutral)
+        type = terrain.getType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long))
+        if(type > 0 & type < nbPowerup):
+            j.setPowerUp(type)
+            terrain.setType((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), neutral)
             
 
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu

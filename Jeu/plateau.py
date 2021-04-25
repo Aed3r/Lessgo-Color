@@ -30,6 +30,7 @@ class Terrain:
         self.plateau = [[Case(0) for x in range(long)] for y in range(larg)]
         self.nbCasesColorie = [0 for i in range(4)]
         self.initTerrain()
+        self._offset = [[1, 0], [0, 1], [-1, 0], [0, -1]]
 
     def getCase(self, x, y):
         return self.plateau[x][y]
@@ -78,6 +79,14 @@ class Terrain:
                 # if(self.getType(i,j) == paintMore):
                 #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
 
+    def _calcNeighbors(self, x, y):
+        code = 0
+        col = self.getColor(x, y)
+        for i in range(len(self._offset)):
+            if self.getColor(x+self._offset[i][0], y+self._offset[i][1]) == col:
+                code |= 1<<i
+        return code
+
     def afficheProp(self,fenetre):
         listePour=self.pourcentageCouleur()
         tot=0
@@ -87,28 +96,6 @@ class Terrain:
             tot+=p
             i+=1
         pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))
-
-
-
-    # ----- Accesseurs compteurs proportion de couleurs ----- #
-
-    def getcb(self):
-        return cb
-
-    def getcj(self):
-        return cj
-
-    def getcr(self):
-        return cr
-
-    def getcv(self):
-        return cv
-
-    def getpb(self):
-        return pb
-
-    def getpj(self):
-        return pj
 
     def modifCompteur(self, pos, color):
         colorNow = self.getColor(pos[0], pos[1])

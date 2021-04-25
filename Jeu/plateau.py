@@ -1,4 +1,5 @@
 import pygame
+import os
 import time
 from constantes import *
 
@@ -30,7 +31,15 @@ class Terrain:
         self.plateau = [[Case(0) for x in range(long)] for y in range(larg)]
         self.nbCasesColorie = [0 for i in range(4)]
         self.initTerrain()
-        self._offset = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+        self._offset = [[0, -1], [1, 0], [0, 1], [-1, 0]]
+        self._tiles = [[], [], [], []]
+        # On charge tous les tiles une seule fois
+        for i in range(4):
+            for j in range(16):
+                self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
+        self._buffer = pygame.Surface((resolutionPlateau[0], resolutionPlateau[1]))
+        # On dessine le fond sur la surface
+        pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
 
     def getCase(self, x, y):
         return self.plateau[x][y]
@@ -49,7 +58,10 @@ class Terrain:
         return self.larg
 
     def getColor(self, x, y):
-        return self.plateau[x][y].getColor()
+        if x < 0 or x >= self.larg or y < 0 or y >= self.long:
+            return None
+        else:
+            return self.plateau[x][y].getColor()
 
     def getType(self, x, y):
         return self.plateau[x][y].getType()
@@ -70,14 +82,12 @@ class Terrain:
             for j in range(self.long):
                 col = self.getColor(i, j)
                 if col != None:
-                    col = couleursPlateau[col]
-                else:
-                    col = couleurFond # Blanc
-                pygame.draw.rect(fenetre, col, pygame.Rect(
-                    i*tailleCase, j*tailleCase, tailleCase, tailleCase))
+                    code = self._calcNeighbors(i, j)
+                    self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase), special_flags=BLEND_ALPHA_SDL2)
         
                 # if(self.getType(i,j) == paintMore):
                 #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
+        fenetre.blit(self._buffer, (0, 0))
 
     def _calcNeighbors(self, x, y):
         code = 0

@@ -13,7 +13,7 @@ couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
 port = 8081
 
 # ------------------ Plateau ------------------- #
-tailleCase = 10
+tailleCase = 10 # Modifier les tiles dans Data/Images/Tiles également
 propZoneInit = 0.2 # Contrôle la taille des zones initiales en *100 %
 tailleBarre = 20
 resolutionPlateau = (resolution[0], resolution[1] - tailleBarre)

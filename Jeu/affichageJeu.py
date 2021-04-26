@@ -17,12 +17,17 @@ def afficherJoueurs(fenetre):
 def chrono(fenetre):
     global tDebut
     if (tDebut == None):
-       tDebut = time.time()
+       tDebut = time.time() + tempsPartie
     else :
         tActuelle=time.time()
-        t0=tActuelle-tDebut
+        t0=tDebut - tActuelle
+        t0 = int(t0)
+        minute= str(t0//60)
+        seconde = str(t0%60)
+        if (t0 == 0):
+            print("Partie FINI")
         police=pygame.font.SysFont(None,80)
-        text = police.render (str(int(t0)),1,(0,0,0))
+        text = police.render (minute + ":" + seconde,1,(0,0,0))
         fenetre.blit(text, (pygame.display.Info().current_w/2, 50))
         pygame.display.flip()                                                
 

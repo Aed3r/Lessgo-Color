@@ -102,7 +102,7 @@ class Terrain:
         tot=0
         i=0
         for p in listePour:
-            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
+            pygame.draw.rect(fenetre,couleursPlateau[i-1],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
             tot+=p
             i+=1
         pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))

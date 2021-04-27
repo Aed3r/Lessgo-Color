@@ -5,7 +5,6 @@
 
 body {
     opacity: 0;
-    background-color: #000000;
     position: fixed;
     -webkit-transition: opacity 1s ease-in;
     -moz-transition: opacity 1s ease-in;
@@ -19,5 +18,11 @@ body.charger {
 }
 
 #canvas1 {
-    background-color: #ffffff;
+    position:absolute;
+}
+
+#affichagePing {
+    position: absolute;
+    top: 0;
+    right: 0;
 }

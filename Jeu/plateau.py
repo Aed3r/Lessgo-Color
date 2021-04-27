@@ -1,16 +1,7 @@
 import pygame
+import os
+import time
 from constantes import *
-
-# Compteurs de couleurs
-cr = 0
-cb = 0
-cj = 0
-cv = 0
-pr = 0
-pb = 0
-pj = 0
-pv = 0
-
 
 class Case:
     def __init__(self, startingType):
@@ -38,12 +29,23 @@ class Terrain:
         self.long = long
         self.larg = larg
         self.plateau = [[Case(0) for x in range(long)] for y in range(larg)]
+        self.nbCasesColorie = [0 for i in range(4)]
         self.initTerrain()
+        self._offset = [[0, -1], [1, 0], [0, 1], [-1, 0]]
+        self._tiles = [[], [], [], []]
+        # On charge tous les tiles une seule fois
+        for i in range(4):
+            for j in range(16):
+                self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
+        self._buffer = pygame.Surface((resolutionPlateau[0], resolutionPlateau[1]))
+        # On dessine le fond sur la surface
+        pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
 
     def getCase(self, x, y):
         return self.plateau[x][y]
 
     def setColor(self, x, y, color):
+        self.modifCompteur((x, y), color)
         self.plateau[x][y].setColor(color)
 
     def setType(self, x, y, type):
@@ -56,7 +58,10 @@ class Terrain:
         return self.larg
 
     def getColor(self, x, y):
-        return self.plateau[x][y].getColor()
+        if x < 0 or x >= self.larg or y < 0 or y >= self.long:
+            return None
+        else:
+            return self.plateau[x][y].getColor()
 
     def getType(self, x, y):
         return self.plateau[x][y].getType()
@@ -77,84 +82,46 @@ class Terrain:
             for j in range(self.long):
                 col = self.getColor(i, j)
                 if col != None:
-                    col = couleursPlateau[col]
-                else:
-                    col = (255, 255, 255) # Blanc
-                pygame.draw.rect(fenetre, col, pygame.Rect(
-                    i*tailleCase, j*tailleCase, tailleCase, tailleCase))                   
-
+                    code = self._calcNeighbors(i, j)
+                    self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
+        
                 # if(self.getType(i,j) == paintMore):
                 #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
+        fenetre.blit(self._buffer, (0, 0))
 
-    # ----- Accesseurs compteurs proportion de couleurs ----- #
+    def _calcNeighbors(self, x, y):
+        code = 0
+        col = self.getColor(x, y)
+        for i in range(len(self._offset)):
+            if self.getColor(x+self._offset[i][0], y+self._offset[i][1]) == col:
+                code |= 1<<i
+        return code
 
-    def getcb(self):
-        return cb
+    def afficheProp(self,fenetre):
+        listePour=self.pourcentageCouleur()
+        tot=0
+        i=0
+        for p in listePour:
+            pygame.draw.rect(fenetre,couleursPlateau[i-1],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
+            tot+=p
+            i+=1
+        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))
 
-    def getcj(self):
-        return cj
+    def modifCompteur(self, pos, color):
+        colorNow = self.getColor(pos[0], pos[1])
 
-    def getcr(self):
-        return cr
+        if colorNow != None :
+            self.nbCasesColorie[colorNow] -= 1
+        
+        self.nbCasesColorie[color] += 1
 
-    def getcv(self):
-        return cv
-
-    def getpb(self):
-        return pb
-
-    def getpj(self):
-        return pj
-
-    def getpr(self):
-        return pr
-
-    def getpv(self):
-        return pv
-    # ----- Fin accesseurs compteurs proportion de couleurs ----- #
-
-    def modifCompteur(self, x, y, color):
-        global cb
-        global cj
-        global cr
-        global cv
-        colorNow = self.getColor(
-            (int)(x/resolutionPlateau[0]*self.larg), (int)(y/resolutionPlateau[1]*self.long))
-
-        if(colorNow == 1 and cb >= 0):  # bleu
-            cb = cb-1
-        elif(colorNow == 2 and cj >= 0):  # jaune
-            cj = cj-1
-            # print(cj)
-        elif(colorNow == 3 and cr >= 0):  # rouge
-            cr = cr-1
-        elif(colorNow == 4 and cv >= 0):  # vert
-            cv = cv-1
-
-        if(color == 1):  # bleu
-            cb = cb+1
-        elif(color == 2):  # jaune
-            cj = cj+1
-            # print(cj)
-        elif(color == 3):  # rouge
-            cr = cr+1
-        elif(color == 4):  # vert
-            cv = cv+1
-
-    # Calcul les pourcentages à partir des compteurs
+    # Calcul les pourcentages à partir des compteurs. Renvoie une liste de réels
     def pourcentageCouleur(self):
-        global pr
-        global pb
-        global pj
-        global pv
-        pr = 0
-        pb = 0
-        pj = 0
-        pv = 0
-        pb = cb*100/(resolutionPlateau[0]*resolutionPlateau[1])
-        pr = cr*100/(resolutionPlateau[0]*resolutionPlateau[1])
-        pj = cj*100/(resolutionPlateau[0]*resolutionPlateau[1])
-        pv = cv*100/(resolutionPlateau[0]*resolutionPlateau[1])
+        listePourc = []
+        nbCases = self.getLong() * self.getLarg()
+        for i in range(4):
+            listePourc.append(self.nbCasesColorie[i]/ nbCases)
+        return listePourc
 
 
 terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))

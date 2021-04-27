@@ -10,6 +10,7 @@ import ecranAttente
 import UI.menuPause as mp
 import joueur
 import asyncio
+import finPartie
 
 routes = web.RouteTableDef()
 app = None
@@ -82,15 +83,10 @@ pourc_jaune = 0
 def majCouleurs():
     # Couleurs des cases du terrain
     for j in joueur.getJoueurs() :
-            #terrain.modifCompteur(j.x,j.y,j.EQUIPE)
-            terrain.setColor((int) (j.x/resolutionPlateau[0]*terrain.larg), (int) (j.y/resolutionPlateau[1]*terrain.long), j.EQUIPE) 
-            
-    
-    # Parcours le terrain et compte le nombre de couleur
-        #terrain.pourcentageCouleur() calcul les pourcentages
-        # exemple récupération compteur/pourcentage
-            # nb_jaune = terrain.getcj() 
-            #pourc_jaune = terrain.getpj() 
+        posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
+        terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
+        print (terrain.nbCasesColorie)
+        print (terrain.pourcentageCouleur())
 
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
 class BouclePrincipale(threading.Thread): 
@@ -102,10 +98,15 @@ class BouclePrincipale(threading.Thread):
         t = threading.currentThread()
         altPressed = False
         jeuLance = False
+        finJeu = False
         
         while getattr(t, "do_run", True):
+            if finJeu:
+                jeuLance = False
+                # Afficher ecran fin de jeu
+                finPartie.finPartie(fenetre)
             # S'occupe de l'affichage du jeu et de la gestion des joueurs
-            if jeuLance:
+            elif jeuLance:
                 # Mise à jour des positions joueurs
                 joueur.moveJoueurs()
 
@@ -113,7 +114,7 @@ class BouclePrincipale(threading.Thread):
                 majCouleurs()
 
                 # Affichage du plateau et des joueurs
-                affichageJeu.drawAll(fenetre)
+                finJeu = affichageJeu.drawAll(fenetre)
             # Affiche l'écran d'attente
             else:
                 ecranAttente.toutDessiner(fenetre)

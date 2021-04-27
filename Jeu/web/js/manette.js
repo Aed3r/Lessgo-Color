@@ -39,9 +39,6 @@ function chargementfini() {
     canvas2.addEventListener('touchcancel', finBouton);
     canvas3.addEventListener('touchend', finJoy);
     canvas3.addEventListener('touchcancel', finJoy);
-    //document.addEventListener('mousedown', debut);
-    //document.addEventListener('mouseup', fin);
-    //document.addEventListener('mousemove', utiliser);
     document.body.className += " charger";
     window.addEventListener('resize', redimentionne);
     redimentionne();
@@ -49,20 +46,20 @@ function chargementfini() {
 }
 
 function redimentionne() {
-    largeur = (window.innerWidth) - 10;
-    hauteur = (window.innerHeight) - 10;
+    largeur = (window.innerWidth)-10;
+    hauteur = (window.innerHeight)-10;
     canvas1.width = largeur;
-    canvas1.height = hauteur * 0.5;
+    canvas1.height = hauteur;
     if (largeur > hauteur) {
         canvas2.width = largeur * 0.5;
-        canvas2.height = hauteur * 0.5;
-        longeurBouton = canvas2.height * 0.5;
-        largeurBouton = canvas2.width * 0.5;
+        canvas2.height = hauteur;
+        longeurBouton = canvas2.height * 0.2;
+        largeurBouton = canvas2.width * 0.4;
         xBouton = canvas2.width * 0.5 - largeurBouton * 0.5;
         yBouton = canvas2.height * 0.5 - longeurBouton * 0.5;
         canvas3.width = largeur * 0.5;
-        canvas3.height = hauteur * 0.5;
-        rayonInterieur = canvas3.height * 0.3;
+        canvas3.height = hauteur;
+        rayonInterieur = canvas3.height * 0.2;
         rayonExterieur = rayonInterieur + 5;
         xJoy = canvas3.width * 0.5;
         yJoy = canvas3.height * 0.5;
@@ -70,17 +67,17 @@ function redimentionne() {
         joystick();
     } else {
         canvas2.width = largeur * 0.5;
-        canvas2.height = hauteur * 0.5;
-        longeurBouton = canvas2.width * 0.5;
-        largeurBouton = canvas2.height * 0.5;
+        canvas2.height = hauteur;
+        longeurBouton = canvas2.width * 0.2;
+        largeurBouton = canvas2.height*0.4;
         xBouton = canvas2.width * 0.5 - largeurBouton * 0.5;
         yBouton = canvas2.height * 0.5 - longeurBouton * 0.5;
         canvas3.width = largeur * 0.5;
-        canvas3.height = hauteur * 0.5;
-        rayonInterieur = canvas3.width * 0.3;
+        canvas3.height = hauteur;
+        rayonInterieur = canvas3.width * 0.2;
         rayonExterieur = rayonInterieur + 5;
         xJoy = canvas3.width * 0.5;
-        yJoy = canvas3.height * 0.5;
+        yJoy = canvas3.height*0.5;
         bouton();
         joystick();
     }
@@ -111,37 +108,22 @@ function finJoy(event) {
     envoyerDirection(0, 0);
     utiliser(event);
 }
-/*
-function fin(event) {
-    dessine = false;
-    jj = false;
-    jooy = false;
-    bout = false;
-    vitesse = 0;
-    envoyerDirection(0, 0);
-    utiliser(event);
-}*/
 
 function bouton() {
     context2.clearRect(0, 0, widthCanvas2, heightCanvas2);
-    context2.fillStyle = 'rgba(100, 0, 0, 1)';
+    context2.fillStyle = 'rgba(150, 0, 0, 0.5)';
     context2.fillRect(xBouton, yBouton, largeurBouton, longeurBouton);
-    context2.fillStyle = 'rgba(0, 0, 0, 1)';
-    context2.fillRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
     context2.lineWidth = "5";
-    context2.strokeStyle = 'rgba(140, 0, 0, 1)';
+    context2.strokeStyle = 'rgba(150, 0, 0, 1)';
     context2.strokeRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
-
 }
 
 function boutonA() {
     context2.clearRect(0, 0, widthCanvas2, heightCanvas2);
-    context2.fillStyle = 'rgba(100, 0, 0, 1)';
+    context2.fillStyle = 'rgba(250, 0, 0, 0.5)';
     context2.fillRect(xBouton, yBouton, largeurBouton, longeurBouton);
-    context2.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    context2.fillRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
     context2.lineWidth = "5";
-    context2.strokeStyle = 'rgba(240, 0, 0, 0.5)';
+    context2.strokeStyle = 'rgba(250, 0, 0, 1)';
     context2.strokeRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
     bout = true;
 }
@@ -149,17 +131,12 @@ function boutonA() {
 function joystick() {
     context3.clearRect(0, 0, widthCanvas3, heightCanvas3);
     context3.beginPath();
-    context3.fillStyle = 'rgba(100, 0, 0, 1)';
-    context3.arc(xJoy, yJoy, rayonExterieur, 0, 2 * pi);
-    context3.fill();
-    context3.closePath();
-    context3.beginPath();
-    context3.fillStyle = 'rgba(0, 0, 0, 1)';
+    context3.fillStyle = 'rgba(150, 0, 0, 0.5)';
     context3.arc(xJoy, yJoy, rayonInterieur, 0, 2 * pi);
     context3.fill();
     context3.closePath();
     context3.beginPath();
-    context3.strokeStyle = 'rgba(140, 0, 0, 1)';
+    context3.strokeStyle = 'rgba(150, 0, 0, 1)';
     context3.lineWidth = "5";
     context3.arc(xJoy, yJoy, rayonInterieur + 1, 0, 2 * pi);
     context3.stroke();
@@ -169,17 +146,12 @@ function joystick() {
 function joystickA(xJoyMouvement, yJoyMouvement) {
     context3.clearRect(0, 0, widthCanvas3, heightCanvas3);
     context3.beginPath();
-    context3.fillStyle = 'rgba(100, 0, 0, 1)';
-    context3.arc(xJoy, yJoy, rayonExterieur, 0, 2 * pi);
-    context3.fill();
-    context3.closePath();
-    context3.beginPath();
-    context3.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    context3.fillStyle = 'rgba(255, 0, 0, 0.5)';
     context3.arc(xJoyMouvement, yJoyMouvement, rayonInterieur, 0, 2 * pi);
     context3.fill();
     context3.closePath();
     context3.beginPath();
-    context3.strokeStyle = 'rgba(240, 0, 0, 0.5)';
+    context3.strokeStyle = 'rgba(255, 0, 0, 1)';
     context3.lineWidth = "5";
     context3.arc(xJoyMouvement, yJoyMouvement, rayonInterieur + 1, 0, 2 * pi);
     context3.stroke();
@@ -206,46 +178,44 @@ function miniMap() {
     context1.arc(posJX, posJY, 10, 0, 2 * pi);
     context1.fill();
     context1.closePath();
-    setInterval('miniMap()', 10);
+    setInterval('miniMap()', 50);
 }
 
 function utiliser(event) {
     if (dessine) {
-    for (i = 0; i < event.touches.length; i++) {
-        xClient = event.touches[i].clientX;
-        yClient = event.touches[i].clientY;
-        //xClient = event.clientX;
-        //yClient = event.clientY;
-        xClientJoy = (xClient - largeur + widthCanvas2);
-        yClientJoy = (yClient - hauteur + heightCanvas1);
-        if (xClient > 0 && xClient < widthCanvas2) {
-            if (((xClient > xBouton + 5) && (xClient < xBouton + largeurBouton)) && ((yClient > heightCanvas1 + yBouton + 5) && (yClient < heightCanvas1 + yBouton + longeurBouton))) {
-                boutonA();
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
+        for (i = 0; i < event.touches.length; i++) {
+            xClient = event.touches[i].clientX;
+            yClient = event.touches[i].clientY;
+            xClientJoy = (xClient - largeur + widthCanvas2);
+            yClientJoy = (yClient - hauteur + heightCanvas1);
+            if (xClient > 0 && xClient < widthCanvas2) {
+                if (((xClient > xBouton + 5) && (xClient < xBouton + largeurBouton)) && ((yClient > heightCanvas1 + yBouton + 5) && (yClient < heightCanvas1 + yBouton + longeurBouton))) {
+                    boutonA();
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen();
+                    }
                 }
             }
-        }
-        angle = Math.atan2((yClientJoy - yJoy), (xClientJoy - xJoy));
-        dist = Math.sqrt(Math.pow(xClientJoy - xJoy, 2) + Math.pow(yClientJoy - yJoy, 2));
-        if (xClient > widthCanvas2 && xClient < largeur) {
-            if (dist < rayonExterieur) {
-                vitesse = parseInt(((dist / rayonExterieur) * 100), 10);
-                joystickA(xClientJoy, yClientJoy);
-                jj = true;
-            } else {
-                if (jj) {
-                    xJoyMouvement = rayonExterieur * Math.cos(angle) + xJoy;
-                    yJoyMouvement = rayonExterieur * Math.sin(angle) + yJoy;
-                    joystickA(xJoyMouvement, yJoyMouvement);
-                    if (angle < 0) {
-                        angle += 2 * pi;
+            if (xClient > widthCanvas2 && xClient < largeur) {
+                angle = Math.atan2((yClientJoy - yJoy), (xClientJoy - xJoy));
+                dist = Math.sqrt(Math.pow(xClientJoy - xJoy, 2) + Math.pow(yClientJoy - yJoy, 2));
+                if (dist < rayonExterieur) {
+                    vitesse = parseInt(((dist / rayonExterieur) * 100), 10);
+                    joystickA(xClientJoy, yClientJoy);
+                    jj = true;
+                } else {
+                    if (jj) {
+                        xJoyMouvement = rayonExterieur * Math.cos(angle) + xJoy;
+                        yJoyMouvement = rayonExterieur * Math.sin(angle) + yJoy;
+                        joystickA(xJoyMouvement, yJoyMouvement);
+                        if (angle < 0) {
+                            angle += 2 * pi;
+                        }
                     }
                 }
             }
         }
-    }
-    envoyerDirection(angle, vitesse);
+        envoyerDirection(angle, vitesse);
     }
     if (!jooy) {
         joystick();

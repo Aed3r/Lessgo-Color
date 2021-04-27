@@ -14,7 +14,7 @@ port = 8081
 tempsPartie = 5
 
 # ------------------ Plateau ------------------- #
-tailleCase = 10
+tailleCase = 10 # Modifier les tiles dans Data/Images/Tiles également
 propZoneInit = 0.2 # Contrôle la taille des zones initiales en *100 %
 tailleBarre = 20
 resolutionPlateau = (resolution[0], resolution[1] - tailleBarre)

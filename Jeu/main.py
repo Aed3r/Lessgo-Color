@@ -83,8 +83,9 @@ def majCouleurs():
     # Couleurs des cases du terrain
     for j in joueur.getJoueurs() :
         posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
-        terrain.modifCompteur(posCase,j.EQUIPE)
         terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
+        print (terrain.nbCasesColorie)
+        print (terrain.pourcentageCouleur())
 
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
 class BouclePrincipale(threading.Thread): 
@@ -96,10 +97,14 @@ class BouclePrincipale(threading.Thread):
         t = threading.currentThread()
         altPressed = False
         jeuLance = False
+        finJeu = False
         
         while getattr(t, "do_run", True):
+            if finJeu:
+                jeuLance = False
+                # Afficher ecran fin de jeu
             # S'occupe de l'affichage du jeu et de la gestion des joueurs
-            if jeuLance:
+            elif jeuLance:
                 # Mise à jour des positions joueurs
                 joueur.moveJoueurs()
 
@@ -107,7 +112,7 @@ class BouclePrincipale(threading.Thread):
                 majCouleurs()
 
                 # Affichage du plateau et des joueurs
-                affichageJeu.drawAll(fenetre)
+                finJeu = affichageJeu.drawAll(fenetre)
             # Affiche l'écran d'attente
             else:
                 ecranAttente.toutDessiner(fenetre)

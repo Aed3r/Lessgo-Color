@@ -97,10 +97,14 @@ class BouclePrincipale(threading.Thread):
         t = threading.currentThread()
         altPressed = False
         jeuLance = False
+        finJeu = False
         
         while getattr(t, "do_run", True):
+            if finJeu:
+                jeuLance = False
+                # Afficher ecran fin de jeu
             # S'occupe de l'affichage du jeu et de la gestion des joueurs
-            if jeuLance:
+            elif jeuLance:
                 # Mise à jour des positions joueurs
                 joueur.moveJoueurs()
 
@@ -108,7 +112,7 @@ class BouclePrincipale(threading.Thread):
                 majCouleurs()
 
                 # Affichage du plateau et des joueurs
-                affichageJeu.drawAll(fenetre)
+                finJeu = affichageJeu.drawAll(fenetre)
             # Affiche l'écran d'attente
             else:
                 ecranAttente.toutDessiner(fenetre)

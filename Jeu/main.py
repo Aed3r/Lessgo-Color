@@ -10,6 +10,7 @@ import ecranAttente
 import UI.menuPause as mp
 import joueur
 import asyncio
+import finPartie
 
 routes = web.RouteTableDef()
 app = None
@@ -103,6 +104,7 @@ class BouclePrincipale(threading.Thread):
             if finJeu:
                 jeuLance = False
                 # Afficher ecran fin de jeu
+                finPartie.finPartie(fenetre)
             # S'occupe de l'affichage du jeu et de la gestion des joueurs
             elif jeuLance:
                 # Mise à jour des positions joueurs

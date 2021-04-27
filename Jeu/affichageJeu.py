@@ -27,7 +27,6 @@ def chrono(fenetre):
         minute= str(t0//60)
         seconde = str(t0%60)
         if (t0 == 0):
-            print("Partie FINI")
             return True
         text = policeTitres.render (minute + ":" + seconde,1,(0,0,0))
         fenetre.blit(text, (resolution[0]/2 - text.get_width()/2, 50))    

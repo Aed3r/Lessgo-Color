@@ -83,7 +83,7 @@ class Terrain:
                 col = self.getColor(i, j)
                 if col != None:
                     code = self._calcNeighbors(i, j)
-                    self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase), special_flags=pygame.BLEND_ALPHA_SDL2)
+                    self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
         
                 # if(self.getType(i,j) == paintMore):
                 #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)

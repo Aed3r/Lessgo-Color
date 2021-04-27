@@ -1,4 +1,5 @@
-packet = {} // Le paquet envoyé au serveur
+var packet = {} // Le paquet envoyé au serveur
+var step = 0; // Evite les accidents
 
 // Place la div principale verticalement
 function alignBox() {
@@ -14,6 +15,9 @@ window.addEventListener("load", function() {
 // Enregistre le nom choisie et charge la sélection de l'équipe
 function choisirNom() {
     var textBox = document.getElementById("pseudoBox");
+
+    if (step == 0) step++;
+    else return;
 
     // Vérifie si le nomp est valide
     if (isNullOrWhitespace(textBox.value)) {
@@ -41,6 +45,9 @@ function choisirNom() {
 
 // Enregistre l'équipe choisie, envoie les infos puis se place en attente
 function choisirTeam(team) {
+    if (step == 1) step++;
+    else return;
+
     packet["team"] = team;
 
     // On cache l'entré courante

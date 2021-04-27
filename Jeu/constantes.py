@@ -44,6 +44,3 @@ margeCompteur = 5
 # ----------------- Polices ----------------- #
 policeNoms = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 30)
 policeTitres = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 60)
-
-# ----------------- Socket Handler ----------------- #
-posSendCooldown = 1 # s

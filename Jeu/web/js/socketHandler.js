@@ -6,6 +6,7 @@ var posX = null,
 var resX = null,
     resY = null;
 var t1;
+var dx, dy;
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -14,8 +15,8 @@ function envoyerDirection(angle, vitesse) {
         return;
 
     // On calcule le déplacement à effectuer 
-    var dx = parseInt(Math.cos(angle) * vitesse);
-    var dy = parseInt(Math.sin(angle) * vitesse);
+    dx = parseInt(Math.cos(angle) * vitesse);
+    dy = parseInt(Math.sin(angle) * vitesse);
 
     // On prépare le paquet à envoyer
     var paquet = { "action": "deplacement", dx, dy };
@@ -67,6 +68,7 @@ function connect() {
             case 'position':
                 // On arrête le timer et on affiche le ping
                 if (t1) document.getElementById("affichagePing").innerHTML = (performance.now() - t1) + "ms";
+                // On met à jour la position sur la minimap
                 posX = data.x;
                 posY = data.y;
                 break;
@@ -91,9 +93,11 @@ function connect() {
 
 // Renvoie la position actuel du joueur (en % de l'écran)
 function getPosX() {
+    posX += dx/10000;
     return posX;
 }
 function getPosY() {
+    posY += dy/10000;
     return posY;
 }
 

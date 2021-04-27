@@ -11,7 +11,7 @@ couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
 
 # ------------------ Main ------------------- #
 port = 8081
-tempsPartie = 10
+tempsPartie = 300
 
 # ------------------ Plateau ------------------- #
 tailleCase = 10 # Modifier les tiles dans Data/Images/Tiles également

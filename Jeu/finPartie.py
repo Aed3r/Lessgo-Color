@@ -21,7 +21,5 @@ def finPartie(fenetre):
 
     policeVert=pygame.font.SysFont(None,80)
     vert = policeVert.render(str(int(listeP[3]*100))+"%",True,(0,0,0))
-    fenetre.blit(jaune, (pygame.display.Info().current_w/2, 400))
-
-    pygame.display.flip()                                  
+    fenetre.blit(jaune, (pygame.display.Info().current_w/2, 400))                           
              

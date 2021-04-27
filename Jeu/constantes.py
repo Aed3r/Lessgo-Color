@@ -11,20 +11,21 @@ couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
 
 # ------------------ Main ------------------- #
 port = 8081
+tempsPartie = 300
 
 # ------------------ Plateau ------------------- #
 tailleCase = 10
 propZoneInit = 0.2 # Contrôle la taille des zones initiales en *100 %
 tailleBarre = 20
 resolutionPlateau = (resolution[0], resolution[1] - tailleBarre)
+couleurFond = (255, 255, 255)
 
 # ------------------ Joueur ----------------- #
 playerSize = 5
 
 #Valeurs par défaut
 defRayonCouleur = 1
-defVitesse = 1
-
+defVitesse = 1.2
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3
 neutral = 0

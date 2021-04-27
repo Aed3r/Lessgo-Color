@@ -1,8 +1,11 @@
 var conn = null;
 var msCooldown = 100;
 var lastMsg;
-var posX = null, posY = null;
-var resX = null, resY = null;
+var posX = null,
+    posY = null;
+var resX = null,
+    resY = null;
+var t1;
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -17,6 +20,9 @@ function envoyerDirection(angle, vitesse) {
     // On prépare le paquet à envoyer
     var paquet = { "action": "deplacement", dx, dy };
     envoyerPaquet(paquet);
+
+    // On démarre un timer
+    t1 = performance.now();
 }
 
 // Envoi le paquet donné au serveur si assez de temps s'est écoulé depuis le dernier
@@ -28,7 +34,6 @@ function envoyerPaquet(packet) {
 
     // On prépare le paquet à envoyer
     var msg = JSON.stringify(packet);
-    console.log("Envoi du paquet " + msg);
 
     // On envoie le paquet
     if (conn != null)
@@ -53,20 +58,27 @@ function connect() {
 
     // Lorsqu'un message est reçue
     conn.onmessage = function(e) {
-        console.log("Paquet Reçu: " + e.data);
-
         var data = JSON.parse(e.data);
 
         switch (data.action) {
             case 'init':
-                resX = data.resX; 
+                resX = data.resX;
                 resY = data.resY;
             case 'position':
+                // On arrête le timer et on affiche le ping
+                if (t1) document.getElementById("affichagePing").innerHTML = (performance.now() - t1) + "ms";
                 posX = data.x;
                 posY = data.y;
                 break;
             case 'go':
-                window.location.pathname = '/manette.html';
+                device = getDeviceType()
+                if (device == "mobile" || device == "tablet")
+                    window.location.pathname = '/manette.html';
+                else
+                    window.location.pathname = '/manette_pc.html';
+                break;
+            default:
+                return;
         }
     };
 
@@ -100,5 +112,22 @@ function disconnect() {
         conn = null;
     }
 }
+
+// Vérifie si l'appareil actuel est un smartphone ou une tablette
+// https: //dev.to/itsabdessalam/detect-current-device-type-with-javascript-490j
+const getDeviceType = () => {
+    const ua = navigator.userAgent;
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+        return "tablet";
+    }
+    if (
+        /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+            ua
+        )
+    ) {
+        return "mobile";
+    }
+    return "desktop";
+};
 
 connect();

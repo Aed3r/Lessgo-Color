@@ -85,8 +85,6 @@ def majCouleurs():
     for j in joueur.getJoueurs() :
         posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
         terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
-        print (terrain.nbCasesColorie)
-        print (terrain.pourcentageCouleur())
 
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
 class BouclePrincipale(threading.Thread): 

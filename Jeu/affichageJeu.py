@@ -4,7 +4,7 @@ import time
 import joueur
 from plateau import *
 from constantes import *
-
+from finPartie import *
 tDebut = None
 
 # Temps de calcul alloué pour une image
@@ -25,7 +25,7 @@ def chrono(fenetre):
         minute= str(t0//60)
         seconde = str(t0%60)
         if (t0 == 0):
-            print("Partie FINI")
+            finPartie(fenetre,terrain)
         police=pygame.font.SysFont(None,80)
         text = police.render (minute + ":" + seconde,1,(0,0,0))
         fenetre.blit(text, (pygame.display.Info().current_w/2, 50))

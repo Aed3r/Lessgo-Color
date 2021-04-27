@@ -38,14 +38,15 @@ class Joueur(object):
     def move(self):
         #On vérifie si on doit enlever un poweup
         for pu in self.PowerUp:
-            if(pu[1] - time.time() >= listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
-                self.rayonCouleur -= listeValeurs[pu][0]
-                self.vitesse -= listeValeurs[pu][1]
+            if(time.time() - pu[1] >= listeValeurs[pu[0]][2]): #Si le powerup est la depu[0]is plus longtemps que ses paramètres le permettent
+                print("AAAAAAAAA")
+                self.vitesse -= listeValeurs[pu[0]][0]
+                self.rayonCouleur -= listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
 
         # Application du vecteur déplacement
-        self.x = int(self.x + self.dX) * self.vitesse
-        self.y = int(self.y + self.dY) * self.vitesse
+        self.x = int(self.x + self.dX * self.vitesse)
+        self.y = int(self.y + self.dY * self.vitesse)
 
         # Vérification de dépassement des bordures
         if (self.x >= resolutionPlateau[0] ): self.x = 1
@@ -71,8 +72,8 @@ class Joueur(object):
 
     def setPowerUp(self, pu): #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
         if(pu != neutral & pu <= nbPowerup):
-            self.rayonCouleur += listeValeurs[pu][0]
-            self.vitesse += listeValeurs[pu][1]
+            self.vitesse += listeValeurs[pu][0]
+            self.rayonCouleur += listeValeurs[pu][1]
             self.PowerUp.append((pu, time.time()))
 
             

@@ -123,5 +123,15 @@ class Terrain:
             listePourc.append(self.nbCasesColorie[i]/ nbCases)
         return listePourc
 
+terrain = None
+def initTerrain():
+    global terrain
+    terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))
 
-terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))
+def getTerrain():
+    global terrain
+    return terrain
+
+def updateCase(j):
+    posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
+    terrain.setColor(posCase[0], posCase[1], j.EQUIPE)

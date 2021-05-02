@@ -59,10 +59,10 @@ async def envoyerPaquet (websocket, paquet):
     if not websocket.closed:
         await websocket.send_json(paquet)
 
-# Signifie à tous les clients d'afficher la manette
-async def avertirClients(app):
+# Signifie à tous les clients
+async def avertirClients(app, msg):
     for ws in app['websockets']:
-        await envoyerPaquet(ws, {'action': 'go'})
+        await envoyerPaquet(ws, {'action': msg})
 
 # Avertit les clients de la fermeture du serveur
 async def shutdown(app):

@@ -1,20 +1,32 @@
 import pygame
 import UI.bouton as b
+from constantes import *
 
 boutons = []
 rectBoutons = []
 orientation = None # 'V' ou 'H' 
 doDraw = False
 
-# Crée ou supprime les boutons du menu d'attente
-def toggleAttente (font):
+# Crée ou supprime les boutons du menu d'attente sélectionné
+def toggle (etat):
     global boutons, orientation, doDraw
 
-    if not doDraw:
-        boutons.append(b.Bouton("Lancer le jeu", font, (255, 255, 255)))
+    if not doDraw: # Création des boutons
         orientation = 'V'
         doDraw = True
-    else:
+        if etat == "attente":
+            boutons.append(b.Bouton(LANCERJEU, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(QUITTERJEU, policeTitres, buttonBGcol, buttonFGcol))
+        elif etat == "jeu":
+            boutons.append(b.Bouton(REDEMJEU, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(REVATTENTE, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(INITTIMER, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(FINIRJEU, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(QUITTERJEU, policeTitres, buttonBGcol, buttonFGcol))
+        elif etat == "fin":
+            boutons.append(b.Bouton(REVATTENTE, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(QUITTERJEU, policeTitres, buttonBGcol, buttonFGcol))
+    else: # Suppression des boutons
         boutons.clear()
         rectBoutons.clear()
         orientation = None

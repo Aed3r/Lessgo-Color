@@ -6,7 +6,7 @@ import os
 def finPartie(fenetre):
     i = 0
     pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, resolution[0], resolution[1]))
-    listeP = terrain.pourcentageCouleur()
+    listeP = getTerrain().pourcentageCouleur()
 
     policeViolet=pygame.font.SysFont(None,30)
     violet = policeViolet.render(str(int(listeP[3]*100))+"%",True,(0,0,0))

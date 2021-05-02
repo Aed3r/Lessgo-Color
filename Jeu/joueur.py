@@ -110,3 +110,11 @@ def getJoueur(id):
 def getNombreJoueurs():
     global joueurs
     return len(joueurs)
+
+# Réinitialise les joueurs
+def initJoueurs():
+    for joueur in joueurs:
+        joueur.rayonCouleur = defRayonCouleur
+        joueur.vitesse = defVitesse
+        joueur.x = spawn[joueur.getEquipe()][0]
+        joueur.y = spawn[joueur.getEquipe()][1]

@@ -46,8 +46,8 @@ function chargementfini() {
 }
 
 function redimentionne() {
-    largeur = (window.innerWidth)-10;
-    hauteur = (window.innerHeight)-10;
+    largeur = (window.innerWidth) - 10;
+    hauteur = (window.innerHeight) - 10;
     canvas1.width = largeur;
     canvas1.height = hauteur;
     if (largeur > hauteur) {
@@ -68,8 +68,8 @@ function redimentionne() {
     } else {
         canvas2.width = largeur * 0.5;
         canvas2.height = hauteur;
-        longeurBouton = canvas2.width * 0.2;
-        largeurBouton = canvas2.height*0.4;
+        longeurBouton = canvas2.width * 0.3;
+        largeurBouton = canvas2.width * 0.3;
         xBouton = canvas2.width * 0.5 - largeurBouton * 0.5;
         yBouton = canvas2.height * 0.5 - longeurBouton * 0.5;
         canvas3.width = largeur * 0.5;
@@ -77,7 +77,7 @@ function redimentionne() {
         rayonInterieur = canvas3.width * 0.2;
         rayonExterieur = rayonInterieur + 5;
         xJoy = canvas3.width * 0.5;
-        yJoy = canvas3.height*0.5;
+        yJoy = canvas3.height * 0.5;
         bouton();
         joystick();
     }
@@ -164,13 +164,7 @@ function miniMap() {
     servPosY = getPosY();
 
     posJX = servPosX * widthCanvas1;
-    if (posJX > widthCanvas1) {
-        posJX - widthCanvas1;
-    }
     posJY = servPosY * heightCanvas1;
-    if (posJY > heightCanvas1) {
-        posJY - heightCanvas1;
-    }
 
     context1.clearRect(0, 0, widthCanvas1, heightCanvas1);
     context1.beginPath();
@@ -189,7 +183,7 @@ function utiliser(event) {
             xClientJoy = (xClient - largeur + widthCanvas2);
             yClientJoy = (yClient - hauteur + heightCanvas1);
             if (xClient > 0 && xClient < widthCanvas2) {
-                if (((xClient > xBouton + 5) && (xClient < xBouton + largeurBouton)) && ((yClient > heightCanvas1 + yBouton + 5) && (yClient < heightCanvas1 + yBouton + longeurBouton))) {
+                if (((xClient > xBouton + 5) && (xClient < xBouton + largeurBouton)) && ((yClient > yBouton + 5) && (yClient < yBouton + longeurBouton))) {
                     boutonA();
                     if (!document.fullscreenElement) {
                         document.documentElement.requestFullscreen();

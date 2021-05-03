@@ -86,6 +86,9 @@ function connect() {
                 let newUrl = window.location.origin + '/introduction.html#skip';
                 document.location.href = newUrl;
                 break;
+            case 'fin':
+                // On affiche l'écran de fin de jeu
+                break;
             default:
                 return;
         }
@@ -101,10 +104,12 @@ function connect() {
 // Renvoie la position actuel du joueur (en % de l'écran)
 function getPosX() {
     posX += dx/10000;
+    if (posX > 1) posX = 0;
     return posX;
 }
 function getPosY() {
     posY += dy/10000;
+    if (posY > 1) posY = 0;
     return posY;
 }
 

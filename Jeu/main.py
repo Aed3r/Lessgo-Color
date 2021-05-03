@@ -114,6 +114,7 @@ class BouclePrincipale(threading.Thread):
                 # Affichage du plateau et des joueurs
                 if affichageJeu.drawAll(fenetre):
                     etatJeu = "fin"
+                    avertirClients("fin")
 
             # Affiche (potentiellement) un menu
             mp.afficherMenu(fenetre)
@@ -158,8 +159,7 @@ class BouclePrincipale(threading.Thread):
                             etatJeu = "attente"
 
                             # On avertit les clients
-                            coroutine = socketHandler.avertirClients(app, "attente")
-                            asyncio.run(coroutine)
+                            avertirClients("attente")
                         elif e == INITTIMER:
                             # On remet le timer à zéro sans toucher la partie en cours
                             affichageJeu.initChrono()
@@ -189,6 +189,10 @@ def lancerJeu():
     initJeu()
 
     # On avertit les clients
+    avertirClients("go")
+
+# Envoie un message à tous les clients
+def avertirClients(msg):
     coroutine = socketHandler.avertirClients(app, "go")
     asyncio.run(coroutine)
 

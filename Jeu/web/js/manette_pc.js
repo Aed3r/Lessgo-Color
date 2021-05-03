@@ -156,13 +156,7 @@ function miniMap() {
     servPosY = getPosY();
 
     posJX = servPosX * widthCanvas1;
-    if (posJX > widthCanvas1) {
-        posJX - widthCanvas1;
-    }
     posJY = servPosY * heightCanvas1;
-    if (posJY > heightCanvas1) {
-        posJY - heightCanvas1;
-    }
 
     context1.clearRect(0, 0, widthCanvas1, heightCanvas1);
     context1.beginPath();

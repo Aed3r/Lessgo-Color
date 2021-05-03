@@ -12,21 +12,25 @@
 </head>
 
 <body onresize="alignBox()">
-    <div id="mainDiv">
-        <h2 id="greet">Bienvenue!</h2>
-        <h4 id="contentQuestion">Quel est votre pseudo ?</h4>
+    <div id="background">
+        <div id="colors"></div>
+        <div id="mainDiv">
+            <h2 id="greet">Bienvenue!</h2>
+            <h4 id="contentQuestion">Quel est votre pseudo ?</h4>
 
-        <div id="namePicker">
-            <input id="pseudoBox" type="text" placeholder="Pseudo" name="pseudo" />
-            <button onclick="choisirNom()"> Continuer </button>
-        </div>
+            <div id="namePicker">
+                <input id="pseudoBox" type="text" placeholder="Pseudo" name="pseudo" />
+                <button onclick="choisirNom()"> Continuer </button>
+            </div>
 
-        <div id="teamPicker">
-            <div id="team1" class="teamBox" onclick="choisirTeam(0)"></div>
-            <div id="team2" class="teamBox" onclick="choisirTeam(1)"></div>
-            <div id="team3" class="teamBox" onclick="choisirTeam(2)"></div>
-            <div id="team4" class="teamBox" onclick="choisirTeam(3)"></div>
+            <div id="teamPicker">
+                <div id="team1" class="teamBox" onclick="choisirTeam(0)"></div>
+                <div id="team2" class="teamBox" onclick="choisirTeam(1)"></div>
+                <div id="team3" class="teamBox" onclick="choisirTeam(2)"></div>
+                <div id="team4" class="teamBox" onclick="choisirTeam(3)"></div>
+            </div>
         </div>
+    </div>
 </body>
 
 </html>

@@ -7,7 +7,37 @@
 html {
     background: #95a5a6;
     font-family: 'Helvetica Neue', Arial, Sans-Serif;
-    align-items: center;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    height: 100%;
+}
+
+#background {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+#colors {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: radial-gradient(circle at 0px 0px, rgb(60, 23, 66) 0%, transparent 50%), 
+                radial-gradient(circle at 100% 0px, rgb(243, 255, 185) 0%, transparent 50%), 
+                radial-gradient(circle at 0px 100%, rgb(196, 32, 33) 0%, transparent 50%), 
+                radial-gradient(circle at 100% 100%, rgb(115, 210, 222) 0%, transparent 50%);
+    animation: bgAnim 30s ease infinite;
+}
+
+@keyframes bgAnim {
+    0% { background-color: rgb(60, 23, 66) }
+    25% { background-color: rgb(115, 210, 222) }
+    50% { background-color: rgb(196, 32, 33) }
+    75% { background-color: rgb(243, 255, 185) }
+    100% { background-color: rgb(60, 23, 66) }
 }
 
 #mainDiv {
@@ -19,6 +49,12 @@ html {
     box-shadow: 3px 3px 10px #333;
     padding: 15px;
     transition: height 0.2s ease;
+    animation: opacityAnim 1s ease forwards;
+}
+
+@keyframes opacityAnim {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 #mainDiv h2 {
@@ -28,6 +64,8 @@ html {
     margin-top: 10px;
     color: #34495e;
     transition: all 0.2s ease;
+    opacity: 0;
+    animation: opacityAnim 1s ease forwards;
 }
 
 #mainDiv h4 {
@@ -37,12 +75,16 @@ html {
     margin-top: 10px;
     color: #34495e;
     transition: all 0.2s ease;
+    opacity: 0;
+    animation: opacityAnim 1s ease forwards;
+    animation-delay: 1s;
 }
 
 #namePicker {
     padding-top: 20px;
-    opacity: 1;
-    transition: opacity 0.4s ease;
+    opacity: 0;
+    animation: opacityAnim 1s ease forwards;
+    animation-delay: 2s;
 }
 
 #namePicker input[type="text"],

@@ -11,7 +11,7 @@ couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
 
 # ------------------ Main ------------------- #
 port = 8081
-tempsPartie = 10
+tempsPartie = 300
 
 # ------------------ Plateau ------------------- #
 tailleCase = 10 # Modifier les tiles dans Data/Images/Tiles également
@@ -41,6 +41,19 @@ tailleCompteur = 0.05 # En % de la hauteur de la fenêtre
 titleColor = (49, 51, 53) # Couleurs du texte sur fond blanc
 margeCompteur = 5
 
+# ----------------- Menu pause ----------------- #
+buttonBGcol = (255,255,255,255)
+buttonFGcol = titleColor
+
 # ----------------- Polices ----------------- #
 policeNoms = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 30)
 policeTitres = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 60)
+
+# ----------------- Strings ----------------- #
+LANCERJEU = "Lancer le jeu"
+QUITTERJEU = "Quitter le jeu"
+REDEMJEU = "Redémarrer le jeu"
+REVATTENTE = "Revenir au menu attente"
+INITTIMER = "Réinitialiser le timer"
+FINIRJEU = "Finir le jeu"
+ENATTENTE = "En attente de joueurs..."

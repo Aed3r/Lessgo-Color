@@ -1,4 +1,5 @@
-packet = {} // Le paquet envoyé au serveur
+var packet = {} // Le paquet envoyé au serveur
+var step = 0; // Evite les accidents
 
 // Place la div principale verticalement
 function alignBox() {
@@ -14,6 +15,9 @@ window.addEventListener("load", function() {
 // Enregistre le nom choisie et charge la sélection de l'équipe
 function choisirNom() {
     var textBox = document.getElementById("pseudoBox");
+
+    if (step == 0) step++;
+    else return;
 
     // Vérifie si le nomp est valide
     if (isNullOrWhitespace(textBox.value)) {
@@ -41,21 +45,35 @@ function choisirNom() {
 
 // Enregistre l'équipe choisie, envoie les infos puis se place en attente
 function choisirTeam(team) {
+    if (step != 1) return;
+
     packet["team"] = team;
 
-    // On cache l'entré courante
-    var teamPicker = document.getElementById("teamPicker");
-    teamPicker.style.position = "absolute";
-    teamPicker.style.opacity = "0";
+    // On affiche le prochain écran
+    loadWaitScreen();
+
+    // On envoie les infos
+    packet["action"] = "init";
+    envoyerPaquet(packet);
+}
+
+function loadWaitScreen() {
+    // On cache l'entrée active
+    if (step == 0) {
+        var namePicker = document.getElementById("namePicker");
+        namePicker.style.display = "none";
+    } else if (step == 1) {
+        var teamPicker = document.getElementById("teamPicker");
+        teamPicker.style.position = "absolute";
+        teamPicker.style.opacity = "0";
+    }
     alignBox();
 
     // On modifie le texte
     document.getElementById("greet").innerHTML = "Bonne chance";
     document.getElementById("contentQuestion").innerHTML = "En attente du début du jeu...";
 
-    // On envoie les infos
-    packet["action"] = "init";
-    envoyerPaquet(packet);
+    step = 2;
 }
 
 // Vérifie si un chaîne de caractères est vide
@@ -66,3 +84,6 @@ function isNullOrWhitespace(input) {
 
     return input.replace(/\s/g, '').length < 1;
 }
+
+// On vérifie s'il ne faut pas immédiatement montrer l'écran d'attente
+if (location.hash == "#skip") loadWaitScreen();

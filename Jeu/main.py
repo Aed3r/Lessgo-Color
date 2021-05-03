@@ -114,7 +114,7 @@ class BouclePrincipale(threading.Thread):
                 # Affichage du plateau et des joueurs
                 if affichageJeu.drawAll(fenetre):
                     etatJeu = "fin"
-                    avertirClients("fin")
+                    terminerJeu()
 
             # Affiche (potentiellement) un menu
             mp.afficherMenu(fenetre)
@@ -159,13 +159,14 @@ class BouclePrincipale(threading.Thread):
                             etatJeu = "attente"
 
                             # On avertit les clients
-                            avertirClients("attente")
+                            avertirClients({'action': 'attente'})
                         elif e == INITTIMER:
                             # On remet le timer à zéro sans toucher la partie en cours
                             affichageJeu.initChrono()
                         elif e == FINIRJEU:
                             # On termine la partie prématurément
                             etatJeu = "fin"
+                            terminerJeu()
                         # On cache le menu pause
                         mp.toggle(None)
 
@@ -189,12 +190,24 @@ def lancerJeu():
     initJeu()
 
     # On avertit les clients
-    avertirClients("go")
+    avertirClients({'action': 'go'})
 
 # Envoie un message à tous les clients
 def avertirClients(msg):
-    coroutine = socketHandler.avertirClients(app, "go")
+    coroutine = socketHandler.avertirClients(app, msg)
     asyncio.run(coroutine)
+
+# Avertit les clients de la fin du jeu
+def terminerJeu():
+    maxV = 0
+    maxI = -1
+    i = 0
+    for p in plateau.getTerrain().pourcentageCouleur():
+        if p > maxV:
+            maxV = p
+            maxI = i
+        i += 1
+    avertirClients({'action': 'fin', 'winner': maxI})
 
 if __name__ == '__main__':
     print("Initialisations...")

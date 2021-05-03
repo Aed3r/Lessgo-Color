@@ -23,7 +23,7 @@ async def request_handler(ws_current, request):
         # On envoie la position initiale du joueur, ainsi que la taille de l'écran
         player = j.getJoueur(request.remote)
         await envoyerPaquet(ws_current, {'action': 'init', 'x': player.getPos()[0], 'y': player.getPos()[1],
-                                         'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1]})
+                                         'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1], 'col': player.getEquipe()})
 
     while True:
         msg = await ws_current.receive()
@@ -62,7 +62,7 @@ async def envoyerPaquet (websocket, paquet):
 # Signifie à tous les clients
 async def avertirClients(app, msg):
     for ws in app['websockets']:
-        await envoyerPaquet(ws, {'action': msg})
+        await envoyerPaquet(ws, msg)
 
 # Avertit les clients de la fermeture du serveur
 async def shutdown(app):

@@ -7,6 +7,7 @@ var resX = null,
     resY = null;
 var t1;
 var dx, dy;
+var color = null;
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -65,6 +66,7 @@ function connect() {
             case 'init':
                 resX = data.resX;
                 resY = data.resY;
+                color = data.col;
                 // On initialise également la position
             case 'position':
                 // On arrête le timer et on affiche le ping
@@ -83,11 +85,17 @@ function connect() {
                 break;
             case 'attente':
                 // On revient à l'écran d'attente
-                let newUrl = window.location.origin + '/introduction.html#skip';
-                document.location.href = newUrl;
+                let waitUrl = window.location.origin + '/introduction.html#skip';
+                document.location.href = waitUrl;
+                location.reload();
                 break;
             case 'fin':
                 // On affiche l'écran de fin de jeu
+                let isWinner = null;
+                if (color != null) isWinner = data.winner == color;
+
+                let endUrl = window.location.origin + '/introduction.html#end#' + data.winner + '#' + isWinner;
+                document.location.href = endUrl;
                 break;
             default:
                 return;

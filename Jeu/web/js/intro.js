@@ -73,7 +73,48 @@ function loadWaitScreen() {
     document.getElementById("greet").innerHTML = "Bonne chance";
     document.getElementById("contentQuestion").innerHTML = "En attente du début du jeu...";
 
+    // On enlève le hash
+    history.pushState("", document.title, window.location.pathname);
+
     step = 2;
+}
+
+function loadEndCard(winner, isWinner) {
+    // On cache l'entrée active
+    if (step == 0) {
+        var namePicker = document.getElementById("namePicker");
+        namePicker.style.display = "none";
+    } else if (step == 1) {
+        var teamPicker = document.getElementById("teamPicker");
+        teamPicker.style.position = "absolute";
+        teamPicker.style.opacity = "0";
+    }
+    alignBox();
+
+    // On modifie le texte
+    if (isWinner == 'true') {
+        document.getElementById("greet").innerHTML = "Félicitation !";
+        document.getElementById("contentQuestion").innerHTML = "Votre équipe à gagner";
+    } else if (isWinner == 'false') {
+        document.getElementById("greet").innerHTML = "Dommage...";
+        document.getElementById("contentQuestion").innerHTML = "Votre équipe à perdu";
+    } else {
+        document.getElementById("greet").innerHTML = "Game Over";
+        document.getElementById("contentQuestion").innerHTML = "L'équipe " + (winner+1) + " gagne!";
+    }
+
+    // On enlève le hash
+    history.pushState("", document.title, window.location.pathname);
+
+    step = 3;
+}
+
+// On vérifie s'il ne faut pas immédiatement montrer l'écran d'attente
+var hash = location.hash.split('#');
+
+if (hash && hash.length > 0) {
+    if (hash[1] == "skip") loadWaitScreen();
+    else if (hash[1] == "end") loadEndCard(hash[2], hash[3]);
 }
 
 // Vérifie si un chaîne de caractères est vide
@@ -84,6 +125,3 @@ function isNullOrWhitespace(input) {
 
     return input.replace(/\s/g, '').length < 1;
 }
-
-// On vérifie s'il ne faut pas immédiatement montrer l'écran d'attente
-if (location.hash == "#skip") loadWaitScreen();

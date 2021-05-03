@@ -178,7 +178,7 @@ function miniMap() {
     context1.arc(posJX, posJY, 10, 0, 2 * pi);
     context1.fill();
     context1.closePath();
-    setInterval('miniMap()', 50);
+    setTimeout('miniMap()', 50);
 }
 
 function utiliser(event) {

@@ -5,32 +5,23 @@ import time
 from constantes import *
 
 class Case:
-    def __init__(self, startingType):
-        self.type = startingType
+    def __init__(self):
         self.color = None
-
-    def getType(self):
-        return self.type
 
     def getColor(self):
         return self.color
 
-    def setType(self, newType):
-        self.type = newType
-
     def setColor(self, newColor):
         self.color = newColor
-
-    def __repr__(self):
-        return repr([self.color, self.type])
 
 
 class Terrain:
     def __init__(self, long, larg):
         self.long = long
         self.larg = larg
-        self.plateau = [[Case(0) for x in range(long)] for y in range(larg)]
+        self.plateau = [[Case() for x in range(long)] for y in range(larg)]
         self.nbCasesColorie = [0 for i in range(4)]
+        self.powerups = []
         self.initTerrain()
         self._offset = [[0, -1], [1, 0], [0, 1], [-1, 0]]
         self._tiles = [[], [], [], []]
@@ -39,10 +30,10 @@ class Terrain:
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
         self._buffer = pygame.Surface((resolutionPlateau[0], resolutionPlateau[1]))
-        # On charge les powerups
-        self._powerups = []
-        for i in range(1, nbPowerup+1):
-            self._powerups.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3])))
+        # On charge les images des powerups
+        self._powerUpSprites = []
+        for i in range(nbPowerup):
+            self._powerUpSprites.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3])))
         # On dessine le fond sur la surface
         pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
 
@@ -81,7 +72,7 @@ class Terrain:
             self.plateau[x][y].setColor(color)
 
     def setType(self, x, y, type):
-        self.plateau[x][y].setType(type)
+        self.powerups.append({'x': x, 'y': y, 'type': type})
 
     def getLong(self):
         return self.long
@@ -96,7 +87,11 @@ class Terrain:
             return self.plateau[x][y].getColor()
 
     def getType(self, x, y):
-        return self.plateau[x][y].getType()
+        for p in self.powerups:
+            if (x > p['x']-15 and x < p['x']+15 and y > p['y'] - 15 and p['y'] + 15):
+                self.powerups.remove(p)
+                return p['type']
+        return None
 
     def initTerrain(self):
         taille = (int)(resolutionPlateau[0] / tailleCase * propZoneInit)
@@ -115,15 +110,11 @@ class Terrain:
                     code = self._calcNeighbors(i, j)
                     self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
         
-                # if(self.getType(i,j) == paintMore):
-                #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
         fenetre.blit(self._buffer, (0, 0))
 
         # Powerup
-        for i in range(self.larg):
-            for j in range(self.long): 
-                    if(self.getType(i,j) > 0):
-                        fenetre.blit(self._powerups[self.getType(i,j)-1], (i*tailleCase+tailleCase/2-15, j*tailleCase+tailleCase/2-15))
+        for p in self.powerups:
+            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-15, p['y']-15))             
 
     def _calcNeighbors(self, x, y):
         code = 0
@@ -255,8 +246,7 @@ def updateCase(j):
                 cercle_bresenham_plateau(r, posCase1[0], posCase1[1], j.EQUIPE)
     j.drawn = True
 
-    #Si le joueur passe sur un PowerUp il le récupère 
-    typeItem = terrain.getType(posCase2[0], posCase2[1])
-    if(typeItem > 0 & typeItem < nbPowerup):
-        j.setPowerUp(typeItem)
-        terrain.setType(posCase2[0], posCase2[1], neutral)
+    #Si le joueur passe sur un PowerUp il le récupère  
+    p = terrain.getType(j.x, j.y)
+    if (p != None):
+        j.setPowerUp(p)

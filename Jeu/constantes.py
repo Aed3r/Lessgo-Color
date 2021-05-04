@@ -29,12 +29,11 @@ defRayonCouleur = 1
 defVitesse = 1
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3
-neutral = 0
-paintMore = 1
-gottaGoFast = 2
-mildPower = 3
+paintMore = 0
+gottaGoFast = 1
+mildPower = 2
 # Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon, Durée(sec)]
-listeValeurs = [[0, 0, 0, ""], [0, 1, 5, "paintMore.png"], [2, 0, 10, "gottaGoFast.png"], [1, 1, 5, "mildPower.png"]]
+listeValeurs = [[0, 1, 10, "paintMore.png"], [2, 0, 10, "gottaGoFast.png"], [1, 1, 10, "mildPower.png"]]
 
 # ----------------- Ecran d'attente ----------------- #
 margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %

@@ -139,5 +139,12 @@ def getTerrain():
     return terrain
 
 def updateCase(j):
+    # Couleur
     posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
     terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
+
+    #Si le joueur passe sur un PowerUp il le récupère 
+    typeItem = terrain.getType(posCase[0], posCase[1])
+    if(typeItem > 0 & typeItem < nbPowerup):
+        j.setPowerUp(typeItem)
+        terrain.setType(posCase[0], posCase[1], neutral)

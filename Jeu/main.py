@@ -85,12 +85,6 @@ def majCouleurs():
     for j in joueur.getJoueurs() :
         plateau.updateCase(j)
 
-        #Si le joueur passe sur un PowerUp il le récupère 
-        type = terrain.getType(posCase[0], posCase[1])
-        if(type > 0 & type < nbPowerup):
-            j.setPowerUp(type)
-            terrain.setType(posCase[0], posCase[1], neutral)
-
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
 class BouclePrincipale(threading.Thread): 
     def __init__(self):  

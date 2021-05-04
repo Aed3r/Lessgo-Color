@@ -138,10 +138,35 @@ def getTerrain():
     global terrain
     return terrain
 
+def cercle_bresenham_plateau(r, xc, yc, couleur):
+    x = 0
+    y = r
+    d = 1 -r
+    while y >= x:
+        terrain.setColor(x + xc, y+ yc, couleur)
+        terrain.setColor(y + xc, x+ yc, couleur)
+        terrain.setColor(-x + xc, y+ yc, couleur)
+        terrain.setColor(-y + xc, x+ yc, couleur)
+        terrain.setColor(x + xc, -y + yc, couleur)
+        terrain.setColor(y + xc, -x + yc, couleur)
+        terrain.setColor(-x + xc, -y + yc, couleur)
+        terrain.setColor(-y + xc, -x + yc, couleur)
+        if d < 0: 
+            d = d + 2*x + 3
+        else:
+            d = d + 2*(x-y) + 5
+            y -= 1
+        x += 1
+
+
+
 def updateCase(j):
     # Couleur
     posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
-    terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
+    if r == 1:
+        terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
+    elif r > 1:
+        cercle_bresenham_plateau(r, posCase[0], posCase[1], j.EQUIPE)
 
     #Si le joueur passe sur un PowerUp il le récupère 
     typeItem = terrain.getType(posCase[0], posCase[1])

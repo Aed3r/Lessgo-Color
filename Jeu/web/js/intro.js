@@ -94,13 +94,13 @@ function loadEndCard(winner, isWinner) {
     // On modifie le texte
     if (isWinner == 'true') {
         document.getElementById("greet").innerHTML = "Félicitation !";
-        document.getElementById("contentQuestion").innerHTML = "Votre équipe à gagner";
+        document.getElementById("contentQuestion").innerHTML = "Votre équipe a gagné";
     } else if (isWinner == 'false') {
         document.getElementById("greet").innerHTML = "Dommage...";
-        document.getElementById("contentQuestion").innerHTML = "Votre équipe à perdu";
+        document.getElementById("contentQuestion").innerHTML = "Votre équipe a perdu";
     } else {
         document.getElementById("greet").innerHTML = "Game Over";
-        document.getElementById("contentQuestion").innerHTML = "L'équipe " + (winner+1) + " gagne!";
+        document.getElementById("contentQuestion").innerHTML = "L'équipe " + (winner + 1) + " gagne!";
     }
 
     // On enlève le hash

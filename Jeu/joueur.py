@@ -41,7 +41,7 @@ class Joueur(object):
     def move(self):
         #On vérifie si on doit enlever un poweup
         for pu in self.PowerUp:
-            if(time.time() - pu[1] >= listeValeurs[pu[0]][2]): #Si le powerup est la depu[0]is plus longtemps que ses paramètres le permettent
+            if(time.time() - pu[1] >= listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
                 self.vitesse -= listeValeurs[pu[0]][0]
                 self.rayonCouleur -= listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
@@ -86,7 +86,7 @@ class Joueur(object):
 
     #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
     def setPowerUp(self, pu): 
-        if(pu != neutral & pu <= nbPowerup):
+        if(pu <= nbPowerup):
             self.vitesse += listeValeurs[pu][0]
             self.rayonCouleur += listeValeurs[pu][1]
             self.PowerUp.append((pu, time.time()))

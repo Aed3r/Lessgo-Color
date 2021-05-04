@@ -38,6 +38,10 @@ class Terrain:
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
         self._buffer = pygame.Surface((resolutionPlateau[0], resolutionPlateau[1]))
+        # On charge les powerups
+        self._powerups = []
+        for i in range(1, nbPowerup+1):
+            self._powerups.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3])))
         # On dessine le fond sur la surface
         pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
 
@@ -91,9 +95,9 @@ class Terrain:
 
         # Powerup
         for i in range(self.larg):
-            for j in range(self.long):
-                if(self.getType(i,j) > 0 & self.getType(i, j) < nbPowerup):
-                    pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,tailleCase/2)
+            for j in range(self.long): 
+                    if(self.getType(i,j) > 0):
+                        fenetre.blit(self._powerups[self.getType(i,j)-1], (i*tailleCase+tailleCase/2-15, j*tailleCase+tailleCase/2-15))
 
     def _calcNeighbors(self, x, y):
         code = 0

@@ -41,9 +41,9 @@ async def request_handler(ws_current, request):
                 # On modifie le déplacement du joueur
                 player.setDirection(data["dx"]/10, data["dy"]/10)
 
-                # On renvoie la position actuelle
+                # On renvoie la position et le powerup actuel
                 pos = player.getPosPourcentage()
-                await envoyerPaquet(ws_current, {'action': 'position', 'x': pos[0], 'y': pos[1]})
+                await envoyerPaquet(ws_current, {'action': 'update', 'x': pos[0], 'y': pos[1], 'pu': player.getInventaire()})
             elif data["action"] == "init":
                 # On enregistre le nouveau joueur
                 player = j.Joueur(request.remote, data["nom"], data["team"])

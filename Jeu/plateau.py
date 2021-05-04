@@ -247,6 +247,7 @@ def updateCase(j):
     j.drawn = True
 
     #Si le joueur passe sur un PowerUp il le récupère  
-    p = terrain.getType(j.x, j.y)
-    if (p != None):
-        j.setPowerUp(p)
+    if j.getInventaire() == None:
+        p = terrain.getType(j.x, j.y)
+        if (p != None):
+            j.setPowerUp(p)

@@ -68,12 +68,18 @@ function connect() {
                 resY = data.resY;
                 color = data.col;
                 // On initialise également la position
-            case 'position':
+            case 'update':
                 // On arrête le timer et on affiche le ping
                 if (t1) document.getElementById("affichagePing").innerHTML = (performance.now() - t1) + "ms";
                 // On met à jour la position sur la minimap
                 posX = data.x;
                 posY = data.y;
+
+                if (data.pu) {
+                    chargePower(data.pu);
+                } else {
+                    suppPower(data.pu);
+                }
                 break;
             case 'go':
                 // Le jeu est lancé, on affiche la manette suivant l'appareil utilisé
@@ -111,12 +117,13 @@ function connect() {
 
 // Renvoie la position actuel du joueur (en % de l'écran)
 function getPosX() {
-    posX += dx/10000;
+    posX += dx / 10000;
     if (posX > 1) posX = 0;
     return posX;
 }
+
 function getPosY() {
-    posY += dy/10000;
+    posY += dy / 10000;
     if (posY > 1) posY = 0;
     return posY;
 }
@@ -125,6 +132,7 @@ function getPosY() {
 function getResX() {
     return resX;
 }
+
 function getResY() {
     return resY;
 }

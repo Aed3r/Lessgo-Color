@@ -25,6 +25,7 @@ class Joueur(object):
         self.vitesse = defVitesse
         self.nom = nom
         self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
+        self.puInactif = None # Powerup ramassé et non activé
 
         #definition des constantes
         self.ID = id
@@ -39,7 +40,7 @@ class Joueur(object):
         self.drawn = True
 
     def move(self):
-        #On vérifie si on doit enlever un poweup
+        #On vérifie si on doit enlever un powerup
         for pu in self.PowerUp:
             if(time.time() - pu[1] >= listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
                 self.vitesse -= listeValeurs[pu[0]][0]
@@ -87,9 +88,7 @@ class Joueur(object):
     #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
     def setPowerUp(self, pu): 
         if(pu <= nbPowerup):
-            self.vitesse += listeValeurs[pu][0]
-            self.rayonCouleur += listeValeurs[pu][1]
-            self.PowerUp.append((pu, time.time()))
+            self.puInactif = pu
             
     def getPosPourcentage(self):
         return (self.x / resolutionPlateau[0], self.y / resolutionPlateau[1])
@@ -105,6 +104,16 @@ class Joueur(object):
 
     def getID (self):
         return self.ID
+
+    def getInventaire (self):
+        return self.puInactif
+    
+    def activerPU(self):
+        if (self.puInactif != None):
+            self.vitesse += listeValeurs[pu][0]
+            self.rayonCouleur += listeValeurs[pu][1]
+            self.PowerUp.append((pu, time.time()))
+            self.puInactif = None
 
 # Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):

@@ -77,6 +77,15 @@ async def cssGetHandler(request):
     except:
         return web.Response(text="404: '" + url + "' n'existe pas")
 
+# Sert tous les fichiers image demandé
+@routes.get('/{file}.png')
+async def pngGetHandler(request):
+    url = "web/data/{}.png".format(request.match_info['file'])
+    try:
+        return web.FileResponse(url)
+    except:
+        return web.Response(text="404: '" + url + "' n'existe pas")
+
 nb_jaune = 0 
 pourc_jaune = 0
 

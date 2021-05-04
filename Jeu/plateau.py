@@ -1,4 +1,5 @@
 import pygame
+import random
 import os
 import time
 from constantes import *
@@ -106,8 +107,6 @@ class Terrain:
                 self.setColor(i, self.long-j-1, 2)
                 self.setColor(self.larg-i-1, self.long-j-1, 3)
 
-        self.setType(int(self.larg/2), int(self.long/2), gottaGoFast)
-
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):
             for j in range(self.long):
@@ -203,6 +202,15 @@ class Terrain:
                     self._bresenham(0, 0, dX, dY, 1, 1, 0, x1, y1, col)
                 else: # 2 
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, col)
+    
+    def placerPowerupAlea(self):
+        taille = (int)(resolutionPlateau[0] / tailleCase * propZoneInit)
+        type = random.randrange(1, nbPowerup+1)
+        x = random.randrange(taille, self.larg - taille)
+        y = random.randrange(taille, self.long - taille)
+        
+        self.setType(x, y, type)
+
 
 terrain = None
 def initTerrain():

@@ -20,7 +20,6 @@ var bout = false;
 var dessine = false;
 var dist = 0;
 var pi = Math.PI;
-var i = 0;
 var servPosX = 0,
     servPosY = 0;
 var posJX = 0,
@@ -43,8 +42,8 @@ function chargementfini() {
 }
 
 function redimentionne() {
-    largeur = (window.innerWidth)-10;
-    hauteur = (window.innerHeight)-10;
+    largeur = (window.innerWidth) - 10;
+    hauteur = (window.innerHeight) - 10;
     canvas1.width = largeur;
     canvas1.height = hauteur;
     if (largeur > hauteur) {
@@ -65,8 +64,8 @@ function redimentionne() {
     } else {
         canvas2.width = largeur * 0.5;
         canvas2.height = hauteur;
-        longeurBouton = canvas2.width * 0.2;
-        largeurBouton = canvas2.height*0.4;
+        longeurBouton = canvas2.width * 0.3;
+        largeurBouton = canvas2.width * 0.3;
         xBouton = canvas2.width * 0.5 - largeurBouton * 0.5;
         yBouton = canvas2.height * 0.5 - longeurBouton * 0.5;
         canvas3.width = largeur * 0.5;
@@ -74,7 +73,7 @@ function redimentionne() {
         rayonInterieur = canvas3.width * 0.2;
         rayonExterieur = rayonInterieur + 5;
         xJoy = canvas3.width * 0.5;
-        yJoy = canvas3.height*0.5;
+        yJoy = canvas3.height * 0.5;
         bouton();
         joystick();
     }
@@ -176,9 +175,9 @@ function utiliser(event) {
         if (xClient > 0 && xClient < widthCanvas2) {
             if (((xClient > xBouton + 5) && (xClient < xBouton + largeurBouton)) && ((yClient > yBouton + 5) && (yClient < yBouton + longeurBouton))) {
                 boutonA();
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                }
+                /* if (!document.fullscreenElement) {
+                     document.documentElement.requestFullscreen();
+                 }*/
             }
         }
         if (xClient > widthCanvas2 && xClient < largeur) {

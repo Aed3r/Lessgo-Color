@@ -1,6 +1,6 @@
 var canvas1, contex1, canvas2, contex2, canvas3, contex3;
 var heightCanvas1, widthCanvas1, heightCanvas2, widthCanvas2, heightCanvas3, widthCanvas3;
-var img1,img2,img3;
+var img1, img2, img3;
 var largeur = 0,
     hauteur = 0;
 var xClient = 0,
@@ -45,21 +45,21 @@ function chargementfini() {
     miniMap();
 }
 
-function chargePower(i){
+function chargePower(i) {
     switch (i) {
         case 0:
-            document.img1.className += " charger";
+            img1.className += " charger";
             break;
         case 1:
-            document.img2.className += " charger";
+            img2.className += " charger";
             break;
         case 2:
-            document.img3.className += " charger";
+            img3.className += " charger";
             break;
     }
 }
 
-function suppPower(i){
+function suppPower(i) {
     switch (i) {
         case 0:
             document.img1.className -= " charger";
@@ -79,14 +79,14 @@ function redimentionne() {
     canvas1.width = largeur;
     canvas1.height = hauteur;
 
-    img1.width = largeur*0.2;
-    img1.height = hauteur*0.2;
+    img1.width = largeur * 0.2;
+    img1.height = hauteur * 0.2;
 
-    img2.width = largeur*0.2;
-    img2.height = hauteur*0.2;
+    img2.width = largeur * 0.2;
+    img2.height = hauteur * 0.2;
 
-    img3.width = largeur*0.2;
-    img3.height = hauteur*0.2;
+    img3.width = largeur * 0.2;
+    img3.height = hauteur * 0.2;
 
     if (largeur > hauteur) {
         canvas2.width = largeur * 0.5;

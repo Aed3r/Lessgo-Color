@@ -87,9 +87,10 @@ class Terrain:
             return self.plateau[x][y].getColor()
 
     def getType(self, x, y):
-        for p in self.powerups:
+        for i in range(len(self.powerups)):
+            p = self.powerups[i]
             if (x > p['x']-15 and x < p['x']+15 and y > p['y'] - 15 and p['y'] + 15):
-                self.powerups.remove(p)
+                self.powerups.pop(i)
                 return p['type']
         return None
 

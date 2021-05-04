@@ -154,3 +154,4 @@ def initJoueurs():
         joueur.x = spawn[joueur.getEquipe()][0]
         joueur.y = spawn[joueur.getEquipe()][1]
         joueur.powerup = []
+        joueur.puInactif = None

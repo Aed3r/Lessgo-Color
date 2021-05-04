@@ -49,6 +49,18 @@ class Terrain:
         return self.plateau[x][y]
 
     def setColor(self, x, y, color):
+        #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'auter coté !
+        
+        if x < 0:
+            x = self.larg + x
+        elif x >= self.larg:
+            x = x - self.larg
+        
+        if y < 0:
+            y = self.long + y
+        elif y >= self.long:
+            y = y - self.long
+
         self.modifCompteur((x, y), color)
         self.plateau[x][y].setColor(color)
 
@@ -112,7 +124,7 @@ class Terrain:
         tot=0
         i=0
         for p in listePour:
-            pygame.draw.rect(fenetre,couleursPlateau[i-1],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
+            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
             tot+=p
             i+=1
         pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))
@@ -186,12 +198,42 @@ def getTerrain():
     global terrain
     return terrain
 
+def cercle_bresenham_plateau(r, xc, yc, couleur):
+    x = 0
+    y = r
+    d = 1 -r
+    while y >= x:
+        terrain.setColor(x + xc, y+ yc, couleur)
+        terrain.setColor(y + xc, x+ yc, couleur)
+        terrain.setColor(-x + xc, y+ yc, couleur)
+        terrain.setColor(-y + xc, x+ yc, couleur)
+        terrain.setColor(x + xc, -y + yc, couleur)
+        terrain.setColor(y + xc, -x + yc, couleur)
+        terrain.setColor(-x + xc, -y + yc, couleur)
+        terrain.setColor(-y + xc, -x + yc, couleur)
+        if d < 0: 
+            d = d + 2*x + 3
+        else:
+            d = d + 2*(x-y) + 5
+            y -= 1
+        x += 1
+
+
+
 def updateCase(j):
-    # Couleur
     posCase1 = ((int) (j.oldX/resolutionPlateau[0]*terrain.getLarg()), (int) (j.oldY/resolutionPlateau[1]*terrain.getLong()))
     posCase2 = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
-    terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
-    j.drawn = True
+    
+
+    if j.rayonCouleur == 0:
+        terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
+        j.drawn = True
+    elif j.rayonCouleur > 0:
+        cercle_bresenham_plateau(j.rayonCouleur, posCase1[0], posCase1[1], j.EQUIPE)
+        if j.rayonCouleur > 1:
+            for r in range(j.rayonCouleur):
+                cercle_bresenham_plateau(r, posCase1[0], posCase1[1], j.EQUIPE)
+        j.drawn = True
 
     #Si le joueur passe sur un PowerUp il le récupère 
     typeItem = terrain.getType(posCase2[0], posCase2[1])

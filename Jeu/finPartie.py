@@ -9,19 +9,19 @@ def finPartie(fenetre):
     listeP = getTerrain().pourcentageCouleur()
 
     policeViolet=pygame.font.SysFont(None,30)
-    violet = policeViolet.render(str(int(listeP[3]*100))+"%",True,(0,0,0))
+    violet = policeViolet.render(str(int(listeP[0]*100))+"%",True,(0,0,0))
 
 
     policeJaune=pygame.font.SysFont(None,30)
-    jaune = policeJaune.render(str(int(listeP[2]*100))+"%",True,(0,0,0))
+    jaune = policeJaune.render(str(int(listeP[1]*100))+"%",True,(0,0,0))
 
 
     policeRouge=pygame.font.SysFont(None,30)
-    rouge = policeRouge.render(str(int(listeP[1]*100))+"%",True,(0,0,0))
+    rouge = policeRouge.render(str(int(listeP[2]*100))+"%",True,(0,0,0))
 
 
     policeBleu=pygame.font.SysFont(None,30)
-    bleu = policeBleu.render(str(int(listeP[0]*100))+"%",True,(0,0,0))
+    bleu = policeBleu.render(str(int(listeP[3]*100))+"%",True,(0,0,0))
 
     listePolice = [violet,jaune,rouge,bleu]
 

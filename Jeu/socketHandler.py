@@ -57,7 +57,10 @@ async def request_handler(ws_current, request):
 # Vérifie que la socket est ouverte puis envoie le paquet
 async def envoyerPaquet (websocket, paquet):
     if not websocket.closed:
-        await websocket.send_json(paquet)
+        try:
+            await websocket.send_json(paquet)
+        except:
+            return
 
 # Signifie à tous les clients
 async def avertirClients(app, msg):

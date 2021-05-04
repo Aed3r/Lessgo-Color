@@ -1,35 +1,27 @@
 import pygame
+import random
 import os
 import time
 from constantes import *
 
 class Case:
-    def __init__(self, startingType):
-        self.type = startingType
+    def __init__(self):
         self.color = None
-
-    def getType(self):
-        return self.type
 
     def getColor(self):
         return self.color
 
-    def setType(self, newType):
-        self.type = newType
-
     def setColor(self, newColor):
         self.color = newColor
-
-    def __repr__(self):
-        return repr([self.color, self.type])
 
 
 class Terrain:
     def __init__(self, long, larg):
         self.long = long
         self.larg = larg
-        self.plateau = [[Case(0) for x in range(long)] for y in range(larg)]
+        self.plateau = [[Case() for x in range(long)] for y in range(larg)]
         self.nbCasesColorie = [0 for i in range(4)]
+        self.powerups = []
         self.initTerrain()
         self._offset = [[0, -1], [1, 0], [0, 1], [-1, 0]]
         self._tiles = [[], [], [], []]
@@ -38,10 +30,10 @@ class Terrain:
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
         self._buffer = pygame.Surface((resolutionPlateau[0], resolutionPlateau[1]))
-        # On charge les powerups
-        self._powerups = []
-        for i in range(1, nbPowerup+1):
-            self._powerups.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3])))
+        # On charge les images des powerups
+        self._powerUpSprites = []
+        for i in range(nbPowerup):
+            self._powerUpSprites.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3])))
         # On dessine le fond sur la surface
         pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
 
@@ -50,22 +42,37 @@ class Terrain:
 
     def setColor(self, x, y, color):
         #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'auter coté !
-        
+        wrapped = False
+
         if x < 0:
-            x = self.larg + x
+            if wrapAround == True: 
+                x = self.larg + x
+            else :
+                wrapped = True
         elif x >= self.larg:
-            x = x - self.larg
+            if wrapAround == True:
+                x = x - self.larg
+            else :
+                wrapped = True
         
         if y < 0:
-            y = self.long + y
+            if wrapAround == True:
+                y = self.long + y
+            else :
+                wrapped = True
+    
         elif y >= self.long:
-            y = y - self.long
+            if wrapAround == True:
+                y = y - self.long
+            else :
+                wrapped = True
 
-        self.modifCompteur((x, y), color)
-        self.plateau[x][y].setColor(color)
+        if wrapped == False:
+            self.modifCompteur((x, y), color)
+            self.plateau[x][y].setColor(color)
 
     def setType(self, x, y, type):
-        self.plateau[x][y].setType(type)
+        self.powerups.append({'x': x, 'y': y, 'type': type})
 
     def getLong(self):
         return self.long
@@ -80,7 +87,11 @@ class Terrain:
             return self.plateau[x][y].getColor()
 
     def getType(self, x, y):
-        return self.plateau[x][y].getType()
+        for p in self.powerups:
+            if (x > p['x']-15 and x < p['x']+15 and y > p['y'] - 15 and p['y'] + 15):
+                self.powerups.remove(p)
+                return p['type']
+        return None
 
     def initTerrain(self):
         taille = (int)(resolutionPlateau[0] / tailleCase * propZoneInit)
@@ -91,8 +102,6 @@ class Terrain:
                 self.setColor(i, self.long-j-1, 2)
                 self.setColor(self.larg-i-1, self.long-j-1, 3)
 
-        self.setType(int(self.larg/2), int(self.long/2), gottaGoFast)
-
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):
             for j in range(self.long):
@@ -101,15 +110,11 @@ class Terrain:
                     code = self._calcNeighbors(i, j)
                     self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
         
-                # if(self.getType(i,j) == paintMore):
-                #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
         fenetre.blit(self._buffer, (0, 0))
 
         # Powerup
-        for i in range(self.larg):
-            for j in range(self.long): 
-                    if(self.getType(i,j) > 0):
-                        fenetre.blit(self._powerups[self.getType(i,j)-1], (i*tailleCase+tailleCase/2-15, j*tailleCase+tailleCase/2-15))
+        for p in self.powerups:
+            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-15, p['y']-15))             
 
     def _calcNeighbors(self, x, y):
         code = 0
@@ -188,6 +193,15 @@ class Terrain:
                     self._bresenham(0, 0, dX, dY, 1, 1, 0, x1, y1, col)
                 else: # 2 
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, col)
+    
+    def placerPowerupAlea(self):
+        taille = (int)(resolutionPlateau[0] * propZoneInit)
+        type = random.randrange(nbPowerup)
+        x = random.randrange(taille, resolutionPlateau[0] - taille)
+        y = random.randrange(taille, resolutionPlateau[1] - taille)
+        
+        self.setType(x, y, type)
+
 
 terrain = None
 def initTerrain():
@@ -224,19 +238,15 @@ def updateCase(j):
     posCase1 = ((int) (j.oldX/resolutionPlateau[0]*terrain.getLarg()), (int) (j.oldY/resolutionPlateau[1]*terrain.getLong()))
     posCase2 = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
     
-
-    if j.rayonCouleur == 0:
-        terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
-        j.drawn = True
-    elif j.rayonCouleur > 0:
+    terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
+    if j.rayonCouleur > 0:
         cercle_bresenham_plateau(j.rayonCouleur, posCase1[0], posCase1[1], j.EQUIPE)
         if j.rayonCouleur > 1:
             for r in range(j.rayonCouleur):
                 cercle_bresenham_plateau(r, posCase1[0], posCase1[1], j.EQUIPE)
-        j.drawn = True
+    j.drawn = True
 
-    #Si le joueur passe sur un PowerUp il le récupère 
-    typeItem = terrain.getType(posCase2[0], posCase2[1])
-    if(typeItem > 0 & typeItem < nbPowerup):
-        j.setPowerUp(typeItem)
-        terrain.setType(posCase2[0], posCase2[1], neutral)
+    #Si le joueur passe sur un PowerUp il le récupère  
+    p = terrain.getType(j.x, j.y)
+    if (p != None):
+        j.setPowerUp(p)

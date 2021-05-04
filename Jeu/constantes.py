@@ -24,7 +24,7 @@ couleurFond = (255, 255, 255)
 playerSize = 5
 
 #Valeurs par défaut
-defRayonCouleur = 1
+defRayonCouleur = 0
 defVitesse = 1
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3

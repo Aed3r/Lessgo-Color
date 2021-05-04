@@ -49,12 +49,12 @@ class Terrain:
         
         if x < 0:
             x = self.larg + x
-        elif x > self.larg:
+        elif x >= self.larg:
             x = x - self.larg
         
         if y < 0:
             y = self.long + y
-        elif y > self.long:
+        elif y >= self.long:
             y = y - self.long
 
         self.modifCompteur((x, y), color)
@@ -105,7 +105,7 @@ class Terrain:
         for i in range(self.larg):
             for j in range(self.long):
                 if(self.getType(i,j) > 0 & self.getType(i, j) < nbPowerup):
-                    pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,tailleCase/2)
+                    pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,(int)(tailleCase/2))
 
     def _calcNeighbors(self, x, y):
         code = 0
@@ -175,10 +175,13 @@ def cercle_bresenham_plateau(r, xc, yc, couleur):
 def updateCase(j):
     # Couleur
     posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
-    if r == 1:
+    if j.rayonCouleur == 0:
         terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
-    elif r > 1:
-        cercle_bresenham_plateau(r, posCase[0], posCase[1], j.EQUIPE)
+    elif j.rayonCouleur > 0:
+        cercle_bresenham_plateau(j.rayonCouleur, posCase[0], posCase[1], j.EQUIPE)
+        if j.rayonCouleur > 1:
+            for r in range(j.rayonCouleur):
+                cercle_bresenham_plateau(r, posCase[0], posCase[1], j.EQUIPE)
 
     #Si le joueur passe sur un PowerUp il le récupère 
     typeItem = terrain.getType(posCase[0], posCase[1])

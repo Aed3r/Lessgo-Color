@@ -52,14 +52,18 @@ class Terrain:
         #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'auter coté !
         
         if x < 0:
-            x = self.larg + x
+            if wrapAround == True: 
+                x = self.larg + x
         elif x >= self.larg:
-            x = x - self.larg
+            if wrapAround == True:
+                x = x - self.larg
         
         if y < 0:
-            y = self.long + y
+            if wrapAround == True:
+                y = self.long + y
         elif y >= self.long:
-            y = y - self.long
+            if wrapAround == True:
+                y = y - self.long
 
         self.modifCompteur((x, y), color)
         self.plateau[x][y].setColor(color)
@@ -224,16 +228,13 @@ def updateCase(j):
     posCase1 = ((int) (j.oldX/resolutionPlateau[0]*terrain.getLarg()), (int) (j.oldY/resolutionPlateau[1]*terrain.getLong()))
     posCase2 = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
     
-
-    if j.rayonCouleur == 0:
-        terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
-        j.drawn = True
-    elif j.rayonCouleur > 0:
+    terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
+    if j.rayonCouleur > 0:
         cercle_bresenham_plateau(j.rayonCouleur, posCase1[0], posCase1[1], j.EQUIPE)
         if j.rayonCouleur > 1:
             for r in range(j.rayonCouleur):
                 cercle_bresenham_plateau(r, posCase1[0], posCase1[1], j.EQUIPE)
-        j.drawn = True
+    j.drawn = True
 
     #Si le joueur passe sur un PowerUp il le récupère 
     typeItem = terrain.getType(posCase2[0], posCase2[1])

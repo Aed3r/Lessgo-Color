@@ -25,15 +25,15 @@ playerSize = 5
 
 #Valeurs par défaut
 defRayonCouleur = 1
-defVitesse = 1.2
+defVitesse = 1
 # ----------------- Gameplay ----------------- #
-msPowerup = 10000
-nbPowerup = 1
+nbPowerup = 3
 neutral = 0
 paintMore = 1
 gottaGoFast = 2
-# Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon]
-listeValeurs = [[0, 0], [0, 1], [1, 0]]
+mildPower = 3
+# Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon, Durée(sec)]
+listeValeurs = [[0, 0, 0], [0, 2, 10], [2, 0, 10], [1, 1, 10]]
 
 # ----------------- Ecran d'attente ----------------- #
 margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %

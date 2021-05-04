@@ -81,9 +81,15 @@ nb_jaune = 0
 pourc_jaune = 0
 
 def majCouleurs():
-    # Couleurs des cases du terrain
+    # Couleurs des cases du terrain + Power ups pour economiser une boucle
     for j in joueur.getJoueurs() :
         plateau.updateCase(j)
+
+        #Si le joueur passe sur un PowerUp il le récupère 
+        type = terrain.getType(posCase[0], posCase[1])
+        if(type > 0 & type < nbPowerup):
+            j.setPowerUp(type)
+            terrain.setType(posCase[0], posCase[1], neutral)
 
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
 class BouclePrincipale(threading.Thread): 

@@ -75,7 +75,7 @@ class Terrain:
                 self.setColor(i, self.long-j-1, 2)
                 self.setColor(self.larg-i-1, self.long-j-1, 3)
 
-        self.setType(int(self.larg/2), int(self.long/2), paintMore)
+        self.setType(int(self.larg/2), int(self.long/2), gottaGoFast)
 
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):
@@ -88,6 +88,12 @@ class Terrain:
                 # if(self.getType(i,j) == paintMore):
                 #pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,9)
         fenetre.blit(self._buffer, (0, 0))
+
+        # Powerup
+        for i in range(self.larg):
+            for j in range(self.long):
+                if(self.getType(i,j) > 0 & self.getType(i, j) < nbPowerup):
+                    pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,tailleCase/2)
 
     def _calcNeighbors(self, x, y):
         code = 0

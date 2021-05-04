@@ -120,7 +120,7 @@ class Terrain:
         tot=0
         i=0
         for p in listePour:
-            pygame.draw.rect(fenetre,couleursPlateau[i-1],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
+            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
             tot+=p
             i+=1
         pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))
@@ -140,6 +140,50 @@ class Terrain:
         for i in range(4):
             listePourc.append(self.nbCasesColorie[i]/ nbCases)
         return listePourc
+
+    def _bresenham(self, x1, y1, x2, y2, transX, transY, inv, offX, offY, col):
+        y = y1
+        dX = x2-x1
+        dY = y2-y1
+        m = 2*dY
+        err = -dX;
+
+        for x in range(x1, x2+1):
+            if inv:
+                self.setColor(y*transY+offX, x*transX+offY, col)
+            else:
+                self.setColor(x*transX+offX, y*transY+offY, col)
+            err += m
+            if err >= 0:
+                y += 1
+                err -= 2 * dX
+
+    def dessinerLigne(self, x1, y1, x2, y2, col):
+        dX = x2-x1
+        dY = y2-y1
+
+        if dX < 0:
+            if dY < 0: # Bas gauche 
+                if abs(dX) > abs(dY): # 5 
+                    self._bresenham(0, 0, -dX, -dY, -1, -1, 0, x1, y1, col)
+                else: # 6 
+                    self._bresenham(0, 0, -dY, -dX, -1, -1, 1, x1, y1, col)
+            else: # Haut gauche 
+                if abs(dX) > abs(dY): # 4 
+                    self._bresenham(0, 0, -dX, dY, -1, 1, 0, x1, y1, col)
+                else: # 3 
+                    self._bresenham(0, 0, dY, -dX, 1, -1, 1, x1, y1, col)
+        else:
+            if dY < 0: # Bas droite 
+                if abs(dX) > abs(dY): # 8 
+                    self._bresenham(0, 0, dX, -dY, 1, -1, 0, x1, y1, col)
+                else: # 7 
+                    self._bresenham(0, 0, -dY, dX, -1, 1, 1, x1, y1, col)
+            else: # Haut droite 
+                if abs(dX) > abs(dY): # 1 
+                    self._bresenham(0, 0, dX, dY, 1, 1, 0, x1, y1, col)
+                else: # 2 
+                    self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, col)
 
 terrain = None
 def initTerrain():
@@ -173,18 +217,22 @@ def cercle_bresenham_plateau(r, xc, yc, couleur):
 
 
 def updateCase(j):
-    # Couleur
-    posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
+    posCase1 = ((int) (j.oldX/resolutionPlateau[0]*terrain.getLarg()), (int) (j.oldY/resolutionPlateau[1]*terrain.getLong()))
+    posCase2 = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
+    
+
     if j.rayonCouleur == 0:
-        terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
+        terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
+        j.drawn = True
     elif j.rayonCouleur > 0:
-        cercle_bresenham_plateau(j.rayonCouleur, posCase[0], posCase[1], j.EQUIPE)
+        cercle_bresenham_plateau(j.rayonCouleur, posCase1[0], posCase1[1], j.EQUIPE)
         if j.rayonCouleur > 1:
             for r in range(j.rayonCouleur):
-                cercle_bresenham_plateau(r, posCase[0], posCase[1], j.EQUIPE)
+                cercle_bresenham_plateau(r, posCase1[0], posCase1[1], j.EQUIPE)
+        j.drawn = True
 
     #Si le joueur passe sur un PowerUp il le récupère 
-    typeItem = terrain.getType(posCase[0], posCase[1])
+    typeItem = terrain.getType(posCase2[0], posCase2[1])
     if(typeItem > 0 & typeItem < nbPowerup):
         j.setPowerUp(typeItem)
-        terrain.setType(posCase[0], posCase[1], neutral)
+        terrain.setType(posCase2[0], posCase2[1], neutral)

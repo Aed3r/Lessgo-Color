@@ -19,6 +19,7 @@ propZoneInit = 0.2 # Contrôle la taille des zones initiales en *100 %
 tailleBarre = 20
 resolutionPlateau = (resolution[0], resolution[1] - tailleBarre)
 couleurFond = (255, 255, 255)
+wrapAround = False
 
 # ------------------ Joueur ----------------- #
 playerSize = 5

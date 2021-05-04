@@ -34,6 +34,9 @@ class Joueur(object):
         self.COLOR = couleursJoueurs[equipe]
         self.x = spawn[equipe][0]
         self.y = spawn[equipe][1]
+        self.oldX = self.x
+        self.oldY = self.y
+        self.drawn = True
 
     def move(self):
         #On vérifie si on doit enlever un poweup
@@ -43,15 +46,27 @@ class Joueur(object):
                 self.rayonCouleur -= listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
 
+        # Mise à jour de la dernière position dessiné
+        if (self.drawn):
+            self.oldX = self.x
+            self.oldY = self.y
+            self.drawn = False
+
         # Application du vecteur déplacement
         self.x = int(self.x + self.dX * self.vitesse)
         self.y = int(self.y + self.dY * self.vitesse)
 
         # Vérification de dépassement des bordures
-        if (self.x >= resolutionPlateau[0] ): self.x = 1
-        if (self.x <= 0): self.x = resolutionPlateau[0] - 1
-        if (self.y >= resolutionPlateau[1] ): self.y = 1
-        if (self.y <= 0): self.y = resolutionPlateau[1] - 1
+        if (wrapAround):
+            if (self.x >= resolutionPlateau[0] ): self.x = 1
+            if (self.x <= 0): self.x = resolutionPlateau[0] - 1
+            if (self.y >= resolutionPlateau[1] ): self.y = 1
+            if (self.y <= 0): self.y = resolutionPlateau[1] - 1
+        else:
+            if (self.x >= resolutionPlateau[0] ): self.x = resolutionPlateau[0] - 1
+            if (self.x < 0): self.x = 0
+            if (self.y >= resolutionPlateau[1] ): self.y = resolutionPlateau[1] - 1
+            if (self.y < 0): self.y = 0
 
     def isDead(self):
         return self.dead

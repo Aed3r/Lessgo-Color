@@ -45,6 +45,18 @@ class Terrain:
         return self.plateau[x][y]
 
     def setColor(self, x, y, color):
+        #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'auter coté !
+        
+        if x < 0:
+            x = self.larg + x
+        elif x > self.larg:
+            x = x - self.larg
+        
+        if y < 0:
+            y = self.long + y
+        elif y > self.long:
+            y = y - self.long
+
         self.modifCompteur((x, y), color)
         self.plateau[x][y].setColor(color)
 

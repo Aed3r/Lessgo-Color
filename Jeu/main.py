@@ -5,11 +5,12 @@ import socket
 import os, signal
 from constantes import *
 import affichageJeu
-from plateau import * 
+import plateau
 import ecranAttente
-import UI.menuPause as mp
+import menuPause as mp
 import joueur
 import asyncio
+import finPartie
 
 routes = web.RouteTableDef()
 app = None
@@ -80,11 +81,9 @@ nb_jaune = 0
 pourc_jaune = 0
 
 def majCouleurs():
-    # Couleurs des cases du terrain
+    # Couleurs des cases du terrain + Power ups pour economiser une boucle
     for j in joueur.getJoueurs() :
-        posCase = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
-        terrain.modifCompteur(posCase,j.EQUIPE)
-        terrain.setColor(posCase[0], posCase[1], j.EQUIPE)
+        plateau.updateCase(j)
 
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
 class BouclePrincipale(threading.Thread): 
@@ -95,11 +94,17 @@ class BouclePrincipale(threading.Thread):
         ecranAttente.initValeurs()
         t = threading.currentThread()
         altPressed = False
-        jeuLance = False
+        etatJeu = "attente" # "jeu", "fin"
         
         while getattr(t, "do_run", True):
+            # Affiche l'écran d'attente
+            if etatJeu == "attente":
+                ecranAttente.toutDessiner(fenetre)
+            elif etatJeu == "fin":
+                # Afficher ecran fin de jeu
+                finPartie.finPartie(fenetre)
             # S'occupe de l'affichage du jeu et de la gestion des joueurs
-            if jeuLance:
+            elif etatJeu == "jeu":
                 # Mise à jour des positions joueurs
                 joueur.moveJoueurs()
 
@@ -107,10 +112,9 @@ class BouclePrincipale(threading.Thread):
                 majCouleurs()
 
                 # Affichage du plateau et des joueurs
-                affichageJeu.drawAll(fenetre)
-            # Affiche l'écran d'attente
-            else:
-                ecranAttente.toutDessiner(fenetre)
+                if affichageJeu.drawAll(fenetre):
+                    etatJeu = "fin"
+                    terminerJeu()
 
             # Affiche (potentiellement) un menu
             mp.afficherMenu(fenetre)
@@ -131,26 +135,79 @@ class BouclePrincipale(threading.Thread):
                         os.kill(os.getpid(), signal.SIGINT)
                     # Menu pause
                     elif event.key == pygame.K_ESCAPE:
-                        if not jeuLance:
-                            mp.toggleAttente(policeTitres)
+                        mp.toggle(etatJeu)
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LALT:
                         altPressed = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # Si le bouton 'lancer jeu' a été appuyé on lance la boucle principale
-                    if not jeuLance and mp.verifClic(event.pos) != None:
-                        lancerJeu()
-                        jeuLance = True
+                    # Gestion des clics dans le menu de pause
+                    e = mp.verifClic(event.pos)
+                    if e != None:
+                        # Un bouton a été appuyé
+                        if e == LANCERJEU:
+                            # Si le bouton 'lancer jeu' a été appuyé on lance la boucle principale
+                            lancerJeu()
+                            etatJeu = "jeu"
+                        elif e == QUITTERJEU:
+                            # On quitte
+                            os.kill(os.getpid(), signal.SIGINT)
+                        elif e == REDEMJEU:
+                            # On relance le jeu sans passer par le menu d'attente
+                            initJeu()
+                        elif e == REVATTENTE:
+                            # On revient au menu d'attente
+                            etatJeu = "attente"
 
+                            # On avertit les clients
+                            avertirClients({'action': 'attente'})
+                        elif e == INITTIMER:
+                            # On remet le timer à zéro sans toucher la partie en cours
+                            affichageJeu.initChrono()
+                        elif e == FINIRJEU:
+                            # On termine la partie prématurément
+                            etatJeu = "fin"
+                            terminerJeu()
+                        # On cache le menu pause
+                        mp.toggle(None)
+
+# Initialise ou réinitialise le jeu
+def initJeu():
+
+    # On initialise le terrain
+    plateau.initTerrain()
+
+    # On initialise le chrono
+    affichageJeu.initChrono()
+
+    # On initialise les joeurs
+    joueur.initJoueurs()
+
+# Lance le jeu "correctement", cad en venant de l'écran d'attente
 def lancerJeu():
     global app
 
-    # On cache le menu de l'écran d'attente
-    mp.toggleAttente(None)
+    # On initialise le jeu
+    initJeu()
 
     # On avertit les clients
-    coroutine = socketHandler.avertirClients(app)
+    avertirClients({'action': 'go'})
+
+# Envoie un message à tous les clients
+def avertirClients(msg):
+    coroutine = socketHandler.avertirClients(app, msg)
     asyncio.run(coroutine)
+
+# Avertit les clients de la fin du jeu
+def terminerJeu():
+    maxV = 0
+    maxI = -1
+    i = 0
+    for p in plateau.getTerrain().pourcentageCouleur():
+        if p > maxV:
+            maxV = p
+            maxI = i
+        i += 1
+    avertirClients({'action': 'fin', 'winner': maxI})
 
 if __name__ == '__main__':
     print("Initialisations...")

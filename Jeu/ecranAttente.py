@@ -82,7 +82,7 @@ def afficherNomsJoueurs(fenetre):
 
 def afficherTitre (fenetre):
     global titleColor
-    textSurface = policeTitres.render("En attente de joueurs...", True, titleColor);
+    textSurface = policeTitres.render(ENATTENTE, True, titleColor);
     tailleTexte = textSurface.get_size()
     fenetre.blit(textSurface, (resolution[0]/2-tailleTexte[0]/2, margins['top']/2-tailleTexte[1]/2))
 

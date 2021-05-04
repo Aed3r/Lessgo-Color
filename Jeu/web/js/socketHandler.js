@@ -6,6 +6,8 @@ var posX = null,
 var resX = null,
     resY = null;
 var t1;
+var dx, dy;
+var color = null;
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -14,8 +16,8 @@ function envoyerDirection(angle, vitesse) {
         return;
 
     // On calcule le déplacement à effectuer 
-    var dx = parseInt(Math.cos(angle) * vitesse);
-    var dy = parseInt(Math.sin(angle) * vitesse);
+    dx = parseInt(Math.cos(angle) * vitesse);
+    dy = parseInt(Math.sin(angle) * vitesse);
 
     // On prépare le paquet à envoyer
     var paquet = { "action": "deplacement", dx, dy };
@@ -64,18 +66,36 @@ function connect() {
             case 'init':
                 resX = data.resX;
                 resY = data.resY;
+                color = data.col;
+                // On initialise également la position
             case 'position':
                 // On arrête le timer et on affiche le ping
                 if (t1) document.getElementById("affichagePing").innerHTML = (performance.now() - t1) + "ms";
+                // On met à jour la position sur la minimap
                 posX = data.x;
                 posY = data.y;
                 break;
             case 'go':
-                device = getDeviceType()
+                // Le jeu est lancé, on affiche la manette suivant l'appareil utilisé
+                let device = getDeviceType()
                 if (device == "mobile" || device == "tablet")
                     window.location.pathname = '/manette.html';
                 else
                     window.location.pathname = '/manette_pc.html';
+                break;
+            case 'attente':
+                // On revient à l'écran d'attente
+                let waitUrl = window.location.origin + '/introduction.html#skip';
+                document.location.href = waitUrl;
+                location.reload();
+                break;
+            case 'fin':
+                // On affiche l'écran de fin de jeu
+                let isWinner = null;
+                if (color != null) isWinner = data.winner == color;
+
+                let endUrl = window.location.origin + '/introduction.html#end#' + data.winner + '#' + isWinner;
+                document.location.href = endUrl;
                 break;
             default:
                 return;
@@ -91,10 +111,13 @@ function connect() {
 
 // Renvoie la position actuel du joueur (en % de l'écran)
 function getPosX() {
+    posX += dx/10000;
+    if (posX > 1) posX = 0;
     return posX;
 }
-
 function getPosY() {
+    posY += dy/10000;
+    if (posY > 1) posY = 0;
     return posY;
 }
 
@@ -102,7 +125,6 @@ function getPosY() {
 function getResX() {
     return resX;
 }
-
 function getResY() {
     return resY;
 }

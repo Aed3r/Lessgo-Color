@@ -1,5 +1,6 @@
 #Classe servant a instancier des joueurs
 
+import time
 from constantes import *
 
 joueurs = []
@@ -23,6 +24,7 @@ class Joueur(object):
         self.rayonCouleur = defRayonCouleur
         self.vitesse = defVitesse
         self.nom = nom
+        self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
 
         #definition des constantes
         self.ID = id
@@ -32,17 +34,39 @@ class Joueur(object):
         self.COLOR = couleursJoueurs[equipe]
         self.x = spawn[equipe][0]
         self.y = spawn[equipe][1]
+        self.oldX = self.x
+        self.oldY = self.y
+        self.drawn = True
 
     def move(self):
+        #On vérifie si on doit enlever un poweup
+        for pu in self.PowerUp:
+            if(time.time() - pu[1] >= listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
+                self.vitesse -= listeValeurs[pu[0]][0]
+                self.rayonCouleur -= listeValeurs[pu[0]][1]
+                self.PowerUp.remove(pu)
+
+        # Mise à jour de la dernière position dessiné
+        if (self.drawn):
+            self.oldX = self.x
+            self.oldY = self.y
+            self.drawn = False
+
         # Application du vecteur déplacement
         self.x = int(self.x + self.dX * self.vitesse)
         self.y = int(self.y + self.dY * self.vitesse)
 
         # Vérification de dépassement des bordures
-        if (self.x >= resolutionPlateau[0] ): self.x = 1
-        if (self.x <= 0): self.x = resolutionPlateau[0] - 1
-        if (self.y >= resolutionPlateau[1] ): self.y = 1
-        if (self.y <= 0): self.y = resolutionPlateau[1] - 1
+        if (wrapAround):
+            if (self.x >= resolutionPlateau[0] ): self.x = 1
+            if (self.x <= 0): self.x = resolutionPlateau[0] - 1
+            if (self.y >= resolutionPlateau[1] ): self.y = 1
+            if (self.y <= 0): self.y = resolutionPlateau[1] - 1
+        else:
+            if (self.x >= resolutionPlateau[0] ): self.x = resolutionPlateau[0] - 1
+            if (self.x < 0): self.x = 0
+            if (self.y >= resolutionPlateau[1] ): self.y = resolutionPlateau[1] - 1
+            if (self.y < 0): self.y = 0
 
     def isDead(self):
         return self.dead
@@ -60,10 +84,12 @@ class Joueur(object):
     def getPos(self):
         return (self.x, self.y)
 
-    def setPowerUp(self, pu):
-        if(pu != neutral & pu <= nbPowerup):
-            self.rayonCouleur += listeValeurs[pu][0]
+    #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
+    def setPowerUp(self, pu): 
+        if(pu <= nbPowerup):
+            self.vitesse += listeValeurs[pu][0]
             self.rayonCouleur += listeValeurs[pu][1]
+            self.PowerUp.append((pu, time.time()))
             
     def getPosPourcentage(self):
         return (self.x / resolutionPlateau[0], self.y / resolutionPlateau[1])
@@ -110,3 +136,12 @@ def getJoueur(id):
 def getNombreJoueurs():
     global joueurs
     return len(joueurs)
+
+# Réinitialise les joueurs
+def initJoueurs():
+    for joueur in joueurs:
+        joueur.rayonCouleur = defRayonCouleur
+        joueur.vitesse = defVitesse
+        joueur.x = spawn[joueur.getEquipe()][0]
+        joueur.y = spawn[joueur.getEquipe()][1]
+        joueur.powerup = []

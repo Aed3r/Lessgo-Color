@@ -1,17 +1,15 @@
 import pygame
 
 class Bouton:  # Classe permettant de créer des boutons
-    def __init__(self, text, font, color):
+    def __init__(self, text, font, BGColor, FGColor):
         self.text = text
-        self.font = font
-        self.color = color
 
         # On prépare la surface tenant le texte
-        texte = self.font.render(self.text, 1, (0, 0, 0))
+        texte = font.render(self.text, 1, FGColor)
         tTexte = texte.get_size()
         self.tBouton = (tTexte[0]*2, tTexte[1]*1.6)
         self.buffer = pygame.Surface(self.tBouton)
-        self.buffer.fill(self.color)
+        self.buffer.fill(BGColor)
         self.buffer.blit(texte, (self.tBouton[0]/2 - tTexte[0]/2, self.tBouton[1]/2 - tTexte[1]/2))
 
     # Affiche le bouton centré sur le point coords de la fenêtre screen. 

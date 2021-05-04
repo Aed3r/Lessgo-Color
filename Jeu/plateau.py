@@ -93,7 +93,7 @@ class Terrain:
         for i in range(self.larg):
             for j in range(self.long):
                 if(self.getType(i,j) > 0 & self.getType(i, j) < nbPowerup):
-                    pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,tailleCase/2)
+                    pygame.draw.circle(fenetre,(0,0,0),((i*tailleCase) + 10, (j*tailleCase) + 10) ,int(tailleCase/2))
 
     def _calcNeighbors(self, x, y):
         code = 0
@@ -108,7 +108,7 @@ class Terrain:
         tot=0
         i=0
         for p in listePour:
-            pygame.draw.rect(fenetre,couleursPlateau[i-1],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
+            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
             tot+=p
             i+=1
         pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))

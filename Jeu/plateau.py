@@ -50,23 +50,34 @@ class Terrain:
 
     def setColor(self, x, y, color):
         #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'auter coté !
-        
+        wrapped = False
+
         if x < 0:
             if wrapAround == True: 
                 x = self.larg + x
+            else :
+                wrapped = True
         elif x >= self.larg:
             if wrapAround == True:
                 x = x - self.larg
+            else :
+                wrapped = True
         
         if y < 0:
             if wrapAround == True:
                 y = self.long + y
+            else :
+                wrapped = True
+    
         elif y >= self.long:
             if wrapAround == True:
                 y = y - self.long
+            else :
+                wrapped = True
 
-        self.modifCompteur((x, y), color)
-        self.plateau[x][y].setColor(color)
+        if wrapped == False:
+            self.modifCompteur((x, y), color)
+            self.plateau[x][y].setColor(color)
 
     def setType(self, x, y, type):
         self.plateau[x][y].setType(type)

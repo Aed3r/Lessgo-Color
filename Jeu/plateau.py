@@ -195,10 +195,10 @@ class Terrain:
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, col)
     
     def placerPowerupAlea(self):
-        taille = (int)(resolutionPlateau[0] / tailleCase * propZoneInit)
-        type = random.randrange(1, nbPowerup+1)
-        x = random.randrange(taille, self.larg - taille)
-        y = random.randrange(taille, self.long - taille)
+        taille = (int)(resolutionPlateau[0] * propZoneInit)
+        type = random.randrange(nbPowerup)
+        x = random.randrange(taille, resolutionPlateau[0] - taille)
+        y = random.randrange(taille, resolutionPlateau[1] - taille)
         
         self.setType(x, y, type)
 

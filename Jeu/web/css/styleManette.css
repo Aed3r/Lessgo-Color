@@ -32,3 +32,36 @@ body.charger {
     top: 0;
     right: 0;
 }
+
+#gottaGoFast{
+    opacity: 0;
+    position:absolute;
+    top : 0px;
+    left : 0px;
+}
+
+#mildPower{
+    opacity: 0;
+    position:absolute;
+    top : 0px;
+    left : 0px;
+}
+
+#paintMore{
+    opacity: 0;
+    position:absolute;
+    top : 0px;
+    left : 0px;
+}
+
+#gottaGoFast.charger{
+    opacity: 1;
+}
+
+#mildPower.charger{
+    opacity: 1;
+}
+
+#paintMore.charger{
+    opacity: 1;
+}

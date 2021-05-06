@@ -33,9 +33,6 @@ function chargementfini() {
     context2 = canvas2.getContext('2d');
     canvas3 = document.getElementById('canvas3');
     context3 = canvas3.getContext('2d');
-    img1 = document.getElementById('gottaGoFast');
-    img2 = document.getElementById('mildPower');
-    img3 = document.getElementById('paintMore');
     document.addEventListener('mousedown', debut);
     document.addEventListener('mouseup', fin);
     document.addEventListener('mousemove', utiliser);
@@ -45,48 +42,11 @@ function chargementfini() {
     miniMap();
 }
 
-function chargePower(i) {
-    switch (i) {
-        case 0:
-            img1.className += " charger";
-            break;
-        case 1:
-            img2.className += " charger";
-            break;
-        case 2:
-            img3.className += " charger";
-            break;
-    }
-}
-
-function suppPower(i) {
-    switch (i) {
-        case 0:
-            document.img1.className -= " charger";
-            break;
-        case 1:
-            document.img2.className -= " charger";
-            break;
-        case 2:
-            document.img3.className -= " charger";
-            break;
-    }
-}
-
 function redimentionne() {
     largeur = (window.innerWidth) - 10;
     hauteur = (window.innerHeight) - 10;
     canvas1.width = largeur;
     canvas1.height = hauteur;
-
-    img1.width = largeur * 0.2;
-    img1.height = hauteur * 0.2;
-
-    img2.width = largeur * 0.2;
-    img2.height = hauteur * 0.2;
-
-    img3.width = largeur * 0.2;
-    img3.height = hauteur * 0.2;
 
     if (largeur > hauteur) {
         canvas2.width = largeur * 0.5;

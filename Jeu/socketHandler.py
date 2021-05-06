@@ -43,7 +43,7 @@ async def request_handler(ws_current, request):
 
                 # On renvoie la position et le powerup actuel
                 pos = player.getPosPourcentage()
-                await envoyerPaquet(ws_current, {'action': 'update', 'x': pos[0], 'y': pos[1], 'pu': player.getInventaire()})
+                await envoyerPaquet(ws_current, {'action': 'update', 'x': pos[0], 'y': pos[1], 'pu': player.getPowerups()})
             elif data["action"] == "init":
                 # On enregistre le nouveau joueur
                 player = j.Joueur(request.remote, data["nom"], data["team"])
@@ -59,7 +59,7 @@ async def envoyerPaquet (websocket, paquet):
     if not websocket.closed:
         try:
             await websocket.send_json(paquet)
-        except:
+        except Exception:
             return
 
 # Signifie à tous les clients

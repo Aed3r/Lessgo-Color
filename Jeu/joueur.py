@@ -25,7 +25,6 @@ class Joueur(object):
         self.vitesse = defVitesse
         self.nom = nom
         self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
-        self.puInactif = None # Powerup ramassé et non activé
 
         #definition des constantes
         self.ID = id
@@ -88,7 +87,9 @@ class Joueur(object):
     #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
     def setPowerUp(self, pu): 
         if(pu <= nbPowerup):
-            self.puInactif = pu
+            self.vitesse += listeValeurs[pu][0]
+            self.rayonCouleur += listeValeurs[pu][1]
+            self.PowerUp.append((pu, time.time()))
             
     def getPosPourcentage(self):
         return (self.x / resolutionPlateau[0], self.y / resolutionPlateau[1])
@@ -105,15 +106,12 @@ class Joueur(object):
     def getID (self):
         return self.ID
 
-    def getInventaire (self):
-        return self.puInactif
-    
-    def activerPU(self):
-        if (self.puInactif != None):
-            self.vitesse += listeValeurs[pu][0]
-            self.rayonCouleur += listeValeurs[pu][1]
-            self.PowerUp.append((pu, time.time()))
-            self.puInactif = None
+    # Renvoie une liste descriptive des powerups actifs
+    def getPowerups(self):
+        pu = list(map(lambda x: x[0], self.PowerUp)) # On récupère les powerup actifs
+        puNames = list(map(lambda x: listeValeurs[x][3], pu)) # On remplace par des noms
+        return puNames
+
 
 # Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):
@@ -154,4 +152,3 @@ def initJoueurs():
         joueur.x = spawn[joueur.getEquipe()][0]
         joueur.y = spawn[joueur.getEquipe()][1]
         joueur.powerup = []
-        joueur.puInactif = None

@@ -33,7 +33,7 @@ class Terrain:
         # On charge les images des powerups
         self._powerUpSprites = []
         for i in range(nbPowerup):
-            self._powerUpSprites.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3])))
+            self._powerUpSprites.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3]+".png")))
         # On dessine le fond sur la surface
         pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
 
@@ -89,7 +89,7 @@ class Terrain:
     def getType(self, x, y):
         for i in range(len(self.powerups)):
             p = self.powerups[i]
-            if (x > p['x']-15 and x < p['x']+15 and y > p['y'] - 15 and p['y'] + 15):
+            if (x > p['x']-15 and x < p['x']+15 and y > p['y'] - 15 and y < p['y'] + 15):
                 self.powerups.pop(i)
                 return p['type']
         return None
@@ -197,21 +197,11 @@ class Terrain:
     
     def placerPowerupAlea(self):
         taille = (int)(resolutionPlateau[0] * propZoneInit)
-        type = random.randrange(nbPowerup)
+        typeItem = random.randrange(nbPowerup)
         x = random.randrange(taille, resolutionPlateau[0] - taille)
         y = random.randrange(taille, resolutionPlateau[1] - taille)
         
-        self.setType(x, y, type)
-
-
-terrain = None
-def initTerrain():
-    global terrain
-    terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))
-
-def getTerrain():
-    global terrain
-    return terrain
+        self.setType(x, y, typeItem)
 
 def cercle_bresenham_plateau(r, xc, yc, couleur):
     x = 0
@@ -233,7 +223,14 @@ def cercle_bresenham_plateau(r, xc, yc, couleur):
             y -= 1
         x += 1
 
+terrain = None
+def initTerrain():
+    global terrain
+    terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))
 
+def getTerrain():
+    global terrain
+    return terrain
 
 def updateCase(j):
     posCase1 = ((int) (j.oldX/resolutionPlateau[0]*terrain.getLarg()), (int) (j.oldY/resolutionPlateau[1]*terrain.getLong()))
@@ -248,7 +245,6 @@ def updateCase(j):
     j.drawn = True
 
     #Si le joueur passe sur un PowerUp il le récupère  
-    if j.getInventaire() == None:
-        p = terrain.getType(j.x, j.y)
-        if (p != None):
-            j.setPowerUp(p)
+    p = terrain.getType(j.x, j.y)
+    if (p != None):
+        j.setPowerUp(p)

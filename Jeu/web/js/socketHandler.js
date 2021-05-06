@@ -1,5 +1,5 @@
 var conn = null;
-var msCooldown = 100;
+const msCooldown = 100;
 var lastMsg;
 var posX = null,
     posY = null;
@@ -8,6 +8,10 @@ var resX = null,
 var t1;
 var dx, dy;
 var color = null;
+var powerupNames = ["gottaGoFast", "mildPower", "paintMore"];
+var powerupImages = {};
+const tailleImagesPowerup = 0.2;
+var activePU = null;
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -71,14 +75,24 @@ function connect() {
             case 'update':
                 // On arrête le timer et on affiche le ping
                 if (t1) document.getElementById("affichagePing").innerHTML = (performance.now() - t1) + "ms";
+
                 // On met à jour la position sur la minimap
                 posX = data.x;
                 posY = data.y;
 
-                if (data.pu) {
-                    chargePower(data.pu);
-                } else {
-                    suppPower(data.pu);
+                // On charge les images correspondant aux powerup actifs s'il y a eu un changement
+                if (data.pu && data.pu != [] && (activePU == null || activePU != data.pu)) {
+                    activePU = data.pu
+                    // On enlève les anciennes images
+                    let puDisplay = document.getElementById("powerUpDisplay");
+                    while (puDisplay.hasChildNodes()) {
+                        puDisplay.removeChild(puDisplay.lastChild);
+                    }
+                    // On ajoute les nouvelles
+                    data.pu.forEach(pu => {
+                        let img = powerupImages[pu].cloneNode(false);
+                        puDisplay.appendChild(img);
+                    });
                 }
                 break;
             case 'go':
@@ -143,6 +157,20 @@ function disconnect() {
         conn.close();
         conn = null;
     }
+}
+
+// Chargement paresseux des images de powerUp
+async function loadImages() {
+    powerupNames.forEach(pu => {
+        let tmp = new Image();
+        tmp.src = pu + ".png";
+        powerupImages[pu] = tmp;
+    });
+}
+
+// On ne charge les images que si le jeu est lancé
+if (window.location.pathname[1] == "m") {
+    loadImages();
 }
 
 // Vérifie si l'appareil actuel est un smartphone ou une tablette

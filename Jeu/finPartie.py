@@ -26,5 +26,5 @@ def finPartie(fenetre):
     listePolice = [violet,jaune,rouge,bleu]
 
     for i in range(4):
-        pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(resolution[0]*0.2*(i+1),resolution[1]*0.8,30,-(resolution[1]*listeP[i]/2)))
+        pygame.draw.rect(fenetre, couleursPlateau[i], pygame.Rect(resolution[0]*0.2*(i+1), (resolution[1]*0.8)-(resolution[1]*listeP[i]/2), 30, resolution[1]*listeP[i]/2))
         fenetre.blit(listePolice[i],pygame.Rect(resolution[0]*0.2*(i+1),resolution[1]*0.8,30,-(resolution[1]*listeP[i]/2)))

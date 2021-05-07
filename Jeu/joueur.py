@@ -112,6 +112,9 @@ class Joueur(object):
         puNames = list(map(lambda x: listeValeurs[x][3], pu)) # On remplace par des noms
         return puNames
 
+    def getRayon(self):
+        return self.rayonCouleur
+
 
 # Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):

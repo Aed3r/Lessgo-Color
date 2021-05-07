@@ -86,10 +86,10 @@ class Terrain:
         else:
             return self.plateau[x][y].getColor()
 
-    def getType(self, x, y):
+    def getType(self, x, y, rayon):
         for i in range(len(self.powerups)):
             p = self.powerups[i]
-            if (x > p['x']-15 and x < p['x']+15 and y > p['y'] - 15 and y < p['y'] + 15):
+            if (p['x'] > x - (rayon*tailleCase) and p['x'] < x + (rayon*tailleCase) and p['y'] > y - (rayon*tailleCase) and p['y'] < y + (rayon*tailleCase)):
                 self.powerups.pop(i)
                 return p['type']
         return None
@@ -245,6 +245,6 @@ def updateCase(j):
     j.drawn = True
 
     #Si le joueur passe sur un PowerUp il le récupère  
-    p = terrain.getType(j.x, j.y)
+    p = terrain.getType(j.x, j.y, j.getRayon())
     if (p != None):
         j.setPowerUp(p)

@@ -13,7 +13,7 @@ msPerFrame = int(1000 / fps)
 
 def afficherJoueurs(fenetre):
     for j in joueur.getJoueurs():
-        pygame.draw.circle(fenetre, j.getCouleur(), j.getPos(), playerSize)   
+        pygame.draw.circle(fenetre, j.getCouleur(), j.getPos(), j.getRayon()*tailleCase)   
 
 # (Ré-)initialise le chronomètre
 def initChrono():
@@ -39,7 +39,7 @@ def drawChrono(fenetre):
     seconde = str(t0%60)
     if (t0 == 0):
         return True
-    text = policeTitres.render (minute + ":" + seconde,1,(0,0,0))
+    text = policeTitres.render (minute + ":" + seconde, True, (0,0,0))
     fenetre.blit(text, (resolution[0]/2 - text.get_width()/2, 50))   
     return False                                          
 
@@ -61,7 +61,14 @@ def drawAll(fenetre):
 
     # Fin de la mesure du temps et attente pour afficher la prochaine frame
     end = time.time() * 1000
-    sleep = (msPerFrame - (end - start))/1000.
+
+    # Affichage fps
+    tempsCalcul = end - start # ms
+    if afficherFPS:
+        text = policeNoms.render(str(min(fps, round(1000 / tempsCalcul))) + " fps", True, (0,0,0), (255,255,255))
+        fenetre.blit(text, (resolution[0] - text.get_width(), 0))   
+
+    sleep = (msPerFrame - tempsCalcul)/1000.
     if (sleep > 0): 
         time.sleep(sleep)
 

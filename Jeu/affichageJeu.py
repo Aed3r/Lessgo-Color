@@ -22,6 +22,8 @@ def initChrono():
 
 # AfficehRenvoie True si la partie est finie, False sinon
 def drawChrono(fenetre):
+    image = pygame.image.load("Data/Images/styleChrono.png").convert_alpha()
+    fenetre.blit(image, (resolution[0]/2 - 150, 25))
     global tDebut
     global place
 
@@ -39,7 +41,7 @@ def drawChrono(fenetre):
     seconde = str(t0%60)
     if (t0 == 0):
         return True
-    text = policeTitres.render (minute + ":" + seconde, True, (0,0,0))
+    text = policeTitres.render (minute + ":" + seconde, True, (255,255,255))
     fenetre.blit(text, (resolution[0]/2 - text.get_width()/2, 50))   
     return False                                          
 

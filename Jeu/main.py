@@ -21,8 +21,11 @@ def initFenetre ():
     
     # Initialisation de la fenêtre                                                                                                                     
     pygame.display.set_caption("SPLAT_PGMOT")                                                                                 #nom fenetre
-        
-    return pygame.display.set_mode(resolution, pygame.FULLSCREEN if pleinEcran else pygame.RESIZABLE)
+    
+    if (pleinEcran):
+        return pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+    else:
+        return pygame.display.set_mode(resolution, 0)
 
 fenetre = initFenetre()
 

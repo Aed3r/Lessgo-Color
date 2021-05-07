@@ -1,9 +1,10 @@
 import pygame
 import os
 
+pygame.init()
+
 # ----------------- Affichage ----------------- #
 pleinEcran = False # Si False utilise la résolution définit ci-dessous
-pygame.init()
 resolution = (pygame.display.Info().current_w, pygame.display.Info().current_h) if pleinEcran else (1500, 1000)
 fps = 60
 couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]

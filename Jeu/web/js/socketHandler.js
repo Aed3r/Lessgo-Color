@@ -12,6 +12,7 @@ var powerupNames = ["gottaGoFast", "mildPower", "paintMore"];
 var powerupImages = {};
 const tailleImagesPowerup = 0.2;
 var activePU = null;
+var wraparound = false;
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -132,13 +133,25 @@ function connect() {
 // Renvoie la position actuel du joueur (en % de l'écran)
 function getPosX() {
     posX += dx / 10000;
-    if (posX > 1) posX = 0;
+    if (wraparound) {
+        if (posX > 1) posX = 0;
+        else if (posX < 0) posX = 1;
+    } else {
+        if (posX > 1) posX = 1;
+        else if (posX < 0) posX = 0;
+    }
     return posX;
 }
 
 function getPosY() {
     posY += dy / 10000;
-    if (posY > 1) posY = 0;
+    if (wraparound) {
+        if (posY > 1) posY = 0;
+        else if (posY < 0) posY = 1;
+    } else {
+        if (posY > 1) posY = 1;
+        else if (posY < 0) posY = 0;
+    }
     return posY;
 }
 

@@ -55,6 +55,7 @@ class Joueur(object):
         # Application du vecteur déplacement
         self.x = int(self.x + self.dX * self.vitesse)
         self.y = int(self.y + self.dY * self.vitesse)
+        rayon = self.getRayon() * tailleCase
 
         # Vérification de dépassement des bordures
         if (wrapAround):
@@ -63,10 +64,10 @@ class Joueur(object):
             if (self.y >= resolutionPlateau[1] ): self.y = 1
             if (self.y <= 0): self.y = resolutionPlateau[1] - 1
         else:
-            if (self.x >= resolutionPlateau[0] ): self.x = resolutionPlateau[0] - 1
-            if (self.x < 0): self.x = 0
-            if (self.y >= resolutionPlateau[1] ): self.y = resolutionPlateau[1] - 1
-            if (self.y < 0): self.y = 0
+            if (self.x+rayon >= resolutionPlateau[0] ): self.x = resolutionPlateau[0] - rayon - 1
+            if (self.x-rayon < 0): self.x = rayon
+            if (self.y+rayon >= resolutionPlateau[1] ): self.y = resolutionPlateau[1] - rayon - 1
+            if (self.y-rayon < 0): self.y = rayon
 
     def isDead(self):
         return self.dead

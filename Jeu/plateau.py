@@ -7,6 +7,7 @@ from constantes import *
 class Case:
     def __init__(self):
         self.color = None
+        self.dirty = True
 
     def getColor(self):
         return self.color
@@ -14,6 +15,11 @@ class Case:
     def setColor(self, newColor):
         self.color = newColor
 
+    def isDirty(self):
+        return self.dirty
+
+    def setDirty(self, val):
+        self.dirty = val
 
 class Terrain:
     def __init__(self, long, larg):
@@ -40,8 +46,19 @@ class Terrain:
     def getCase(self, x, y):
         return self.plateau[x][y]
 
+    def setDirty(self, x, y):
+        self.plateau[x][y].setDirty(True)
+        if x+1 < self.larg:
+            self.plateau[x+1][y].setDirty(True)
+        if x-1 >= 0:
+            self.plateau[x-1][y].setDirty(True)
+        if y+1 < self.long:
+            self.plateau[x][y+1].setDirty(True)
+        if y-1 >= 0:
+            self.plateau[x][y-1].setDirty(True)
+
     def setColor(self, x, y, color):
-        #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'auter coté !
+        #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'autre coté !
         wrapped = False
 
         if x < 0:
@@ -70,6 +87,7 @@ class Terrain:
         if wrapped == False:
             self.modifCompteur((x, y), color)
             self.plateau[x][y].setColor(color)
+            self.setDirty(x, y)
 
     def setType(self, x, y, type):
         self.powerups.append({'x': x, 'y': y, 'type': type})
@@ -106,10 +124,15 @@ class Terrain:
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):
             for j in range(self.long):
-                col = self.getColor(i, j)
-                if col != None:
-                    code = self._calcNeighbors(i, j)
-                    self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
+                if self.plateau[i][j].isDirty():
+                    col = self.getColor(i, j)
+                    self.plateau[i][j].setDirty(False)
+                    if col != None:
+                        code = self._calcNeighbors(i, j)
+                        if (code != 15):
+                            self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
+                        else:
+                            pygame.draw.rect(self._buffer, couleursPlateau[col], pygame.Rect(i*tailleCase, j*tailleCase, tailleCase, tailleCase))
         
         fenetre.blit(self._buffer, (0, 0))
 

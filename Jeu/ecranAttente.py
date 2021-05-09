@@ -21,7 +21,6 @@ def initValeurs():
     global blockH, blockW, ico, icoOG, pixelMargins
     
     # MAJ des marges en fonction de la taille d'écran
-    print(str(getRes()))
     pixelMargins['left'] = margins['left'] / 100 * getRes()[0]
     pixelMargins['right'] = margins['right'] / 100 * getRes()[0]
     pixelMargins['top'] = margins['top'] / 100 * getRes()[1]

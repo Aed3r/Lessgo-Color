@@ -24,7 +24,7 @@ def initFenetre ():
     if (pleinEcran):
         return pygame.display.set_mode((0,0), pygame.FULLSCREEN)
     else:
-        return pygame.display.set_mode(getRes(), pygame.RESIZABLE)
+        return pygame.display.set_mode(getRes(), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
 
 fenetre = initFenetre()
 
@@ -184,6 +184,7 @@ class BouclePrincipale(threading.Thread):
                 elif event.type == pygame.VIDEORESIZE:
                     # Redimmensionnement
                     setRes(event.size)
+                    screen=pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
 
 
 # Initialise ou réinitialise le jeu

@@ -9,7 +9,7 @@ _resolution = (pygame.display.Info().current_w, pygame.display.Info().current_h)
 fps = 60
 couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]
 couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
-afficherFPS = True
+afficherFPS = False
 
 def getRes():
     global _resolution

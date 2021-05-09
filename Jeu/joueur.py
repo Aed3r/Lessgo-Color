@@ -1,6 +1,7 @@
 #Classe servant a instancier des joueurs
 
 import time
+import math
 from constantes import *
 
 joueurs = []
@@ -25,8 +26,6 @@ class Joueur(object):
         self.vitesse = defVitesse
         self.nom = nom
         self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
-        self.hSpeed = 0
-        self.vSpeed = 0
 
         #definition des constantes
         self.ID = id
@@ -34,10 +33,21 @@ class Joueur(object):
 
         #On assigne une couleur au joueur selon son équipe et on le place dans la zone de son équipe
         self.COLOR = couleursJoueurs[equipe]
+
+        # Position
         self.x = spawn[equipe][0]
         self.y = spawn[equipe][1]
+
+        # Utilisé à l'affichage
         self.oldX = self.x
         self.oldY = self.y
+
+        # Vitesse de déplacement
+        self.hSpeed = 0
+        self.vSpeed = 0
+        
+        # Dernieres collisions
+        self.collisions = set()
 
     def move(self):
         #On vérifie si on doit enlever un powerup
@@ -47,11 +57,32 @@ class Joueur(object):
                 self.rayonCouleur -= listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
 
-        self.hSpeed += self.dX * self.vitesse
-        self.vSpeed += self.dY * self.vitesse
+        # Accélération selon l'entrée du joueur
+        self.hSpeed += (self.dX * self.vitesse) / 10
+        self.vSpeed += (self.dY * self.vitesse) / 10
 
-        print(str(self.hSpeed))
+        # Réduction de la vitesse au cours du temps
+        self.hSpeed *= 0.99
+        self.vSpeed *= 0.99
 
+        # Cap de vitesse horizontale
+        ratio = 1
+        if self.hSpeed > vitesseMax * self.vitesse:
+            ratio = self.hSpeed / vitesseMax * self.vitesse
+        if self.hSpeed < -vitesseMax * self.vitesse:
+            ratio = self.hSpeed / -vitesseMax * self.vitesse
+        self.hSpeed /= ratio
+        self.vSpeed /= ratio
+
+        # Cap de vitesse verticale
+        ratio = 1
+        if self.vSpeed > vitesseMax * self.vitesse:
+            ratio = self.vSpeed / vitesseMax * self.vitesse
+        if self.vSpeed < -vitesseMax * self.vitesse:
+            ratio = self.vSpeed / -vitesseMax * self.vitesse
+        self.hSpeed /= ratio
+        self.vSpeed /= ratio
+        
         # Application du vecteur déplacement
         self.x += int(self.hSpeed)
         self.y += int(self.vSpeed)
@@ -65,10 +96,18 @@ class Joueur(object):
             if (self.y >= getResP()[1] ): self.y = 1
             if (self.y <= 0): self.y = getResP()[1] - 1
         else:
-            if (self.x+rayon >= getResP()[0] ): self.x = getResP()[0] - rayon - 1
-            if (self.x-rayon < 0): self.x = rayon
-            if (self.y+rayon >= getResP()[1] ): self.y = getResP()[1] - rayon - 1
-            if (self.y-rayon < 0): self.y = rayon
+            if (self.x+rayon >= getResP()[0] ): 
+                self.x = getResP()[0] - rayon - 1
+                self.hSpeed *= -1
+            if (self.x-rayon < 0): 
+                self.x = rayon
+                self.hSpeed *= -1
+            if (self.y+rayon >= getResP()[1] ): 
+                self.y = getResP()[1] - rayon - 1
+                self.vSpeed *= -1
+            if (self.y-rayon < 0): 
+                self.y = rayon
+                self.vSpeed *= -1
 
     def isDead(self):
         return self.dead
@@ -117,6 +156,34 @@ class Joueur(object):
     def getRayon(self):
         return self.rayonCouleur
 
+    def haveCollided(self, j2):
+        return j2.getID() in self.collisions
+
+    def unsetColliding(self, j2):
+        self.collisions.discard(j2.getID())
+        j2.collisions.discard(self.getID())
+    
+    def setColliding(self, j2):
+        self.collisions.add(j2.getID())
+        j2.collisions.add(self.getID())
+
+    # Vérifie s'il y a eu collision avec j2
+    def _areColliding (self, j2):
+        return math.sqrt(math.pow(j2.getPos()[0]-self.getPos()[0], 2)+math.pow(j2.getPos()[1]-self.getPos()[1], 2)) <= (j2.getRayon()*tailleCase)+(self.getRayon()*tailleCase)
+
+    def handleCollision (self, j2):
+        if self.getID() != j2.getID():
+            if self._areColliding(j2): 
+                if not self.haveCollided(j2):
+                    # Nouveaux vecteurs directions
+                    self.hSpeed, j2.hSpeed = j2.hSpeed - self.hSpeed/2, self.hSpeed - j2.hSpeed/2
+                    self.vSpeed, j2.vSpeed = j2.vSpeed - self.vSpeed/2, self.vSpeed - j2.vSpeed/2
+
+                    # Séparation
+                    self.setColliding(j2)
+            else:
+                self.unsetColliding(j2)
+
 
 # Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):
@@ -133,6 +200,10 @@ def moveJoueurs():
     #joueurs.sort(key=comparJoueur) # Trie les joueurs suivant leurs ordonnées 
     for joueur in joueurs:
         joueur.move()
+
+        # On vérifie s'il y a eu collision
+        for j2 in joueurs:
+            joueur.handleCollision(j2)
 
 # Renvoi la liste de tous les joueurs
 def getJoueurs():
@@ -152,4 +223,4 @@ def getNombreJoueurs():
 # Réinitialise les joueurs
 def initJoueurs():
     for joueur in joueurs:
-        joueur.__init__(joueur.ID, joueur.getNom(), joueur.getEquipe())
+        joueur.__init__(joueur.getID(), joueur.getNom(), joueur.getEquipe())

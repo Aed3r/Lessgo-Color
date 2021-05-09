@@ -107,9 +107,6 @@ class BouclePrincipale(threading.Thread):
         etatJeu = "attente" # "jeu", "fin"
         
         while getattr(t, "do_run", True):
-            # Redimmensionnement
-            setRes(pygame.display.get_window_size())
-
             # Affiche l'écran d'attente
             if etatJeu == "attente":
                 ecranAttente.toutDessiner(fenetre)
@@ -152,7 +149,7 @@ class BouclePrincipale(threading.Thread):
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LALT:
                         altPressed = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.type == pygame.MOUSEBUTTONDOWN:
                     # Gestion des clics dans le menu de pause
                     e = mp.verifClic(event.pos)
                     if e != None:
@@ -184,6 +181,10 @@ class BouclePrincipale(threading.Thread):
                             terminerJeu()
                         # On cache le menu pause
                         mp.toggle(None)
+                elif event.type == pygame.VIDEORESIZE:
+                    # Redimmensionnement
+                    setRes(event.size)
+
 
 # Initialise ou réinitialise le jeu
 def initJeu():

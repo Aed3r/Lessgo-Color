@@ -36,6 +36,7 @@ _resolutionPlateau = (_resolution[0], _resolution[1] - tailleBarre)
 couleurFond = (255, 255, 255)
 wrapAround = False
 taillePowerUp = 50 # pixels
+effetFondu = 20 # 0 (très lent) - 255 (instant)
 
 # ------------------ Joueur ----------------- #
 playerSize = 5

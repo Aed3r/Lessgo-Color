@@ -37,6 +37,8 @@ class Terrain:
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
         self._buffer = pygame.Surface((getResP()[0], getResP()[1]))
+        self._buffer.set_alpha(effetFondu)
+        self._bufferPlateau = pygame.Surface((getResP()[0], getResP()[1]))
         # On charge les images des powerups
         self._powerUpSprites = []
         for i in range(nbPowerup):
@@ -45,6 +47,7 @@ class Terrain:
             self._powerUpSprites.append(img)
         # On dessine le fond sur la surface
         pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, getResP()[0], getResP()[1]))
+        pygame.draw.rect(self._bufferPlateau, couleurFond, pygame.Rect(0, 0, getResP()[0], getResP()[1]))
 
     def getCase(self, x, y):
         return self.plateau[x][y]
@@ -140,7 +143,8 @@ class Terrain:
                         else:
                             pygame.draw.rect(self._buffer, couleursPlateau[col], pygame.Rect(i*tailleCase, j*tailleCase, tailleCase, tailleCase))
         
-        fenetre.blit(self._buffer, (0, 0))
+        self._bufferPlateau.blit(self._buffer, (0,0))
+        fenetre.blit(self._bufferPlateau, (0, 0))
 
         # Powerup
         for p in self.powerups:
@@ -264,6 +268,9 @@ def getTerrain():
 def updateCase(j):
     posCase1 = ((int) (j.oldX/getResP()[0]*terrain.getLarg()), (int) (j.oldY/getResP()[1]*terrain.getLong()))
     posCase2 = ((int) (j.x/getResP()[0]*terrain.getLarg()), (int) (j.y/getResP()[1]*terrain.getLong()))
+
+    j.oldX = j.x
+    j.oldY = j.y
     
     terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
     if j.rayonCouleur > 0:

@@ -36,6 +36,7 @@ _resolutionPlateau = (_resolution[0], _resolution[1] - tailleBarre)
 couleurFond = (255, 255, 255)
 wrapAround = False
 taillePowerUp = 50 # pixels
+effetFondu = 20 # 0 (très lent) - 255 (instant)
 
 # ------------------ Joueur ----------------- #
 playerSize = 5
@@ -51,6 +52,8 @@ mildPower = 2
 # Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon, Durée(sec)]
 listeValeurs = [[0, 1, 10, "paintMore"], [2, 0, 10, "gottaGoFast"], [1, 1, 10, "mildPower"]]
 
+#Nombre de PowerUp présent au démarage
+powerUpsDemarage = 5
 # ----------------- Ecran d'attente ----------------- #
 margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %
 tailleCompteur = 0.05 # En % de la hauteur de la fenêtre

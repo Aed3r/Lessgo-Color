@@ -36,7 +36,6 @@ class Joueur(object):
         self.y = spawn[equipe][1]
         self.oldX = self.x
         self.oldY = self.y
-        self.drawn = True
 
     def move(self):
         #On vérifie si on doit enlever un powerup
@@ -45,12 +44,6 @@ class Joueur(object):
                 self.vitesse -= listeValeurs[pu[0]][0]
                 self.rayonCouleur -= listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
-
-        # Mise à jour de la dernière position dessiné
-        if (self.drawn):
-            self.oldX = self.x
-            self.oldY = self.y
-            self.drawn = False
 
         # Application du vecteur déplacement
         self.x = int(self.x + self.dX * self.vitesse)
@@ -151,8 +144,4 @@ def getNombreJoueurs():
 # Réinitialise les joueurs
 def initJoueurs():
     for joueur in joueurs:
-        joueur.rayonCouleur = defRayonCouleur
-        joueur.vitesse = defVitesse
-        joueur.x = spawn[joueur.getEquipe()][0]
-        joueur.y = spawn[joueur.getEquipe()][1]
-        joueur.powerup = []
+        joueur.__init__(joueur.ID, joueur.getNom(), joueur.getEquipe())

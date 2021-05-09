@@ -44,6 +44,9 @@ playerSize = 5
 #Valeurs par défaut
 defRayonCouleur = 1
 defVitesse = 1
+
+collisions = False
+vitesseMax = 5 # Sans powerup
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3
 paintMore = 0

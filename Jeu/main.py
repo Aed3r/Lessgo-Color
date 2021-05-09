@@ -17,15 +17,14 @@ app = None
 
 # Initialise la fenêtre
 def initFenetre ():
-    global resolution 
-    
+   
     # Initialisation de la fenêtre                                                                                                                     
-    pygame.display.set_caption("SPLAT_PGMOT")                                                                                 #nom fenetre
+    pygame.display.set_caption("LessGo Color")                                                                                 #nom fenetre
     
     if (pleinEcran):
         return pygame.display.set_mode((0,0), pygame.FULLSCREEN)
     else:
-        return pygame.display.set_mode(resolution, 0)
+        return pygame.display.set_mode(getRes(), pygame.RESIZABLE)
 
 fenetre = initFenetre()
 
@@ -103,12 +102,14 @@ class BouclePrincipale(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):  
-        ecranAttente.initValeurs()
         t = threading.currentThread()
         altPressed = False
         etatJeu = "attente" # "jeu", "fin"
         
         while getattr(t, "do_run", True):
+            # Redimmensionnement
+            setRes(pygame.display.get_window_size())
+
             # Affiche l'écran d'attente
             if etatJeu == "attente":
                 ecranAttente.toutDessiner(fenetre)
@@ -160,6 +161,7 @@ class BouclePrincipale(threading.Thread):
                             # Si le bouton 'lancer jeu' a été appuyé on lance la boucle principale
                             lancerJeu()
                             etatJeu = "jeu"
+                            pygame.display.set_mode(getRes(), 0)
                         elif e == QUITTERJEU:
                             # On quitte
                             os.kill(os.getpid(), signal.SIGINT)
@@ -169,6 +171,7 @@ class BouclePrincipale(threading.Thread):
                         elif e == REVATTENTE:
                             # On revient au menu d'attente
                             etatJeu = "attente"
+                            pygame.display.set_mode(getRes(), pygame.RESIZABLE)
 
                             # On avertit les clients
                             avertirClients({'action': 'attente'})
@@ -226,7 +229,7 @@ if __name__ == '__main__':
     boucle = BouclePrincipale()
     app = init_app()
     boucle.start() 
-    print("Résolution : ", resolution)
+    print("Résolution : ", getRes())
     print("Affichage démarré. Lancement du site...")
     web.run_app(app, port=port)
     boucle.do_run = False

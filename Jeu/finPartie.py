@@ -5,7 +5,7 @@ import os
 
 def finPartie(fenetre):
     i = 0
-    pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, resolution[0], resolution[1]))
+    pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, getRes()[0], getRes()[1]))
     listeP = getTerrain().pourcentageCouleur()
 
     policeViolet=pygame.font.SysFont(None,30)
@@ -26,5 +26,5 @@ def finPartie(fenetre):
     listePolice = [violet,jaune,rouge,bleu]
 
     for i in range(4):
-        pygame.draw.rect(fenetre, couleursPlateau[i], pygame.Rect(resolution[0]*0.2*(i+1), (resolution[1]*0.8)-(resolution[1]*listeP[i]/2), 30, resolution[1]*listeP[i]/2))
-        fenetre.blit(listePolice[i],pygame.Rect(resolution[0]*0.2*(i+1),resolution[1]*0.8,30,-(resolution[1]*listeP[i]/2)))
+        pygame.draw.rect(fenetre, couleursPlateau[i], pygame.Rect(getRes()[0]*0.2*(i+1), (getRes()[1]*0.8)-(getRes()[1]*listeP[i]/2), 30, getRes()[1]*listeP[i]/2))
+        fenetre.blit(listePolice[i],pygame.Rect(getRes()[0]*0.2*(i+1),getRes()[1]*0.8,30,-(getRes()[1]*listeP[i]/2)))

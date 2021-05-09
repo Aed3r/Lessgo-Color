@@ -12,33 +12,37 @@ msPerFrame = int(1000 / fps)
 # Taille des blocs de couleurs
 blockW = None
 blockH = None
+ico = None
+icoOG = None
+pixelMargins = {}
 
-# Doit être appelé avant les autres fonction pour initialiser les variables nécessitant la globale resolution
+# Doit être appelé avant les autres fonction pour initialiser les variables nécessitant la globale getRes()
 def initValeurs():
-    global blockH, blockW, ico
+    global blockH, blockW, ico, icoOG, pixelMargins
     
     # MAJ des marges en fonction de la taille d'écran
-    margins['left'] = margins['left'] / 100 * resolution[0]
-    margins['right'] = margins['right'] / 100 * resolution[0]
-    margins['top'] = margins['top'] / 100 * resolution[1]
-    margins['bottom'] = margins['bottom'] / 100 * resolution[1]
+    pixelMargins['left'] = margins['left'] / 100 * getRes()[0]
+    pixelMargins['right'] = margins['right'] / 100 * getRes()[0]
+    pixelMargins['top'] = margins['top'] / 100 * getRes()[1]
+    pixelMargins['bottom'] = margins['bottom'] / 100 * getRes()[1]
 
     # Taille des blocs de couleurs
-    blockW = (resolution[0] - (margins['left'] * 5)) / 4
-    blockH = resolution[1] - margins['top'] - margins['bottom']
+    blockW = (getRes()[0] - (pixelMargins['left'] * 5)) / 4
+    blockH = getRes()[1] - pixelMargins['top'] - pixelMargins['bottom']
 
     # Icône
     # https://www.flaticon.com/free-icon/user_1077114?term=user&page=1&position=1&page=1&position=1&related_id=1077114&origin=search
-    ico = pygame.image.load(os.path.join('Data', 'Images', 'user.png')).convert_alpha() # Récupération
-    ico = pygame.transform.smoothscale(ico, (int(resolution[1]*tailleCompteur), int(resolution[1]*tailleCompteur))) # Redimensionnement
+    if (icoOG == None):
+        icoOG = pygame.image.load(os.path.join('Data', 'Images', 'user.png')).convert_alpha() # Récupération
+    ico = pygame.transform.smoothscale(icoOG, (int(getRes()[1]*tailleCompteur), int(getRes()[1]*tailleCompteur))) # Redimensionnement
 
 def clear (fenetre):
-    pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, resolution[0], resolution[1]))
+    pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, getRes()[0], getRes()[1]))
 
 def afficherBlocsCouleurs(fenetre):
     for i in range(4):
-        pg.draw.rect(fenetre, couleursPlateau[i], pg.Rect(margins['left'] + i * (blockW+margins['left']), 
-                                                                  margins['top'], 
+        pg.draw.rect(fenetre, couleursPlateau[i], pg.Rect(pixelMargins['left'] + i * (blockW+pixelMargins['left']), 
+                                                                  pixelMargins['top'], 
                                                                   blockW, 
                                                                   blockH))
 
@@ -59,9 +63,9 @@ def afficherNomsJoueurs(fenetre):
         
         # Préparation de l'emplacement du texte
         tailleTexte = text.get_size()
-        posBloc = margins['left'] + e * (blockW+margins['left'])
+        posBloc = pixelMargins['left'] + e * (blockW+pixelMargins['left'])
         posX = posBloc + blockW/2 - tailleTexte[0]/2
-        posY = margins['top']
+        posY = pixelMargins['top']
 
         # Affichage du texte
         if (offsetListes[e] + tailleTexte[1] < blockH):
@@ -84,7 +88,7 @@ def afficherTitre (fenetre):
     global titleColor
     textSurface = policeTitres.render(ENATTENTE, True, titleColor);
     tailleTexte = textSurface.get_size()
-    fenetre.blit(textSurface, (resolution[0]/2-tailleTexte[0]/2, margins['top']/2-tailleTexte[1]/2))
+    fenetre.blit(textSurface, (getRes()[0]/2-tailleTexte[0]/2, pixelMargins['top']/2-tailleTexte[1]/2))
 
 ico = None
 
@@ -93,21 +97,23 @@ def afficherCompteJoueurs (fenetre):
 
     # Icône
     tailleIco = ico.get_size()
-    fenetre.blit(ico, (resolution[0]-tailleIco[0]-margeCompteur, margeCompteur))
+    fenetre.blit(ico, (getRes()[0]-tailleIco[0]-margeCompteur, margeCompteur))
 
     # Compteur
     textSurface = policeTitres.render(str(j.getNombreJoueurs()), True, titleColor);
     tailleTexte = textSurface.get_size()
-    newHeight = resolution[1]*tailleCompteur
+    newHeight = getRes()[1]*tailleCompteur
     textSurface = pygame.transform.smoothscale(textSurface, 
                     (int((tailleTexte[0]/tailleTexte[1])*newHeight), int(newHeight)))
-    fenetre.blit(textSurface, (resolution[0]-tailleIco[0]-tailleTexte[0]-margeCompteur, margeCompteur))
+    fenetre.blit(textSurface, (getRes()[0]-tailleIco[0]-tailleTexte[0]-margeCompteur, margeCompteur))
 
 def toutDessiner(fenetre):
     global showMenu, rectBouton
 
     # Mesure du temps d'affichage de la frame
     start = time.time() * 1000
+
+    initValeurs()
 
     clear(fenetre)
     afficherBlocsCouleurs(fenetre)

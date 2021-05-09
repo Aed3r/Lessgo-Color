@@ -23,7 +23,7 @@ async def request_handler(ws_current, request):
         # On envoie la position initiale du joueur, ainsi que la taille de l'écran
         player = j.getJoueur(request.remote)
         await envoyerPaquet(ws_current, {'action': 'init', 'x': player.getPos()[0], 'y': player.getPos()[1],
-                                         'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1], 'col': player.getEquipe()})
+                                         'resX': getResP()[0], 'resY': getResP()[1], 'col': player.getEquipe()})
 
     while True:
         msg = await ws_current.receive()

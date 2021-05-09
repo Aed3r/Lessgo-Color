@@ -36,7 +36,7 @@ class Terrain:
         for i in range(4):
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
-        self._buffer = pygame.Surface((resolutionPlateau[0], resolutionPlateau[1]))
+        self._buffer = pygame.Surface((getResP()[0], getResP()[1]))
         # On charge les images des powerups
         self._powerUpSprites = []
         for i in range(nbPowerup):
@@ -44,7 +44,7 @@ class Terrain:
             img = pygame.transform.smoothscale(img, (taillePowerUp, taillePowerUp))
             self._powerUpSprites.append(img)
         # On dessine le fond sur la surface
-        pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
+        pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, getResP()[0], getResP()[1]))
 
     def getCase(self, x, y):
         return self.plateau[x][y]
@@ -116,7 +116,7 @@ class Terrain:
         return None
 
     def initTerrain(self):
-        taille = (int)(resolutionPlateau[0] / tailleCase * propZoneInit)
+        taille = (int)(getResP()[0] / tailleCase * propZoneInit)
         for i in range(taille):
             for j in range(taille):
                 self.setColor(i, j, 0)
@@ -156,10 +156,10 @@ class Terrain:
         tot=0
         i=0
         for p in listePour:
-            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
+            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*getRes()[0],getRes()[1]-19,getRes()[0]*p,18))
             tot+=p
             i+=1
-        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))
+        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*getRes()[0],getRes()[1]-19,getRes()[0],18))
 
     def modifCompteur(self, pos, color):
         colorNow = self.getColor(pos[0], pos[1])
@@ -222,10 +222,10 @@ class Terrain:
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, col)
     
     def placerPowerupAlea(self):
-        taille = (int)(resolutionPlateau[0] * propZoneInit)
+        taille = (int)(getResP()[0] * propZoneInit)
         typeItem = random.randrange(nbPowerup)
-        x = random.randrange(taille, resolutionPlateau[0] - taille)
-        y = random.randrange(taille, resolutionPlateau[1] - taille)
+        x = random.randrange(taille, getResP()[0] - taille)
+        y = random.randrange(taille, getResP()[1] - taille)
         
         self.setType(x, y, typeItem)
 
@@ -252,15 +252,15 @@ def cercle_bresenham_plateau(r, xc, yc, couleur):
 terrain = None
 def initTerrain():
     global terrain
-    terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))
+    terrain = Terrain(round(getResP()[1]/tailleCase), round(getResP()[0]/tailleCase))
 
 def getTerrain():
     global terrain
     return terrain
 
 def updateCase(j):
-    posCase1 = ((int) (j.oldX/resolutionPlateau[0]*terrain.getLarg()), (int) (j.oldY/resolutionPlateau[1]*terrain.getLong()))
-    posCase2 = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
+    posCase1 = ((int) (j.oldX/getResP()[0]*terrain.getLarg()), (int) (j.oldY/getResP()[1]*terrain.getLong()))
+    posCase2 = ((int) (j.x/getResP()[0]*terrain.getLarg()), (int) (j.y/getResP()[1]*terrain.getLong()))
     
     terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
     if j.rayonCouleur > 0:

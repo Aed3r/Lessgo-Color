@@ -6,12 +6,12 @@ from constantes import *
 joueurs = []
 
 # Placements initiaux
-spawnXOffset = resolutionPlateau[0] * propZoneInit / 2
-spawnYOffset = resolutionPlateau[1] * propZoneInit / 2
+spawnXOffset = getResP()[0] * propZoneInit / 2
+spawnYOffset = getResP()[1] * propZoneInit / 2
 spawn = [(spawnXOffset, spawnYOffset),
-         (resolutionPlateau[0] - spawnXOffset, spawnYOffset),
-         (spawnXOffset, resolutionPlateau[1] - spawnYOffset),
-         (resolutionPlateau[0] - spawnXOffset, resolutionPlateau[1] - spawnYOffset)]
+         (getResP()[0] - spawnXOffset, spawnYOffset),
+         (spawnXOffset, getResP()[1] - spawnYOffset),
+         (getResP()[0] - spawnXOffset, getResP()[1] - spawnYOffset)]
 
 class Joueur(object): 
 
@@ -59,14 +59,14 @@ class Joueur(object):
 
         # Vérification de dépassement des bordures
         if (wrapAround):
-            if (self.x >= resolutionPlateau[0] ): self.x = 1
-            if (self.x <= 0): self.x = resolutionPlateau[0] - 1
-            if (self.y >= resolutionPlateau[1] ): self.y = 1
-            if (self.y <= 0): self.y = resolutionPlateau[1] - 1
+            if (self.x >= getResP()[0] ): self.x = 1
+            if (self.x <= 0): self.x = getResP()[0] - 1
+            if (self.y >= getResP()[1] ): self.y = 1
+            if (self.y <= 0): self.y = getResP()[1] - 1
         else:
-            if (self.x+rayon >= resolutionPlateau[0] ): self.x = resolutionPlateau[0] - rayon - 1
+            if (self.x+rayon >= getResP()[0] ): self.x = getResP()[0] - rayon - 1
             if (self.x-rayon < 0): self.x = rayon
-            if (self.y+rayon >= resolutionPlateau[1] ): self.y = resolutionPlateau[1] - rayon - 1
+            if (self.y+rayon >= getResP()[1] ): self.y = getResP()[1] - rayon - 1
             if (self.y-rayon < 0): self.y = rayon
 
     def isDead(self):
@@ -93,7 +93,7 @@ class Joueur(object):
             self.PowerUp.append((pu, time.time()))
             
     def getPosPourcentage(self):
-        return (self.x / resolutionPlateau[0], self.y / resolutionPlateau[1])
+        return (self.x / getResP()[0], self.y / getResP()[1])
 
     def getEquipe(self):
         return self.EQUIPE

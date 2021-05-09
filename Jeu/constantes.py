@@ -11,9 +11,22 @@ couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]
 couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
 afficherFPS = True
 
+def getRes():
+    global resolution
+    return resolution
+
+def getResP():
+    global resolutionPlateau
+    return resolutionPlateau
+
+def setRes(res):
+    global resolution, resolutionPlateau
+    resolution = res
+    resolutionPlateau = (res[0], res[1] - tailleBarre)
+
 # ------------------ Main ------------------- #
 port = 8081
-tempsPartie = 300
+tempsPartie = 300 # secondes
 
 # ------------------ Plateau ------------------- #
 tailleCase = 10 # Modifier les tiles dans Data/Images/Tiles également

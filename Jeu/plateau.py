@@ -41,7 +41,7 @@ class Terrain:
         self._bufferPlateau = pygame.Surface((getResP()[0], getResP()[1]))
         # On charge les images des powerups
         self._powerUpSprites = []
-        for i in range(nbPowerup):
+        for i in range(nbPowerup + nbSpecial):
             img = pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3]+".png"))
             img = pygame.transform.smoothscale(img, (taillePowerUp, taillePowerUp))
             self._powerUpSprites.append(img)

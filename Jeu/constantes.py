@@ -41,7 +41,7 @@ taillePowerUp = 50 # pixels
 playerSize = 5
 
 #Valeurs par défaut
-defRayonCouleur = 0
+defRayonCouleur = 1
 defVitesse = 1
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3

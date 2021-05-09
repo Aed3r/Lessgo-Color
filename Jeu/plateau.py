@@ -248,7 +248,7 @@ class Terrain:
                     if(p['x'] == x and p['y'] == y):
                         bienPlace = False
         
-        self.setType(x, y, type)
+        self.setType(x, y, 3)
 
         #for i in range(taille):
          #   for j in range(taille):

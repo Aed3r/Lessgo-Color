@@ -240,7 +240,6 @@ class Terrain:
             bienPlace = True
             #On vérifie le placement du powerup
             if (x<taille and y<taille) or (x < taille and y > resolution[1] - taille) or (x > resolution[0] - taille and y < taille) or (x > resolution[0] - taille and y > resolution[1] - taille) :
-                print("HQHQHQGQHQ")
                 bienPlace = False
 
             #On vérifie si le powerup est sur un autre si il est bien placé
@@ -249,7 +248,6 @@ class Terrain:
                     if(p['x'] == x and p['y'] == y):
                         bienPlace = False
         
-        print("x = ", x,"y =",y," et taille =", taille)
         self.setType(x, y, type)
 
         #for i in range(taille):

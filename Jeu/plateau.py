@@ -197,8 +197,17 @@ class Terrain:
     def placerPowerupAlea(self):
         taille = (int)(resolutionPlateau[0] * propZoneInit)
         type = random.randrange(nbPowerup)
+        bienPlace =  False
         x = random.randrange(taille, resolutionPlateau[0] - taille)
         y = random.randrange(taille, resolutionPlateau[1] - taille)
+
+        while bienPlace == False:
+            bienPlace = True
+            for p in self.powerups:
+                if(p['x'] == x & p['y'] == y):
+                    bienPlace = False
+                    x = random.randrange(taille, resolutionPlateau[0] - taille)
+                    y = random.randrange(taille, resolutionPlateau[1] - taille)
         
         self.setType(x, y, type)
 
@@ -232,6 +241,13 @@ def cercle_bresenham_plateau(r, xc, yc, couleur):
             y -= 1
         x += 1
 
+def remplissage(x, y, couleur):
+    if terrain.getColor(x, y) != couleur:
+        terrain.setColor(x, y, couleur)
+        remplissage(x+1,y,couleur)
+        remplissage(x-1,y,couleur)
+        remplissage(x,y+1,couleur)
+        remplissage(x,y-1,couleur)
 
 
 def updateCase(j):
@@ -241,9 +257,7 @@ def updateCase(j):
     terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
     if j.rayonCouleur > 0:
         cercle_bresenham_plateau(j.rayonCouleur, posCase1[0], posCase1[1], j.EQUIPE)
-        if j.rayonCouleur > 1:
-            for r in range(j.rayonCouleur):
-                cercle_bresenham_plateau(r, posCase1[0], posCase1[1], j.EQUIPE)
+        remplissage(posCase1[0], posCase1[1], j.EQUIPE)
     j.drawn = True
 
     #Si le joueur passe sur un PowerUp il le récupère  

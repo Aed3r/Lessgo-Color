@@ -183,6 +183,7 @@ class BouclePrincipale(threading.Thread):
                         mp.toggle(None)
                 elif event.type == pygame.VIDEORESIZE:
                     # Redimmensionnement
+                    print(str(event.size))
                     setRes(event.size)
 
 

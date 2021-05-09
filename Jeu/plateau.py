@@ -123,6 +123,9 @@ class Terrain:
                 self.setColor(self.larg-i-1, j, 1)
                 self.setColor(i, self.long-j-1, 2)
                 self.setColor(self.larg-i-1, self.long-j-1, 3)
+        
+        for i in range(powerUpsDemarage):
+            self.placerPowerupAlea()
 
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):

@@ -22,6 +22,7 @@ def getResP():
 def setRes(res):
     global _resolution, _resolutionPlateau
     _resolution = res
+    print(str(_resolution))
     _resolutionPlateau = (res[0], res[1] - tailleBarre)
 
 # ------------------ Main ------------------- #

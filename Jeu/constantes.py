@@ -22,6 +22,7 @@ tailleBarre = 20
 resolutionPlateau = (resolution[0], resolution[1] - tailleBarre)
 couleurFond = (255, 255, 255)
 wrapAround = False
+taillePowerUp = 50 # pixels
 
 # ------------------ Joueur ----------------- #
 playerSize = 5

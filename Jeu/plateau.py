@@ -3,6 +3,7 @@ import random
 import os
 import time
 from constantes import *
+import math
 
 class Case:
     def __init__(self):
@@ -39,7 +40,9 @@ class Terrain:
         # On charge les images des powerups
         self._powerUpSprites = []
         for i in range(nbPowerup):
-            self._powerUpSprites.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3]+".png")))
+            img = pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3]+".png"))
+            img = pygame.transform.smoothscale(img, (taillePowerUp, taillePowerUp))
+            self._powerUpSprites.append(img)
         # On dessine le fond sur la surface
         pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
 
@@ -107,7 +110,7 @@ class Terrain:
     def getType(self, x, y, rayon):
         for i in range(len(self.powerups)):
             p = self.powerups[i]
-            if (p['x'] > x - (rayon*tailleCase) and p['x'] < x + (rayon*tailleCase) and p['y'] > y - (rayon*tailleCase) and p['y'] < y + (rayon*tailleCase)):
+            if math.sqrt(math.pow(p['x']-x, 2)+math.pow(p['y']-y, 2)) <= (rayon*tailleCase)+taillePowerUp/2:
                 self.powerups.pop(i)
                 return p['type']
         return None
@@ -138,7 +141,7 @@ class Terrain:
 
         # Powerup
         for p in self.powerups:
-            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-15, p['y']-15))             
+            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-taillePowerUp/2, p['y']-taillePowerUp/2))          
 
     def _calcNeighbors(self, x, y):
         code = 0

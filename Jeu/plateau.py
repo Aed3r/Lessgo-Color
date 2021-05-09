@@ -222,21 +222,33 @@ class Terrain:
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, col)
     
     def placerPowerupAlea(self):
-        taille = (int)(resolutionPlateau[0] * propZoneInit)
+        resolution = getRes()
+        taille = (int)(resolution[0] * propZoneInit)
         type = random.randrange(nbPowerup)
         bienPlace =  False
-        x = random.randrange(taille, resolutionPlateau[0] - taille)
-        y = random.randrange(taille, resolutionPlateau[1] - taille)
-
-        while bienPlace == False:
-            bienPlace = True
-            for p in self.powerups:
-                if(p['x'] == x & p['y'] == y):
-                    bienPlace = False
-                    x = random.randrange(taille, resolutionPlateau[0] - taille)
-                    y = random.randrange(taille, resolutionPlateau[1] - taille)
         
-        self.setType(x, y, typeItem)
+        while bienPlace == False:
+            x = random.randrange(resolution[0])
+            y = random.randrange(resolution[1])
+            bienPlace = True
+            #On vérifie le placement du powerup
+            if (x<taille & y<taille) | (x < taille & y > resolution[1] - taille) | (x > resolution[0] - taille & y < taille) | (x > resolution[0] - taille & y > resolution[1] - taille) :
+                bienPlace = False
+
+            #On vérifie si le powerup est sur un autre si il est bien placé
+            if bienPlace == True:
+                for p in self.powerups:
+                    if(p['x'] == x & p['y'] == y):
+                        bienPlace = False
+        
+        self.setType(x, y, type)
+
+        #for i in range(taille):
+         #   for j in range(taille):
+          #      self.setColor(i, j, 0)
+           #     self.setColor(self.larg-i-1, j, 1)
+            #    self.setColor(i, self.long-j-1, 2)
+             #   self.setColor(self.larg-i-1, self.long-j-1, 3)
 
 def cercle_bresenham_plateau(r, xc, yc, couleur):
     x = 0

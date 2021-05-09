@@ -57,35 +57,39 @@ class Joueur(object):
                 self.rayonCouleur -= listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
 
-        # Accélération selon l'entrée du joueur
-        self.hSpeed += (self.dX * self.vitesse) / 10
-        self.vSpeed += (self.dY * self.vitesse) / 10
+        if (collisions):
+            # Accélération selon l'entrée du joueur
+            self.hSpeed += (self.dX * self.vitesse) / 10
+            self.vSpeed += (self.dY * self.vitesse) / 10
 
-        # Réduction de la vitesse au cours du temps
-        self.hSpeed *= 0.99
-        self.vSpeed *= 0.99
+            # Réduction de la vitesse au cours du temps
+            self.hSpeed *= 0.99
+            self.vSpeed *= 0.99
 
-        # Cap de vitesse horizontale
-        ratio = 1
-        if self.hSpeed > vitesseMax * self.vitesse:
-            ratio = self.hSpeed / vitesseMax * self.vitesse
-        if self.hSpeed < -vitesseMax * self.vitesse:
-            ratio = self.hSpeed / -vitesseMax * self.vitesse
-        self.hSpeed /= ratio
-        self.vSpeed /= ratio
+            # Cap de vitesse horizontale
+            ratio = 1
+            if self.hSpeed > vitesseMax * self.vitesse:
+                ratio = self.hSpeed / vitesseMax * self.vitesse
+            if self.hSpeed < -vitesseMax * self.vitesse:
+                ratio = self.hSpeed / -vitesseMax * self.vitesse
+            self.hSpeed /= ratio
+            self.vSpeed /= ratio
 
-        # Cap de vitesse verticale
-        ratio = 1
-        if self.vSpeed > vitesseMax * self.vitesse:
-            ratio = self.vSpeed / vitesseMax * self.vitesse
-        if self.vSpeed < -vitesseMax * self.vitesse:
-            ratio = self.vSpeed / -vitesseMax * self.vitesse
-        self.hSpeed /= ratio
-        self.vSpeed /= ratio
-        
-        # Application du vecteur déplacement
-        self.x += int(self.hSpeed)
-        self.y += int(self.vSpeed)
+            # Cap de vitesse verticale
+            ratio = 1
+            if self.vSpeed > vitesseMax * self.vitesse:
+                ratio = self.vSpeed / vitesseMax * self.vitesse
+            if self.vSpeed < -vitesseMax * self.vitesse:
+                ratio = self.vSpeed / -vitesseMax * self.vitesse
+            self.hSpeed /= ratio
+            self.vSpeed /= ratio
+            
+            # Application du vecteur déplacement
+            self.x += int(self.hSpeed)
+            self.y += int(self.vSpeed)
+        else:
+            self.x = int(self.x + self.dX * self.vitesse)
+            self.y = int(self.y + self.dY * self.vitesse)
 
         rayon = self.getRayon() * tailleCase
 
@@ -95,7 +99,7 @@ class Joueur(object):
             if (self.x <= 0): self.x = getResP()[0] - 1
             if (self.y >= getResP()[1] ): self.y = 1
             if (self.y <= 0): self.y = getResP()[1] - 1
-        else:
+        elif (collisions):
             if (self.x+rayon >= getResP()[0] ): 
                 self.x = getResP()[0] - rayon - 1
                 self.hSpeed *= -1
@@ -108,6 +112,11 @@ class Joueur(object):
             if (self.y-rayon < 0): 
                 self.y = rayon
                 self.vSpeed *= -1
+        else:
+            if (self.x+rayon >= getResP()[0] ): self.x = getResP()[0] - rayon - 1
+            if (self.x-rayon < 0): self.x = rayon
+            if (self.y+rayon >= getResP()[1] ): self.y = getResP()[1] - rayon - 1
+            if (self.y-rayon < 0): self.y = rayon
 
     def isDead(self):
         return self.dead
@@ -201,9 +210,10 @@ def moveJoueurs():
     for joueur in joueurs:
         joueur.move()
 
-        # On vérifie s'il y a eu collision
-        for j2 in joueurs:
-            joueur.handleCollision(j2)
+        if (collisions):
+            # On vérifie s'il y a eu collision
+            for j2 in joueurs:
+                joueur.handleCollision(j2)
 
 # Renvoi la liste de tous les joueurs
 def getJoueurs():

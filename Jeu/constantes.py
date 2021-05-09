@@ -21,8 +21,8 @@ def getResP():
 
 def setRes(res):
     global _resolution, _resolutionPlateau
-    resolution = res
-    resolutionPlateau = (res[0], res[1] - tailleBarre)
+    _resolution = res
+    _resolutionPlateau = (res[0], res[1] - tailleBarre)
 
 # ------------------ Main ------------------- #
 port = 8081

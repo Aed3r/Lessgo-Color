@@ -37,6 +37,7 @@ class Terrain:
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
         self._buffer = pygame.Surface((getResP()[0], getResP()[1]))
+        self._buffer.set_alpha(100)
         # On charge les images des powerups
         self._powerUpSprites = []
         for i in range(nbPowerup):

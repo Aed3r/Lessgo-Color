@@ -23,7 +23,7 @@ async def request_handler(ws_current, request):
         # On envoie la position initiale du joueur, ainsi que la taille de l'écran
         player = j.getJoueur(request.remote)
         await envoyerPaquet(ws_current, {'action': 'init', 'x': player.getPos()[0], 'y': player.getPos()[1],
-                                         'resX': resolutionPlateau[0], 'resY': resolutionPlateau[1], 'col': player.getEquipe()})
+                                         'resX': getResP()[0], 'resY': getResP()[1], 'col': player.getEquipe()})
 
     while True:
         msg = await ws_current.receive()
@@ -41,9 +41,9 @@ async def request_handler(ws_current, request):
                 # On modifie le déplacement du joueur
                 player.setDirection(data["dx"]/10, data["dy"]/10)
 
-                # On renvoie la position actuelle
+                # On renvoie la position et le powerup actuel
                 pos = player.getPosPourcentage()
-                await envoyerPaquet(ws_current, {'action': 'position', 'x': pos[0], 'y': pos[1]})
+                await envoyerPaquet(ws_current, {'action': 'update', 'x': pos[0], 'y': pos[1], 'pu': player.getPowerups()})
             elif data["action"] == "init":
                 # On enregistre le nouveau joueur
                 player = j.Joueur(request.remote, data["nom"], data["team"])
@@ -59,7 +59,7 @@ async def envoyerPaquet (websocket, paquet):
     if not websocket.closed:
         try:
             await websocket.send_json(paquet)
-        except:
+        except Exception:
             return
 
 # Signifie à tous les clients

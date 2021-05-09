@@ -16,15 +16,15 @@ window.addEventListener("load", function() {
 function choisirNom() {
     var textBox = document.getElementById("pseudoBox");
 
-    if (step == 0) step++;
-    else return;
-
     // Vérifie si le nomp est valide
     if (isNullOrWhitespace(textBox.value)) {
         textBox.classList.add("invalidEntry");
         textBox.value = "";
         return;
     }
+
+    if (step == 0) step++;
+    else return;
 
     packet["nom"] = textBox.value;
 

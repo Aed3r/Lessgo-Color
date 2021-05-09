@@ -32,3 +32,19 @@ body.charger {
     top: 0;
     right: 0;
 }
+
+#powerUpDisplay {
+    position: absolute;
+    display: flex;
+    top: 0;
+    height: 20%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    pointer-events: none;
+    user-select: none;
+}
+
+#powerUpDisplay img {
+    margin: 20px;
+    height: 100%;
+}

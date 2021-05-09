@@ -3,10 +3,12 @@ import random
 import os
 import time
 from constantes import *
+import math
 
 class Case:
     def __init__(self):
         self.color = None
+        self.dirty = True
 
     def getColor(self):
         return self.color
@@ -14,6 +16,11 @@ class Case:
     def setColor(self, newColor):
         self.color = newColor
 
+    def isDirty(self):
+        return self.dirty
+
+    def setDirty(self, val):
+        self.dirty = val
 
 class Terrain:
     def __init__(self, long, larg):
@@ -29,19 +36,32 @@ class Terrain:
         for i in range(4):
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
-        self._buffer = pygame.Surface((resolutionPlateau[0], resolutionPlateau[1]))
+        self._buffer = pygame.Surface((getResP()[0], getResP()[1]))
         # On charge les images des powerups
         self._powerUpSprites = []
         for i in range(nbPowerup):
-            self._powerUpSprites.append(pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3])))
+            img = pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3]+".png"))
+            img = pygame.transform.smoothscale(img, (taillePowerUp, taillePowerUp))
+            self._powerUpSprites.append(img)
         # On dessine le fond sur la surface
-        pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, resolutionPlateau[0], resolutionPlateau[1]))
+        pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, getResP()[0], getResP()[1]))
 
     def getCase(self, x, y):
         return self.plateau[x][y]
 
+    def setDirty(self, x, y):
+        self.plateau[x][y].setDirty(True)
+        if x+1 < self.larg:
+            self.plateau[x+1][y].setDirty(True)
+        if x-1 >= 0:
+            self.plateau[x-1][y].setDirty(True)
+        if y+1 < self.long:
+            self.plateau[x][y+1].setDirty(True)
+        if y-1 >= 0:
+            self.plateau[x][y-1].setDirty(True)
+
     def setColor(self, x, y, color):
-        #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'auter coté !
+        #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'autre coté !
         wrapped = False
 
         if x < 0:
@@ -70,6 +90,7 @@ class Terrain:
         if wrapped == False:
             self.modifCompteur((x, y), color)
             self.plateau[x][y].setColor(color)
+            self.setDirty(x, y)
 
     def setType(self, x, y, type):
         self.powerups.append({'x': x, 'y': y, 'type': type})
@@ -86,15 +107,16 @@ class Terrain:
         else:
             return self.plateau[x][y].getColor()
 
-    def getType(self, x, y):
-        for p in self.powerups:
-            if (x > p['x']-15 and x < p['x']+15 and y > p['y'] - 15 and p['y'] + 15):
-                self.powerups.remove(p)
+    def getType(self, x, y, rayon):
+        for i in range(len(self.powerups)):
+            p = self.powerups[i]
+            if math.sqrt(math.pow(p['x']-x, 2)+math.pow(p['y']-y, 2)) <= (rayon*tailleCase)+taillePowerUp/2:
+                self.powerups.pop(i)
                 return p['type']
         return None
 
     def initTerrain(self):
-        taille = (int)(resolutionPlateau[0] / tailleCase * propZoneInit)
+        taille = (int)(getResP()[0] / tailleCase * propZoneInit)
         for i in range(taille):
             for j in range(taille):
                 self.setColor(i, j, 0)
@@ -105,16 +127,21 @@ class Terrain:
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):
             for j in range(self.long):
-                col = self.getColor(i, j)
-                if col != None:
-                    code = self._calcNeighbors(i, j)
-                    self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
+                if self.plateau[i][j].isDirty():
+                    col = self.getColor(i, j)
+                    self.plateau[i][j].setDirty(False)
+                    if col != None:
+                        code = self._calcNeighbors(i, j)
+                        if (code != 15):
+                            self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
+                        else:
+                            pygame.draw.rect(self._buffer, couleursPlateau[col], pygame.Rect(i*tailleCase, j*tailleCase, tailleCase, tailleCase))
         
         fenetre.blit(self._buffer, (0, 0))
 
         # Powerup
         for p in self.powerups:
-            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-15, p['y']-15))             
+            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-taillePowerUp/2, p['y']-taillePowerUp/2))          
 
     def _calcNeighbors(self, x, y):
         code = 0
@@ -129,10 +156,10 @@ class Terrain:
         tot=0
         i=0
         for p in listePour:
-            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0]*p,18))
+            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*getRes()[0],getRes()[1]-19,getRes()[0]*p,18))
             tot+=p
             i+=1
-        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*resolution[0],resolution[1]-19,resolution[0],18))
+        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*getRes()[0],getRes()[1]-19,getRes()[0],18))
 
     def modifCompteur(self, pos, color):
         colorNow = self.getColor(pos[0], pos[1])
@@ -209,17 +236,7 @@ class Terrain:
                     x = random.randrange(taille, resolutionPlateau[0] - taille)
                     y = random.randrange(taille, resolutionPlateau[1] - taille)
         
-        self.setType(x, y, type)
-
-
-terrain = None
-def initTerrain():
-    global terrain
-    terrain = Terrain(round(resolutionPlateau[1]/tailleCase), round(resolutionPlateau[0]/tailleCase))
-
-def getTerrain():
-    global terrain
-    return terrain
+        self.setType(x, y, typeItem)
 
 def cercle_bresenham_plateau(r, xc, yc, couleur):
     x = 0
@@ -248,11 +265,18 @@ def remplissage(x, y, couleur):
         remplissage(x-1,y,couleur)
         remplissage(x,y+1,couleur)
         remplissage(x,y-1,couleur)
+terrain = None
+def initTerrain():
+    global terrain
+    terrain = Terrain(round(getResP()[1]/tailleCase), round(getResP()[0]/tailleCase))
 
+def getTerrain():
+    global terrain
+    return terrain
 
 def updateCase(j):
-    posCase1 = ((int) (j.oldX/resolutionPlateau[0]*terrain.getLarg()), (int) (j.oldY/resolutionPlateau[1]*terrain.getLong()))
-    posCase2 = ((int) (j.x/resolutionPlateau[0]*terrain.getLarg()), (int) (j.y/resolutionPlateau[1]*terrain.getLong()))
+    posCase1 = ((int) (j.oldX/getResP()[0]*terrain.getLarg()), (int) (j.oldY/getResP()[1]*terrain.getLong()))
+    posCase2 = ((int) (j.x/getResP()[0]*terrain.getLarg()), (int) (j.y/getResP()[1]*terrain.getLong()))
     
     terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
     if j.rayonCouleur > 0:
@@ -261,6 +285,6 @@ def updateCase(j):
     j.drawn = True
 
     #Si le joueur passe sur un PowerUp il le récupère  
-    p = terrain.getType(j.x, j.y)
+    p = terrain.getType(j.x, j.y, j.getRayon())
     if (p != None):
         j.setPowerUp(p)

@@ -1,5 +1,5 @@
 var conn = null;
-var msCooldown = 100;
+const msCooldown = 100;
 var lastMsg;
 var posX = null,
     posY = null;
@@ -8,6 +8,11 @@ var resX = null,
 var t1;
 var dx, dy;
 var color = null;
+var powerupNames = ["gottaGoFast", "mildPower", "paintMore"];
+var powerupImages = {};
+const tailleImagesPowerup = 0.2;
+var activePU = null;
+var wraparound = false;
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -68,12 +73,28 @@ function connect() {
                 resY = data.resY;
                 color = data.col;
                 // On initialise également la position
-            case 'position':
+            case 'update':
                 // On arrête le timer et on affiche le ping
                 if (t1) document.getElementById("affichagePing").innerHTML = (performance.now() - t1) + "ms";
+
                 // On met à jour la position sur la minimap
                 posX = data.x;
                 posY = data.y;
+
+                // On charge les images correspondant aux powerup actifs s'il y a eu un changement
+                if (data.pu && data.pu != [] && (activePU == null || activePU != data.pu)) {
+                    activePU = data.pu
+                    // On enlève les anciennes images
+                    let puDisplay = document.getElementById("powerUpDisplay");
+                    while (puDisplay.hasChildNodes()) {
+                        puDisplay.removeChild(puDisplay.lastChild);
+                    }
+                    // On ajoute les nouvelles
+                    data.pu.forEach(pu => {
+                        let img = powerupImages[pu].cloneNode(false);
+                        puDisplay.appendChild(img);
+                    });
+                }
                 break;
             case 'go':
                 // Le jeu est lancé, on affiche la manette suivant l'appareil utilisé
@@ -111,13 +132,26 @@ function connect() {
 
 // Renvoie la position actuel du joueur (en % de l'écran)
 function getPosX() {
-    posX += dx/10000;
-    if (posX > 1) posX = 0;
+    posX += dx / 10000;
+    if (wraparound) {
+        if (posX > 1) posX = 0;
+        else if (posX < 0) posX = 1;
+    } else {
+        if (posX > 1) posX = 1;
+        else if (posX < 0) posX = 0;
+    }
     return posX;
 }
+
 function getPosY() {
-    posY += dy/10000;
-    if (posY > 1) posY = 0;
+    posY += dy / 10000;
+    if (wraparound) {
+        if (posY > 1) posY = 0;
+        else if (posY < 0) posY = 1;
+    } else {
+        if (posY > 1) posY = 1;
+        else if (posY < 0) posY = 0;
+    }
     return posY;
 }
 
@@ -125,6 +159,7 @@ function getPosY() {
 function getResX() {
     return resX;
 }
+
 function getResY() {
     return resY;
 }
@@ -135,6 +170,20 @@ function disconnect() {
         conn.close();
         conn = null;
     }
+}
+
+// Chargement paresseux des images de powerUp
+async function loadImages() {
+    powerupNames.forEach(pu => {
+        let tmp = new Image();
+        tmp.src = pu + ".png";
+        powerupImages[pu] = tmp;
+    });
+}
+
+// On ne charge les images que si le jeu est lancé
+if (window.location.pathname[1] == "m") {
+    loadImages();
 }
 
 // Vérifie si l'appareil actuel est un smartphone ou une tablette

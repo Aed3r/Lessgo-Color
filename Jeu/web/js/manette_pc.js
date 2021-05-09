@@ -1,5 +1,6 @@
 var canvas1, contex1, canvas2, contex2, canvas3, contex3;
 var heightCanvas1, widthCanvas1, heightCanvas2, widthCanvas2, heightCanvas3, widthCanvas3;
+var img1, img2, img3;
 var largeur = 0,
     hauteur = 0;
 var xClient = 0,
@@ -46,6 +47,7 @@ function redimentionne() {
     hauteur = (window.innerHeight) - 10;
     canvas1.width = largeur;
     canvas1.height = hauteur;
+
     if (largeur > hauteur) {
         canvas2.width = largeur * 0.5;
         canvas2.height = hauteur;

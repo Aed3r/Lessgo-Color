@@ -25,6 +25,8 @@ class Joueur(object):
         self.vitesse = defVitesse
         self.nom = nom
         self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
+        self.hSpeed = 0
+        self.vSpeed = 0
 
         #definition des constantes
         self.ID = id
@@ -45,9 +47,15 @@ class Joueur(object):
                 self.rayonCouleur -= listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
 
+        self.hSpeed += self.dX * self.vitesse
+        self.vSpeed += self.dY * self.vitesse
+
+        print(str(self.hSpeed))
+
         # Application du vecteur déplacement
-        self.x = int(self.x + self.dX * self.vitesse)
-        self.y = int(self.y + self.dY * self.vitesse)
+        self.x += int(self.hSpeed)
+        self.y += int(self.vSpeed)
+
         rayon = self.getRayon() * tailleCase
 
         # Vérification de dépassement des bordures

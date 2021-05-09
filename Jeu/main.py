@@ -102,6 +102,8 @@ class BouclePrincipale(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):  
+        global fenetre
+        
         t = threading.currentThread()
         altPressed = False
         etatJeu = "attente" # "jeu", "fin"
@@ -184,7 +186,7 @@ class BouclePrincipale(threading.Thread):
                 elif event.type == pygame.VIDEORESIZE:
                     # Redimmensionnement
                     setRes(event.size)
-                    screen=pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                    fenetre=pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
 
 
 # Initialise ou réinitialise le jeu

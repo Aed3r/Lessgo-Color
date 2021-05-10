@@ -150,6 +150,7 @@ class Terrain:
         for p in self.powerups:
             fenetre.blit(self._powerUpSprites[p['type']], (p['x']-taillePowerUp/2, p['y']-taillePowerUp/2))          
 
+    # Construit un code binaire en ajoutant comprenant 1 à l'indice i si le le voisin i (déterminé par self._offset) est de la même couleur que la case (x, y)
     def _calcNeighbors(self, x, y):
         code = 0
         col = self.getColor(x, y)
@@ -184,7 +185,7 @@ class Terrain:
             listePourc.append(self.nbCasesColorie[i]/ nbCases)
         return listePourc
 
-    def _bresenham(self, x1, y1, x2, y2, transX, transY, inv, offX, offY, col):
+    def _bresenham(self, x1, y1, x2, y2, transX, transY, inv, offX, offY, j):
         y = y1
         dX = x2-x1
         dY = y2-y1
@@ -193,40 +194,42 @@ class Terrain:
 
         for x in range(x1, x2+1):
             if inv:
-                self.setColor(y*transY+offX, x*transX+offY, col)
+                cercle_bresenham_plateau(j.rayonCouleur, y*transY+offX, x*transX+offY, j.EQUIPE)
+                remplissage(y*transY+offX, x*transX+offY, j.EQUIPE)
             else:
-                self.setColor(x*transX+offX, y*transY+offY, col)
+                cercle_bresenham_plateau(j.rayonCouleur, x*transX+offX, y*transY+offY, j.EQUIPE)
+                remplissage(x*transX+offX, y*transY+offY, j.EQUIPE)
             err += m
             if err >= 0:
                 y += 1
                 err -= 2 * dX
 
-    def dessinerLigne(self, x1, y1, x2, y2, col):
+    def dessinerLigne(self, x1, y1, x2, y2, j):
         dX = x2-x1
         dY = y2-y1
 
         if dX < 0:
             if dY < 0: # Bas gauche 
                 if abs(dX) > abs(dY): # 5 
-                    self._bresenham(0, 0, -dX, -dY, -1, -1, 0, x1, y1, col)
+                    self._bresenham(0, 0, -dX, -dY, -1, -1, 0, x1, y1, j)
                 else: # 6 
-                    self._bresenham(0, 0, -dY, -dX, -1, -1, 1, x1, y1, col)
+                    self._bresenham(0, 0, -dY, -dX, -1, -1, 1, x1, y1, j)
             else: # Haut gauche 
                 if abs(dX) > abs(dY): # 4 
-                    self._bresenham(0, 0, -dX, dY, -1, 1, 0, x1, y1, col)
+                    self._bresenham(0, 0, -dX, dY, -1, 1, 0, x1, y1, j)
                 else: # 3 
-                    self._bresenham(0, 0, dY, -dX, 1, -1, 1, x1, y1, col)
+                    self._bresenham(0, 0, dY, -dX, 1, -1, 1, x1, y1, j)
         else:
             if dY < 0: # Bas droite 
                 if abs(dX) > abs(dY): # 8 
-                    self._bresenham(0, 0, dX, -dY, 1, -1, 0, x1, y1, col)
+                    self._bresenham(0, 0, dX, -dY, 1, -1, 0, x1, y1, j)
                 else: # 7 
-                    self._bresenham(0, 0, -dY, dX, -1, 1, 1, x1, y1, col)
+                    self._bresenham(0, 0, -dY, dX, -1, 1, 1, x1, y1, j)
             else: # Haut droite 
                 if abs(dX) > abs(dY): # 1 
-                    self._bresenham(0, 0, dX, dY, 1, 1, 0, x1, y1, col)
+                    self._bresenham(0, 0, dX, dY, 1, 1, 0, x1, y1, j)
                 else: # 2 
-                    self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, col)
+                    self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, j)
     
     def placerPowerupAlea(self):
         resolution = getRes()
@@ -300,11 +303,7 @@ def updateCase(j):
     j.oldX = j.x
     j.oldY = j.y
     
-    terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j.EQUIPE)
-    if j.rayonCouleur > 0:
-        cercle_bresenham_plateau(j.rayonCouleur, posCase1[0], posCase1[1], j.EQUIPE)
-        remplissage(posCase1[0], posCase1[1], j.EQUIPE)
-    j.drawn = True
+    terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j)
 
     #Si le joueur passe sur un PowerUp il le récupère  
     p = terrain.getType(j.x, j.y, j.getRayon())

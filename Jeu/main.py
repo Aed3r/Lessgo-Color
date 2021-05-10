@@ -170,7 +170,7 @@ class BouclePrincipale(threading.Thread):
                         elif e == REVATTENTE:
                             # On revient au menu d'attente
                             etatJeu = "attente"
-                            pygame.display.set_mode(getRes(), pygame.RESIZABLE)
+                            pygame.display.set_mode(getRes(), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
 
                             # On avertit les clients
                             avertirClients({'action': 'attente'})

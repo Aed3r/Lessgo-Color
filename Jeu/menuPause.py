@@ -15,22 +15,24 @@ def toggle (etat):
         orientation = 'V'
         doDraw = True
         if etat == "attente":
-            boutons.append(b.Bouton(LANCERJEU, policeTitres, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(QUITTERJEU, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(LANCERJEU, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(QUITTERJEU, policeBold, buttonBGcol, buttonFGcol))
         elif etat == "jeu":
-            boutons.append(b.Bouton(REDEMJEU, policeTitres, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(REVATTENTE, policeTitres, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(INITTIMER, policeTitres, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(FINIRJEU, policeTitres, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(QUITTERJEU, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(REDEMJEU, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(REVATTENTE, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(INITTIMER, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(FINIRJEU, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(QUITTERJEU, policeBold, buttonBGcol, buttonFGcol))
         elif etat == "fin":
-            boutons.append(b.Bouton(REVATTENTE, policeTitres, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(QUITTERJEU, policeTitres, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(REVATTENTE, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(QUITTERJEU, policeBold, buttonBGcol, buttonFGcol))
     else: # Suppression des boutons
         boutons.clear()
         rectBoutons.clear()
         orientation = None
         doDraw = False
+
+    return doDraw
 
 # Affiche les boutons potentiellement prédéfinies (selon l'orientation donnée)
 def afficherMenu(fenetre):

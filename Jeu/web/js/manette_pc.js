@@ -1,6 +1,5 @@
 var canvas1, contex1, canvas2, contex2, canvas3, contex3;
 var heightCanvas1, widthCanvas1, heightCanvas2, widthCanvas2, heightCanvas3, widthCanvas3;
-var img1, img2, img3;
 var largeur = 0,
     hauteur = 0;
 var xClient = 0,
@@ -161,7 +160,7 @@ function miniMap() {
 
     context1.clearRect(0, 0, widthCanvas1, heightCanvas1);
     context1.beginPath();
-    context1.fillStyle = 'rgba(100, 100, 100, 1)';
+    context1.fillStyle = getColor();
     context1.arc(posJX, posJY, 10, 0, 2 * pi);
     context1.fill();
     context1.closePath();

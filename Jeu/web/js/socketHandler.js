@@ -7,7 +7,7 @@ var resX = null,
     resY = null;
 var t1;
 var dx, dy;
-var color = null;
+var team = null, color = null;
 var powerupNames = ["gottaGoFast", "mildPower", "paintMore"];
 var powerupImages = {};
 const tailleImagesPowerup = 0.2;
@@ -71,7 +71,8 @@ function connect() {
             case 'init':
                 resX = data.resX;
                 resY = data.resY;
-                color = data.col;
+                team = data.team;
+                color = data.color;
                 // On initialise également la position
             case 'update':
                 // On arrête le timer et on affiche le ping
@@ -113,7 +114,7 @@ function connect() {
             case 'fin':
                 // On affiche l'écran de fin de jeu
                 let isWinner = null;
-                if (color != null) isWinner = data.winner == color;
+                if (team != null) isWinner = data.winner == team;
 
                 let endUrl = window.location.origin + '/introduction.html#end#' + data.winner + '#' + isWinner;
                 document.location.href = endUrl;
@@ -163,6 +164,12 @@ function getResX() {
 function getResY() {
     return resY;
 }
+
+function getColor() {
+    if (color) return "rgb("+color[0]+","+color[1]+","+color[2]+")";
+    else return 'rgba(100, 100, 100, 1)';
+}
+
 // Déconnecte la connection websocket existante
 function disconnect() {
     if (conn != null) {

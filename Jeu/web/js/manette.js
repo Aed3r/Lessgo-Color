@@ -168,7 +168,7 @@ function miniMap() {
 
     context1.clearRect(0, 0, widthCanvas1, heightCanvas1);
     context1.beginPath();
-    context1.fillStyle = 'rgba(100, 100, 100, 1)';
+    context1.fillStyle = getColor();
     context1.arc(posJX, posJY, 10, 0, 2 * pi);
     context1.fill();
     context1.closePath();

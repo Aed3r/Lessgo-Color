@@ -10,6 +10,7 @@ fps = 60
 couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]
 couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
 afficherFPS = False
+tempsAnnonces = 3 # secondes
 
 def getRes():
     global _resolution
@@ -45,7 +46,7 @@ playerSize = 5
 defRayonCouleur = 1
 defVitesse = 1
 
-collisions = False
+collisions = True
 vitesseMax = 5 # Sans powerup
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3
@@ -68,8 +69,9 @@ buttonBGcol = (255,255,255,255)
 buttonFGcol = titleColor
 
 # ----------------- Polices ----------------- #
-policeNoms = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 30)
-policeTitres = pygame.font.Font(os.path.join("Data", "Fonts", "Quicksand-VariableFont_wght.ttf"), 60)
+policeThin = pygame.font.Font(os.path.join("Data", "Fonts", "static", "Quicksand-Light.ttf"), 30)
+policeMedium = pygame.font.Font(os.path.join("Data", "Fonts", "static", "Quicksand-Medium.ttf"), 30)
+policeBold = pygame.font.Font(os.path.join("Data", "Fonts", "static", "Quicksand-SemiBold.ttf"), 60)
 
 # ----------------- Strings ----------------- #
 LANCERJEU = "Lancer le jeu"
@@ -79,3 +81,6 @@ REVATTENTE = "Revenir au menu attente"
 INITTIMER = "Réinitialiser le timer"
 FINIRJEU = "Finir le jeu"
 ENATTENTE = "En attente de joueurs..."
+
+# ----------------- Ecran fin ----------------- #
+largeurBarres = 60

@@ -6,8 +6,10 @@ from plateau import *
 from constantes import *
 from finPartie import *
 
-tDebut = None
+# Timer
+chronoDebut = None
 place = True
+fond = None
 fondChrono = None
 chronoPos = None
 
@@ -20,15 +22,15 @@ def afficherJoueurs(fenetre):
 
 # (Ré-)initialise le chronomètre
 def initChrono():
-    global tDebut
-    tDebut = time.time() + tempsPartie
+    global chronoDebut
+    chronoDebut = time.time() + tempsPartie
 
 # AfficehRenvoie True si la partie est finie, False sinon
 def drawChrono(fenetre):
-    global tDebut, place, fondChrono, chronoPos
+    global chronoDebut, place, fondChrono, chronoPos, fond
 
     tActuelle=time.time()
-    t0=tDebut - tActuelle
+    t0=chronoDebut - tActuelle
     #print("t0 = " + str(t0) + "t0 % 10 =" + str(t0%10))
     #print(place)
     if ((int)(t0 % 10) == 0) & (place == True):
@@ -41,18 +43,43 @@ def drawChrono(fenetre):
     seconde = str(t0%60)
     if (t0 == 0):
         return True
-    text = policeTitres.render (minute + ":" + seconde, True, (255,255,255))
+    text = policeBold.render (minute + ":" + seconde, True, (255,255,255))
 
     if fondChrono == None:
-        fondChrono = pygame.image.load("Data/Images/styleChrono.png").convert_alpha()
-        fondChrono = pygame.transform.smoothscale(fondChrono, ((int) (text.get_width()*1.50), (int) (text.get_height() + (text.get_width()*0.50))))
-        chronoPos = ((int) (getRes()[0]/2 - text.get_width()*1.50/2), (int) (50 - text.get_width()*0.50/2))
+        fond = pygame.image.load("Data/Images/styleChrono.png").convert_alpha()
+        fondChrono = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.50), (int) (text.get_height() + (text.get_width()*0.5))))
+        chronoPos = ((int) (getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
 
     fenetre.blit(fondChrono, chronoPos)
     fenetre.blit(text, (getRes()[0]/2 - text.get_width()/2, 50))   
-    return False                                          
+    return False      
 
-def drawAll(fenetre):
+# Annonces
+annonceDebut = None
+annonce = None
+
+def afficherAnnonce(fenetre):
+    global annonceDebut, annonce
+
+    if annonceDebut == None:
+        return
+
+    if time.time() >= annonceDebut+tempsAnnonces:
+        annonceDebut = None
+        annonce = None
+        return
+    
+    fenetre.blit(annonce, (getRes()[0]/2 - annonce.get_width()/2, 120))
+
+def definirAnnonce (texte):
+    global fond, annonceDebut, annonce
+
+    annonceDebut = time.time()
+    text = policeBold.render (texte, True, (255,255,255))
+    annonce = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.2), (int) (text.get_height() + (text.get_width()*0.05))))
+    annonce.blit(text, (text.get_width()*0.1, text.get_width()*0.025))
+
+def drawAll(fenetre, pause):
     # Mesure du temps d'affichage de la frame
     start = time.time() * 1000
 
@@ -66,7 +93,14 @@ def drawAll(fenetre):
     afficherJoueurs(fenetre)
 
     # Affichage du chrono
-    gameDone = drawChrono(fenetre)
+    if not pause:
+        gameDone = drawChrono(fenetre)
+    else:
+        gameDone = False
+
+    # Affichage des annonces
+    if not pause:
+        afficherAnnonce(fenetre)
 
     # Fin de la mesure du temps et attente pour afficher la prochaine frame
     end = time.time() * 1000
@@ -74,7 +108,7 @@ def drawAll(fenetre):
     # Affichage fps
     tempsCalcul = end - start # ms
     if afficherFPS:
-        text = policeNoms.render(str(min(fps, round(1000 / tempsCalcul))) + " fps", True, (0,0,0), (255,255,255))
+        text = policeMedium.render(str(min(fps, round(1000 / tempsCalcul))) + " fps", True, (0,0,0), (255,255,255))
         fenetre.blit(text, (getRes()[0] - text.get_width(), 0))   
 
     sleep = (msPerFrame - tempsCalcul)/1000.

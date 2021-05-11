@@ -107,6 +107,7 @@ class BouclePrincipale(threading.Thread):
         t = threading.currentThread()
         altPressed = False
         etatJeu = "attente" # "jeu", "fin"
+        pause = False
         
         while getattr(t, "do_run", True):
             # Affiche l'écran d'attente
@@ -114,20 +115,21 @@ class BouclePrincipale(threading.Thread):
                 ecranAttente.toutDessiner(fenetre)
             elif etatJeu == "fin":
                 # Afficher ecran fin de jeu
-                finPartie.finPartie(fenetre)
+                finPartie.finPartie(fenetre, joueur.getJoueurs())
             # S'occupe de l'affichage du jeu et de la gestion des joueurs
             elif etatJeu == "jeu":
-                # Mise à jour des positions joueurs
-                joueur.moveJoueurs()
+                if not pause:
+                    # Mise à jour des positions joueurs
+                    joueur.moveJoueurs()
 
-                # Mise à jour des cases de couleur
-                majCouleurs()
+                    # Mise à jour des cases de couleur
+                    majCouleurs()
 
                 # Affichage du plateau et des joueurs
-                if affichageJeu.drawAll(fenetre):
+                if affichageJeu.drawAll(fenetre, pause):
                     etatJeu = "fin"
                     terminerJeu()
-
+            
             # Affiche (potentiellement) un menu
             mp.afficherMenu(fenetre)
 
@@ -147,7 +149,7 @@ class BouclePrincipale(threading.Thread):
                         os.kill(os.getpid(), signal.SIGINT)
                     # Menu pause
                     elif event.key == pygame.K_ESCAPE:
-                        mp.toggle(etatJeu)
+                        pause = mp.toggle(etatJeu)
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LALT:
                         altPressed = False
@@ -183,6 +185,7 @@ class BouclePrincipale(threading.Thread):
                             terminerJeu()
                         # On cache le menu pause
                         mp.toggle(None)
+                        pause = False
                 elif event.type == pygame.VIDEORESIZE:
                     # Redimmensionnement
                     setRes(event.size)

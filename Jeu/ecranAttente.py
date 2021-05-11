@@ -56,7 +56,7 @@ def afficherNomsJoueurs(fenetre):
         couleurPolice = (255-couleurBloc[0], 255-couleurBloc[1], 255-couleurBloc[2])
 
         # Préparation de la surface du texte avec redimensionnement si besoin
-        text = policeNoms.render(joueur.getNom(), True, couleurPolice)
+        text = policeMedium.render(joueur.getNom(), True, couleurPolice)
         tailleTexte = text.get_size()
         if (tailleTexte[0] > blockW):
             text = pg.transform.smoothscale(text, (int(blockW-10), int((tailleTexte[1] / tailleTexte[0]) * (blockW-10))))
@@ -86,7 +86,7 @@ def afficherNomsJoueurs(fenetre):
 
 def afficherTitre (fenetre):
     global titleColor
-    textSurface = policeTitres.render(ENATTENTE, True, titleColor);
+    textSurface = policeBold.render(ENATTENTE, True, titleColor);
     tailleTexte = textSurface.get_size()
     fenetre.blit(textSurface, (getRes()[0]/2-tailleTexte[0]/2, pixelMargins['top']/2-tailleTexte[1]/2))
 
@@ -100,7 +100,7 @@ def afficherCompteJoueurs (fenetre):
     fenetre.blit(ico, (getRes()[0]-tailleIco[0]-margeCompteur, margeCompteur))
 
     # Compteur
-    textSurface = policeTitres.render(str(j.getNombreJoueurs()), True, titleColor);
+    textSurface = policeBold.render(str(j.getNombreJoueurs()), True, titleColor);
     tailleTexte = textSurface.get_size()
     newHeight = getRes()[1]*tailleCompteur
     textSurface = pygame.transform.smoothscale(textSurface, 

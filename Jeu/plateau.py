@@ -63,7 +63,7 @@ class Terrain:
         if y-1 >= 0:
             self.plateau[x][y-1].setDirty(True)
 
-    def setColor(self, x, y, color):
+    def setColor(self, x, y, color, joueur):
         #On vérifie que la case est bien dans les limites du jeu sinon on colorie de l'autre coté !
         wrapped = False
 
@@ -91,7 +91,7 @@ class Terrain:
                 wrapped = True
 
         if wrapped == False:
-            self.modifCompteur((x, y), color)
+            self.modifCompteur((x, y), color, joueur)
             self.plateau[x][y].setColor(color)
             self.setDirty(x, y)
 
@@ -122,10 +122,10 @@ class Terrain:
         taille = (int)(getResP()[0] / tailleCase * propZoneInit)
         for i in range(taille):
             for j in range(taille):
-                self.setColor(i, j, 0)
-                self.setColor(self.larg-i-1, j, 1)
-                self.setColor(i, self.long-j-1, 2)
-                self.setColor(self.larg-i-1, self.long-j-1, 3)
+                self.setColor(i, j, 0, None)
+                self.setColor(self.larg-i-1, j, 1, None)
+                self.setColor(i, self.long-j-1, 2, None)
+                self.setColor(self.larg-i-1, self.long-j-1, 3, None)
         
         for i in range(powerUpsDemarage):
             self.placerPowerupAlea()
@@ -169,13 +169,18 @@ class Terrain:
             i+=1
         pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*getRes()[0],getRes()[1]-19,getRes()[0],18))
 
-    def modifCompteur(self, pos, color):
+    def modifCompteur(self, pos, color, joueur):
         colorNow = self.getColor(pos[0], pos[1])
 
-        if colorNow != None :
+        if colorNow == color:
+            return
+
+        if colorNow != None:
             self.nbCasesColorie[colorNow] -= 1
         
         self.nbCasesColorie[color] += 1
+        if joueur != None:
+            joueur.increaseScore(1)
 
     # Calcul les pourcentages à partir des compteurs. Renvoie une liste de réels
     def pourcentageCouleur(self):
@@ -194,11 +199,11 @@ class Terrain:
 
         for x in range(x1, x2+1):
             if inv:
-                cercle_bresenham_plateau(j.rayonCouleur, y*transY+offX, x*transX+offY, j.EQUIPE)
-                remplissage(y*transY+offX, x*transX+offY, j.EQUIPE)
+                cercle_bresenham_plateau(j.rayonCouleur, y*transY+offX, x*transX+offY, j.EQUIPE, j)
+                remplissage(y*transY+offX, x*transX+offY, j.EQUIPE, j)
             else:
-                cercle_bresenham_plateau(j.rayonCouleur, x*transX+offX, y*transY+offY, j.EQUIPE)
-                remplissage(x*transX+offX, y*transY+offY, j.EQUIPE)
+                cercle_bresenham_plateau(j.rayonCouleur, x*transX+offX, y*transY+offY, j.EQUIPE, j)
+                remplissage(x*transX+offX, y*transY+offY, j.EQUIPE, j)
             err += m
             if err >= 0:
                 y += 1
@@ -260,19 +265,19 @@ class Terrain:
             #    self.setColor(i, self.long-j-1, 2)
              #   self.setColor(self.larg-i-1, self.long-j-1, 3)
 
-def cercle_bresenham_plateau(r, xc, yc, couleur):
+def cercle_bresenham_plateau(r, xc, yc, couleur, joueur):
     x = 0
     y = r
     d = 1 -r
     while y >= x:
-        terrain.setColor(x + xc, y+ yc, couleur)
-        terrain.setColor(y + xc, x+ yc, couleur)
-        terrain.setColor(-x + xc, y+ yc, couleur)
-        terrain.setColor(-y + xc, x+ yc, couleur)
-        terrain.setColor(x + xc, -y + yc, couleur)
-        terrain.setColor(y + xc, -x + yc, couleur)
-        terrain.setColor(-x + xc, -y + yc, couleur)
-        terrain.setColor(-y + xc, -x + yc, couleur)
+        terrain.setColor(x + xc, y+ yc, couleur, joueur)
+        terrain.setColor(y + xc, x+ yc, couleur, joueur)
+        terrain.setColor(-x + xc, y+ yc, couleur, joueur)
+        terrain.setColor(-y + xc, x+ yc, couleur, joueur)
+        terrain.setColor(x + xc, -y + yc, couleur, joueur)
+        terrain.setColor(y + xc, -x + yc, couleur, joueur)
+        terrain.setColor(-x + xc, -y + yc, couleur, joueur)
+        terrain.setColor(-y + xc, -x + yc, couleur, joueur)
         if d < 0: 
             d = d + 2*x + 3
         else:
@@ -280,13 +285,14 @@ def cercle_bresenham_plateau(r, xc, yc, couleur):
             y -= 1
         x += 1
 
-def remplissage(x, y, couleur):
+def remplissage(x, y, couleur, joueur):
     if terrain.getColor(x, y) != couleur:
-        terrain.setColor(x, y, couleur)
-        remplissage(x+1,y,couleur)
-        remplissage(x-1,y,couleur)
-        remplissage(x,y+1,couleur)
-        remplissage(x,y-1,couleur)
+        terrain.setColor(x, y, couleur, joueur)
+        remplissage(x+1,y,couleur, joueur)
+        remplissage(x-1,y,couleur, joueur)
+        remplissage(x,y+1,couleur, joueur)
+        remplissage(x,y-1,couleur, joueur)
+
 terrain = None
 def initTerrain():
     global terrain

@@ -17,15 +17,15 @@ spawn = [(spawnXOffset, spawnYOffset),
 class Joueur(object): 
 
     def __init__(self, id, nom, equipe):
-        super().__init__()
-        #Definition des variables
-        self.dead = False
-        self.dX = 0
-        self.dY = 0
         self.rayonCouleur = defRayonCouleur
         self.vitesse = defVitesse
         self.nom = nom
         self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
+        self.score = 0
+
+        # Vecteur direction définie par le joueur
+        self.dX = 0
+        self.dY = 0
 
         #definition des constantes
         self.ID = id
@@ -48,6 +48,8 @@ class Joueur(object):
         
         # Dernieres collisions
         self.collisions = set()
+
+
 
     def move(self):
         #On vérifie si on doit enlever un powerup
@@ -118,12 +120,6 @@ class Joueur(object):
             if (self.y+rayon >= getResP()[1] ): self.y = getResP()[1] - rayon - 1
             if (self.y-rayon < 0): self.y = rayon
 
-    def isDead(self):
-        return self.dead
-
-    def setDead(self, valeur):
-        self.dead = valeur
-
     def setDirection(self, dx, dy):
         self.dX = dx
         self.dY = dy
@@ -162,17 +158,21 @@ class Joueur(object):
         puNames = list(map(lambda x: listeValeurs[x][3], pu)) # On remplace par des noms
         return puNames
 
+    # Renvoie le rayon d'affichage du joueur
     def getRayon(self):
         return self.rayonCouleur
 
+    # Renvoie true si le joueur courant et j2 ont été en collision dans le passé
     def haveCollided(self, j2):
         return j2.getID() in self.collisions
 
-    def unsetColliding(self, j2):
+    # Enlève j2 des joueurs étant actuellement en collision avec le joueur courant
+    def _unsetColliding(self, j2):
         self.collisions.discard(j2.getID())
         j2.collisions.discard(self.getID())
     
-    def setColliding(self, j2):
+    # Ajoute j2 aux joueurs actuellement en collision avec le joueur courant
+    def _setColliding(self, j2):
         self.collisions.add(j2.getID())
         j2.collisions.add(self.getID())
 
@@ -180,6 +180,7 @@ class Joueur(object):
     def _areColliding (self, j2):
         return math.sqrt(math.pow(j2.getPos()[0]-self.getPos()[0], 2)+math.pow(j2.getPos()[1]-self.getPos()[1], 2)) <= (j2.getRayon()*tailleCase)+(self.getRayon()*tailleCase)
 
+    # Modifie les déplacemenent du joueur courant et de j2 s'il entre en collision
     def handleCollision (self, j2):
         if self.getID() != j2.getID():
             if self._areColliding(j2): 
@@ -189,10 +190,17 @@ class Joueur(object):
                     self.vSpeed, j2.vSpeed = j2.vSpeed - self.vSpeed/2, self.vSpeed - j2.vSpeed/2
 
                     # Séparation
-                    self.setColliding(j2)
+                    self._setColliding(j2)
             else:
-                self.unsetColliding(j2)
+                self._unsetColliding(j2)
 
+    # Incrémente le score du joueur de x points
+    def increaseScore(self, x):
+        self.score += x
+
+    # Renvoie le score du joueur
+    def getScore(self):
+        return self.score
 
 # Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):

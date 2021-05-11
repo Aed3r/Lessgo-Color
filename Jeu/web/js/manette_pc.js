@@ -183,7 +183,9 @@ function miniMap() {
     context1.fillStyle = getColor();
     context1.arc(posJX, posJY, 10, 0, 2 * pi);
     context1.fill();
-    context1.closePath();
+    context1.lineWidth = 2;
+    context1.strokeStyle = 'darkslategray';
+    context1.stroke();
     setTimeout('miniMap()', 50);
 }
 //fonction principale qui gere les evenement, et affiche les bons élémenets selon la situation.

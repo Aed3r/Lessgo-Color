@@ -11,6 +11,7 @@ couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]
 couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
 afficherFPS = False
 tempsAnnonces = 3 # secondes
+largeurAnnonces = 0.7 # % de la largeur de l'écran
 
 def getRes():
     global _resolution

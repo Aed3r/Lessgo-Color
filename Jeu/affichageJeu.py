@@ -77,6 +77,7 @@ def definirAnnonce (texte):
 
     annonceDebut = time.time()
     text = policeBold.render (texte, True, (255,255,255))
+    text = pygame.transform.smoothscale(text, ((int) (getRes()[0]*largeurAnnonces), int((text.get_height() / text.get_width()) * (getRes()[0]*largeurAnnonces))))
     if fond == None:
         fond = pygame.image.load(os.path.join("Data", "Images", "styleChrono.png")).convert_alpha()
     annonce = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.2), (int) (text.get_height() + (text.get_width()*0.05))))

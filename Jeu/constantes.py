@@ -50,13 +50,14 @@ collisions = True
 vitesseMax = 5 # Sans powerup
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3
-nbSpecial = 1
+nbSpecial = 2
 paintMore = 0
 gottaGoFast = 1
 mildPower = 2
 teamPaintMore = 3
+teamGoFast = 4
 # Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon, Durée(sec)]
-listeValeurs = [[0, 1, 10, "paintMore"], [2, 0, 10, "gottaGoFast"], [1, 1, 10, "mildPower"], [0, 1, 10, "paintMoreGold"]]
+listeValeurs = [[0, 1, 10, "paintMore"], [2, 0, 10, "gottaGoFast"], [1, 1, 10, "mildPower"], [0, 1, 5, "paintMoreGold"], [2, 0, 5, "gottaGoFastGold"]]
 
 #Nombre de PowerUp présent au démarage
 powerUpsDemarage = 5

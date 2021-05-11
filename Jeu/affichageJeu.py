@@ -5,6 +5,7 @@ import joueur
 from plateau import *
 from constantes import *
 from finPartie import *
+import os
 
 # Timer
 chronoDebut = None
@@ -46,7 +47,7 @@ def drawChrono(fenetre):
     text = policeBold.render (minute + ":" + seconde, True, (255,255,255))
 
     if fondChrono == None:
-        fond = pygame.image.load("Data/Images/styleChrono.png").convert_alpha()
+        fond = pygame.image.load(os.path.join("Data", "Images", "styleChrono.png")).convert_alpha()
         fondChrono = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.50), (int) (text.get_height() + (text.get_width()*0.5))))
         chronoPos = ((int) (getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
 
@@ -76,6 +77,8 @@ def definirAnnonce (texte):
 
     annonceDebut = time.time()
     text = policeBold.render (texte, True, (255,255,255))
+    if fond == None:
+        fond = pygame.image.load(os.path.join("Data", "Images", "styleChrono.png")).convert_alpha()
     annonce = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.2), (int) (text.get_height() + (text.get_width()*0.05))))
     annonce.blit(text, (text.get_width()*0.1, text.get_width()*0.025))
 

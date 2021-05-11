@@ -131,11 +131,13 @@ class Joueur(object):
         return (self.x, self.y)
 
     #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
-    def setPowerUp(self, pu): 
-        if(pu <= nbPowerup):
+    def setPowerUp(self, pu):
+        if pu <= nbPowerup:
             self.vitesse += listeValeurs[pu][0]
             self.rayonCouleur += listeValeurs[pu][1]
             self.PowerUp.append((pu, time.time()))
+        elif pu <= nbPowerup + nbSpecial:
+            equipePowerUp(pu, self.EQUIPE)
             
     def getPosPourcentage(self):
         return (self.x / getResP()[0], self.y / getResP()[1])
@@ -242,3 +244,12 @@ def getNombreJoueurs():
 def initJoueurs():
     for joueur in joueurs:
         joueur.__init__(joueur.getID(), joueur.getNom(), joueur.getEquipe())
+
+# Applique un powerup a toute l'équipe donnée en paramètre
+def equipePowerUp(pu, equipe):
+    global joueurs
+    for joueur in joueurs:
+        if joueur.EQUIPE == equipe:
+            joueur.vitesse += listeValeurs[pu][0]
+            joueur.rayonCouleur += listeValeurs[pu][1]
+            joueur.PowerUp.append((pu, time.time()))

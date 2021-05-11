@@ -316,16 +316,20 @@ def updateCase(j):
     if (p != None):
         j.setPowerUp(p)
         if (listeValeurs[p][3].endswith("Gold")):
-            if j.getEquipe() == 0:
-                text = "L'équipe violette "
-            elif j.getEquipe() == 1:
-                text = "L'équipe jaune "
-            elif j.getEquipe() == 2:
-                text = "L'équipe rouge "
-            elif j.getEquipe() == 3:
-                text = "L'équipe bleu "
             if listeValeurs[p][3] == "paintMoreGold":
-                text += "dessine plus !"
+                text += "Bonus de coloriage pour "
+            if listeValeurs[p][3] == "gottaGoFastGold":
+                text += "Bonus de vitesse pour "
+            
+            if j.getEquipe() == 0:
+                text += "l'équipe violette !"
+            elif j.getEquipe() == 1:
+                text += "l'équipe jaune !"
+            elif j.getEquipe() == 2:
+                text += "l'équipe rouge !"
+            elif j.getEquipe() == 3:
+                text += "l'équipe bleu !"
+
             return text
         else:
             return None

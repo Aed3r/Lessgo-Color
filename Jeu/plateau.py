@@ -278,7 +278,7 @@ def cercle_bresenham_plateau(r, xc, yc, couleur):
         x += 1
 
 def remplissage(x, y, couleur):
-    if terrain.getColor(x, y) != couleur and x > 0 and y > 0 and x < terrain.getLarg and y < terrain.getLong:
+    if terrain.getColor(x, y) != couleur and x > 0 and y > 0 and x < terrain.getLarg() and y < terrain.getLong():
         terrain.setColor(x, y, couleur)
         remplissage(x+1,y,couleur)
         remplissage(x-1,y,couleur)

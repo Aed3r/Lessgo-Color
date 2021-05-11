@@ -80,11 +80,11 @@ class Joueur(object):
 
     #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
     def setPowerUp(self, pu):
-        if pu <= nbPowerup:
+        if pu < nbPowerup:
             self.vitesse += listeValeurs[pu][0]
             self.rayonCouleur += listeValeurs[pu][1]
             self.PowerUp.append((pu, time.time()))
-        elif pu <= nbPowerup + nbSpecial:
+        elif pu < nbPowerup + nbSpecial:
             equipePowerUp(pu, self.EQUIPE)
             
     def getPosPourcentage(self):

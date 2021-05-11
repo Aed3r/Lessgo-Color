@@ -94,7 +94,9 @@ pourc_jaune = 0
 def majCouleurs():
     # Couleurs des cases du terrain + Power ups pour economiser une boucle
     for j in joueur.getJoueurs() :
-        plateau.updateCase(j)
+        text = plateau.updateCase(j)
+        if text != None:
+            affichageJeu.definirAnnonce(text)
 
 # Boucle s'occupant des gestions de l'affichage, des entrées et du déroulement du jeu
 class BouclePrincipale(threading.Thread): 

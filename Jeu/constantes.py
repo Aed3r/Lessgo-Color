@@ -56,7 +56,7 @@ gottaGoFast = 1
 mildPower = 2
 teamPaintMore = 3
 # Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon, Durée(sec)]
-listeValeurs = [[0, 1, 10, "paintMore"], [2, 0, 10, "gottaGoFast"], [1, 1, 10, "mildPower"], [0, 1, 10, "paintMore"]]
+listeValeurs = [[0, 1, 10, "paintMore"], [2, 0, 10, "gottaGoFast"], [1, 1, 10, "mildPower"], [0, 1, 10, "paintMoreGold"]]
 
 #Nombre de PowerUp présent au démarage
 powerUpsDemarage = 5

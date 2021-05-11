@@ -130,7 +130,7 @@ class Terrain:
         for i in range(powerUpsDemarage):
             self.placerPowerupAlea()
         
-        self.setType(100, 100, 3)
+        self.setType(500, 500, 3)
 
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):

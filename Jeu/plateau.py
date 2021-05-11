@@ -239,7 +239,7 @@ class Terrain:
             y = random.randrange(resolution[1])
             bienPlace = True
             #On vérifie le placement du powerup
-            if (x<taille and y<taille) or (x < taille and y > resolution[1] - taille) or (x > resolution[0] - taille and y < taille) or (x > resolution[0] - taille and y > resolution[1] - taille) :
+            if (x<taille and y<taille) or (x < taille and y > resolution[1] - taille) or (x > resolution[0] - taille and y < taille) or (x > resolution[0] - taille and y > resolution[1] - taille) or y > resolution[1] - tailleBarre - (taillePowerUp/2):
                 bienPlace = False
 
             #On vérifie si le powerup est sur un autre si il est bien placé
@@ -249,13 +249,6 @@ class Terrain:
                         bienPlace = False
         
         self.setType(x, y, 3)
-
-        #for i in range(taille):
-         #   for j in range(taille):
-          #      self.setColor(i, j, 0)
-           #     self.setColor(self.larg-i-1, j, 1)
-            #    self.setColor(i, self.long-j-1, 2)
-             #   self.setColor(self.larg-i-1, self.long-j-1, 3)
 
 def cercle_bresenham_plateau(r, xc, yc, couleur):
     x = 0

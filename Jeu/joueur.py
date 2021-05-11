@@ -125,7 +125,7 @@ class Joueur(object):
         return self.nom
 
     def getPos(self):
-        return (self.x, self.y)
+        return (round(self.x), round(self.y))
 
     #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
     def setPowerUp(self, pu):

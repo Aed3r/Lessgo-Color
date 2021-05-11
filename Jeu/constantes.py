@@ -56,7 +56,7 @@ teamGoFast = 4
 listeValeurs = [[0, 1, 10, "paintMore"], [2, 0, 10, "gottaGoFast"], [1, 1, 10, "mildPower"], [0, 1, 5, "paintMore"], [2, 0, 5, "gottaGoFast"]]
 
 #Nombre de PowerUp présent au démarage
-powerUpsDemarage = 5
+powerUpsDemarage = 4
 # ----------------- Ecran d'attente ----------------- #
 margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %
 tailleCompteur = 0.05 # En % de la hauteur de la fenêtre

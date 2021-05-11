@@ -8,7 +8,7 @@ var resX = null,
 var t1;
 var dx, dy;
 var team = null, color = null;
-var powerupNames = ["gottaGoFast", "mildPower", "paintMore", "paintMoreGold"];
+var powerupNames = ["gottaGoFast", "mildPower", "paintMore", "paintMoreGold", "gottaGoFastGold"];
 var powerupImages = {};
 const tailleImagesPowerup = 0.2;
 var activePU = null;

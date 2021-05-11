@@ -7,16 +7,13 @@ from constantes import *
 joueurs = []
 
 # Placements initiaux
-spawnXOffset = getResP()[0] * propZoneInit / 2
-spawnYOffset = getResP()[1] * propZoneInit / 2
-spawn = [(spawnXOffset, spawnYOffset),
-         (getResP()[0] - spawnXOffset, spawnYOffset),
-         (spawnXOffset, getResP()[1] - spawnYOffset),
-         (getResP()[0] - spawnXOffset, getResP()[1] - spawnYOffset)]
+global spawn
 
 class Joueur(object): 
 
     def __init__(self, id, nom, equipe):
+        global spawn
+
         self.rayonCouleur = defRayonCouleur
         self.vitesse = defVitesse
         self.nom = nom
@@ -242,6 +239,7 @@ def getNombreJoueurs():
 
 # Réinitialise les joueurs
 def initJoueurs():
+    initSpawnPoints()
     for joueur in joueurs:
         joueur.__init__(joueur.getID(), joueur.getNom(), joueur.getEquipe())
 
@@ -253,3 +251,14 @@ def equipePowerUp(pu, equipe):
             joueur.vitesse += listeValeurs[pu][0]
             joueur.rayonCouleur += listeValeurs[pu][1]
             joueur.PowerUp.append((pu, time.time()))
+
+def initSpawnPoints():
+    global spawn
+    spawnXOffset = getResP()[0] * propZoneInit / 2
+    spawnYOffset = getResP()[1] * propZoneInit / 2
+    spawn = [(spawnXOffset, spawnYOffset),
+            (getResP()[0] - spawnXOffset, spawnYOffset),
+            (spawnXOffset, getResP()[1] - spawnYOffset),
+            (getResP()[0] - spawnXOffset, getResP()[1] - spawnYOffset)]
+
+initSpawnPoints()

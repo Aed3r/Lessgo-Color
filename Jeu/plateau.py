@@ -129,6 +129,8 @@ class Terrain:
         
         for i in range(powerUpsDemarage):
             self.placerPowerupAlea()
+        
+        self.setType(100, 100, 3)
 
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):
@@ -256,7 +258,7 @@ class Terrain:
                     if(p['x'] == x and p['y'] == y):
                         bienPlace = False
         
-        self.setType(x, y, 3)
+        self.setType(x, y, type)
 
 def cercle_bresenham_plateau(r, xc, yc, couleur, joueur):
     x = 0

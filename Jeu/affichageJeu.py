@@ -12,7 +12,6 @@ chronoDebut = None
 place = True
 fond = None
 fondChrono = None
-chronoPos = None
 
 # Temps de calcul alloué pour une image
 msPerFrame = int(1000 / fps)
@@ -28,7 +27,7 @@ def initChrono():
 
 # AfficehRenvoie True si la partie est finie, False sinon
 def drawChrono(fenetre):
-    global chronoDebut, place, fondChrono, chronoPos, fond
+    global chronoDebut, place, fondChrono, fond
 
     tActuelle=time.time()
     t0=chronoDebut - tActuelle
@@ -49,7 +48,7 @@ def drawChrono(fenetre):
     if fondChrono == None:
         fond = pygame.image.load(os.path.join("Data", "Images", "styleChrono.png")).convert_alpha()
         fondChrono = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.50), (int) (text.get_height() + (text.get_width()*0.5))))
-        chronoPos = ((int) (getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
+    chronoPos = ((int) (getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
 
     fenetre.blit(fondChrono, chronoPos)
     fenetre.blit(text, (getRes()[0]/2 - text.get_width()/2, 50))   

@@ -4,11 +4,10 @@ import pygame as pg
 import os
 import math
 
-margeH = getRes()[0]*0.2
-
 def afficherScore(fenetre, j, pos, x, y):
     score = j.getScore()
     nom = j.getNom()
+    margeH = getRes()[0]*0.2
 
     if pos == 1:
         top = policeBold.render("#" + str(pos) + " " + nom, True, titleColor)
@@ -31,6 +30,7 @@ def finPartie(fenetre, joueurs):
     i = 0
     pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, getRes()[0], getRes()[1]))
     listeP = getTerrain().pourcentageCouleur()
+    margeH = getRes()[0]*0.2
 
     violet = policeMedium.render(str(int(listeP[0]*100))+"%",True,titleColor)
     jaune = policeMedium.render(str(int(listeP[1]*100))+"%",True,titleColor)

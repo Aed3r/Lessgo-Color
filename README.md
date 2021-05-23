@@ -1,31 +1,30 @@
-<b>Pitch</b>: joueurs répartis en équipes devant s'affronter en coloriant le plateau de leurs couleur. L'équipe ayant la plus grande surface gagne. 
+ _                                 ____      _            
+| |    ___  ___ ___  __ _  ___    / ___|___ | | ___  _ __ 
+| |   / _ \/ __/ __|/ _` |/ _ \  | |   / _ \| |/ _ \| '__|
+| |__|  __/\__ \__ \ (_| | (_) | | |__| (_) | | (_) | |   
+|_____\___||___/___/\__, |\___/   \____\___/|_|\___/|_|   
+                    |___/                               
 
-<b>Déroulement</b>: https://docs.google.com/document/d/1iM4CwHCNdIPDv0mJ89oppqIE51hGo_PN0Ww2bJXOZe0/edit?usp=sharing    
+# What is this project ?
+Lessgo Color is a third year University project made by :
+ - Gustav Hubert
+ - Osman Simsek
+ - Paul-Antoine Bernard
+ - Marwan Ait Addi
+ - Thomas vendeville
 
-<b>Contrôles</b>:   
-    - Joystick  
-    - bouton powerup    
+The objective was to create a game that was playable by a large number of player (40 to 50 players) on the same screen
+and to then host a game night in a cinema to have people come and play our games.
 
-<b>Idées Powerup</b>  
-    - Dessiner plus au dessous de soit
-    - Ralentir les joueurs adverse dans un rayon  
-    - Accélérer les coéquipié  
-    - Pièges  
-    - Freeze    
+# What technologies have been used ?
+We used python 3.8.5 for the server and the html/css/js stack for client side interactions,
+the connection between the client and the server is handled by a high efficiency router, 
+we used WebSockets via the AIOHTTP package to handle server-client interactions and 
+Pygame to display things on the screen, everything else is scratch built using only the standard
+libraries.
 
-<b>Langues d'implémentations</b>  
-    - Mobile: HTML/Javascript   
-    - Serveur: Python   
-
-<b>Ecrans mobile</b>    
-    - Mini carte avec position du joueur    
-    - Contrôles     
-    - Powerup ramassé   
-
-<b>Projecteurs</b>  
-    - Plateau plein écran   
-    - Pourcentages des zones de couleur 
-
-<b>Librairies</b>
-    - Pygame (Graphisme) *sudo apt-get install python3-pygame*
-    - aiohttp (Réseau) *pip install aiohttp*
+# How can i try it ?
+Simply clone the source code into a folder and run the following command : `./jeu.sh`
+it will run a bash script that will put you in the correct folder and run the main.py
+if you can't run bash scripts on you operating system then got to the `Jeu` folder and run
+the main.py file with python3.

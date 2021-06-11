@@ -25,19 +25,19 @@ body {
     height: 100%;
     width: 100%;
     position: absolute;
-    background: radial-gradient(circle at 0px 0px, rgb(60, 23, 66) 0%, transparent 50%), 
-                radial-gradient(circle at 100% 0px, rgb(243, 255, 185) 0%, transparent 50%), 
-                radial-gradient(circle at 0px 100%, rgb(196, 32, 33) 0%, transparent 50%), 
-                radial-gradient(circle at 100% 100%, rgb(115, 210, 222) 0%, transparent 50%);
+    background: radial-gradient(circle at 0px 0px, #ef436b 0%, transparent 50%), 
+                radial-gradient(circle at 100% 0px, #ffd166 0%, transparent 50%), 
+                radial-gradient(circle at 0px 100%, #06d6a0 0%, transparent 50%), 
+                radial-gradient(circle at 100% 100%, #118ab2 0%, transparent 50%);
     animation: bgAnim 30s ease infinite;
 }
 
 @keyframes bgAnim {
-    0% { background-color: rgb(60, 23, 66) }
-    25% { background-color: rgb(115, 210, 222) }
-    50% { background-color: rgb(196, 32, 33) }
-    75% { background-color: rgb(243, 255, 185) }
-    100% { background-color: rgb(60, 23, 66) }
+    0% { background-color: #ef436b }
+    25% { background-color: #118ab2 }
+    50% { background-color: #06d6a0 }
+    75% { background-color: #ffd166 }
+    100% { background-color: #ef436b }
 }
 
 #mainDiv {
@@ -157,19 +157,19 @@ body {
 }
 
 #team1 {
-    background-color: rgb(60, 23, 66);
+    background-color: #ef436b;
 }
 
 #team2 {
-    background-color: rgb(243, 255, 185);
+    background-color: #ffd166;
 }
 
 #team3 {
-    background-color: rgb(196, 32, 33);
+    background-color: #06d6a0;
 }
 
 #team4 {
-    background-color: rgb(115, 210, 222);
+    background-color: #118ab2;
 }
 
 #mainDiv:after {
@@ -178,8 +178,8 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    background: -webkit-linear-gradient(left, rgb(60, 23, 66) 0%, rgb(60, 23, 66) 25%, rgb(243, 255, 185) 25%, rgb(243, 255, 185) 50%, rgb(196, 32, 33) 50%, rgb(196, 32, 33) 75%, rgb(115, 210, 222) 75%, rgb(115, 210, 222) 100%);
-    background: -moz-linear-gradient(left, rgb(60, 23, 66) 0%, rgb(60, 23, 66) 25%, rgb(243, 255, 185) 25%, rgb(243, 255, 185) 50%, rgb(196, 32, 33) 50%, rgb(196, 32, 33) 75%, rgb(115, 210, 222) 75%, rgb(115, 210, 222) 100%);
+    background: -webkit-linear-gradient(left, #ef436b 0%, #ef436b 25%, #ffd166 25%, #ffd166 50%, #06d6a0 50%, #06d6a0 75%, #118ab2 75%, #118ab2 100%);
+    background: -moz-linear-gradient(left, #ef436b 0%, #ef436b 25%, #ffd166 25%, #ffd166 50%, #06d6a0 50%, #06d6a0 75%, #118ab2 75%, #118ab2 100%);
     height: 5px;
     border-radius: 5px 5px 0 0;
 }

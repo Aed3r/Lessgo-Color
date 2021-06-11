@@ -315,15 +315,8 @@ def updateCase(j):
                 text = "Bonus de coloriage pour "
             if listeValeurs[p][3] == "gottaGoFastGold":
                 text = "Bonus de vitesse pour "
-            
-            if j.getEquipe() == 0:
-                text += "l'équipe violette !"
-            elif j.getEquipe() == 1:
-                text += "l'équipe jaune !"
-            elif j.getEquipe() == 2:
-                text += "l'équipe rouge !"
-            elif j.getEquipe() == 3:
-                text += "l'équipe bleu !"
+
+            text += "l'équipe " + nomsEquipes[j.getEquipe()] + " !"
 
             return text
         else:

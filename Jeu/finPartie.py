@@ -32,12 +32,10 @@ def finPartie(fenetre, joueurs):
     listeP = getTerrain().pourcentageCouleur()
     margeH = getRes()[0]*0.2
 
-    violet = policeMedium.render(str(int(listeP[0]*100))+"%",True,titleColor)
-    jaune = policeMedium.render(str(int(listeP[1]*100))+"%",True,titleColor)
-    rouge = policeMedium.render(str(int(listeP[2]*100))+"%",True,titleColor)
-    bleu = policeMedium.render(str(int(listeP[3]*100))+"%",True,titleColor)
-
-    listeTextes = [violet,jaune,rouge,bleu]
+    listeTextes = [policeMedium.render(str(int(listeP[0]*100))+"%",True,titleColor),
+                   policeMedium.render(str(int(listeP[1]*100))+"%",True,titleColor),
+                   policeMedium.render(str(int(listeP[2]*100))+"%",True,titleColor),
+                   policeMedium.render(str(int(listeP[3]*100))+"%",True,titleColor)]
 
     for i in range(4):
         pg.draw.rect(fenetre, couleursPlateau[i], pygame.Rect(margeH*(i+1)-largeurBarres/2, (getRes()[1]*0.8)-(getRes()[1]*listeP[i]/2), largeurBarres, getRes()[1]*listeP[i]/2))

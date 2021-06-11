@@ -7,8 +7,9 @@ pygame.init()
 pleinEcran = False # Si False utilise la résolution définit ci-dessous
 _resolution = (pygame.display.Info().current_w, pygame.display.Info().current_h) if pleinEcran else (1000, 700)
 fps = 60
-couleursPlateau = [(60, 23, 66), (243, 255, 185), (196, 32, 33), (115,210,222)]
-couleursJoueurs = [(30, 11, 33), (183, 221, 0), (98, 16, 16), (32,125,137)]
+couleursPlateau = [(239, 67, 107), (255, 209, 102), (6,214,160), (17,138,178)]
+couleursJoueurs = [(225, 20, 68), (255, 188, 31), (4, 171, 127), (13, 110, 142)]
+nomsEquipes = ["Rose", "Orange", "Verte", "Bleu"]
 afficherFPS = False
 tempsAnnonces = 3 # secondes
 largeurAnnonces = 0.7 # % de la largeur de l'écran
@@ -38,7 +39,7 @@ tailleCase = 10 # Modifier les tiles dans Data/Images/Tiles également
 propZoneInit = 0.2 # Contrôle la taille des zones initiales en *100 %
 tailleBarre = 20
 _resolutionPlateau = (_resolution[0], _resolution[1] - tailleBarre)
-couleurFond = (255, 255, 255)
+couleurFond = (254, 243, 236)
 wrapAround = False
 taillePowerUp = 50 # pixels
 effetFondu = 20 # 0 (très lent) - 255 (instant)
@@ -68,11 +69,11 @@ powerUpsDemarage = 4
 # ----------------- Ecran d'attente ----------------- #
 margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %
 tailleCompteur = 0.05 # En % de la hauteur de la fenêtre
-titleColor = (49, 51, 53) # Couleurs du texte sur fond blanc
+titleColor = (2, 13, 14) # Couleurs du texte sur fond blanc
 margeCompteur = 5
 
 # ----------------- Menu pause ----------------- #
-buttonBGcol = (255,255,255,255)
+buttonBGcol = couleurFond
 buttonFGcol = titleColor
 
 # ----------------- Polices ----------------- #

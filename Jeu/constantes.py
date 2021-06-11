@@ -30,6 +30,9 @@ def setRes(res):
 port = 8081
 tempsPartie = 300 # secondes
 
+# ------------------ Réseau ------------------- #
+defaultCooldown = 100 # ms
+
 # ------------------ Plateau ------------------- #
 tailleCase = 10 # Modifier les tiles dans Data/Images/Tiles également
 propZoneInit = 0.2 # Contrôle la taille des zones initiales en *100 %

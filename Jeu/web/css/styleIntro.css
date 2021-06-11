@@ -66,6 +66,8 @@ body {
     transition: all 0.2s ease;
     opacity: 0;
     animation: opacityAnim 1s ease forwards;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 #mainDiv h4 {
@@ -180,4 +182,11 @@ body {
     background: -moz-linear-gradient(left, rgb(60, 23, 66) 0%, rgb(60, 23, 66) 25%, rgb(243, 255, 185) 25%, rgb(243, 255, 185) 50%, rgb(196, 32, 33) 50%, rgb(196, 32, 33) 75%, rgb(115, 210, 222) 75%, rgb(115, 210, 222) 100%);
     height: 5px;
     border-radius: 5px 5px 0 0;
+}
+
+#affichagePing {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
 }

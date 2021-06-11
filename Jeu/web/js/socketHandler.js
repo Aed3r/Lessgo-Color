@@ -1,5 +1,5 @@
 var conn = null;
-const msCooldown = 100;
+var msCooldown = 100;
 var lastMsg;
 var posX = null,
     posY = null;
@@ -13,6 +13,11 @@ var powerupImages = {};
 const tailleImagesPowerup = 0.2;
 var activePU = null;
 var wraparound = false;
+const afficherPing = true;
+var lastPing = -1;
+
+/* Initialisations */
+if (!afficherPing) t1.style.visibility = "hidden"
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -25,28 +30,32 @@ function envoyerDirection(angle, vitesse) {
     dy = parseInt(Math.sin(angle) * vitesse);
 
     // On prépare le paquet à envoyer
-    var paquet = { "action": "deplacement", dx, dy };
+    let paquet = { "action": "deplacement", dx, dy };
     envoyerPaquet(paquet);
-
-    // On démarre un timer
-    t1 = performance.now();
 }
 
 // Envoi le paquet donné au serveur si assez de temps s'est écoulé depuis le dernier
 function envoyerPaquet(packet) {
     // Vérification du cooldown
     let now = Date.now();
-    if ((now < lastMsg + msCooldown && vitesse != 0))
+    if ((now < lastMsg + msCooldown))
         return;
+
+    // On ajoute le dernier ping
+    packet["ping"] = lastPing;
 
     // On prépare le paquet à envoyer
     var msg = JSON.stringify(packet);
 
     // On envoie le paquet
-    if (conn != null)
+    if (conn != null && conn.readyState == 1)
         conn.send(msg);
     else
         console.error("Erreur! Connection non initialisé");
+
+    // On démarre un timer pour calculer le prochain ping
+    t1 = performance.now();
+
     lastMsg = now;
 }
 
@@ -65,7 +74,15 @@ function connect() {
 
     // Lorsqu'un message est reçue
     conn.onmessage = function(e) {
-        var data = JSON.parse(e.data);
+        var data = null;
+        try {
+            data = JSON.parse(e.data);
+        } catch (e) {
+            console.error("Invalid json packet received : '" + e.data + "'");
+            return;
+        }
+
+        if(!data || !data.action) return;
 
         switch (data.action) {
             case 'init':
@@ -73,11 +90,9 @@ function connect() {
                 resY = data.resY;
                 team = data.team;
                 color = data.color;
-                // On initialise également la position
+                msCooldown = data.coolDown;
+                // VVV On initialise également la position VVV
             case 'update':
-                // On arrête le timer et on affiche le ping
-                if (t1) document.getElementById("affichagePing").innerHTML = (performance.now() - t1) + "ms";
-
                 // On met à jour la position sur la minimap
                 posX = data.x;
                 posY = data.y;
@@ -96,6 +111,13 @@ function connect() {
                         puDisplay.appendChild(img);
                     });
                 }
+                // VVV On met également à jour le dernier ping VVV
+            case 'stresstest':
+                // On arrête le timer et on affiche le ping
+                if (t1) {
+                    lastPing = performance.now() - t1;
+                    if(afficherPing) document.getElementById("affichagePing").innerHTML = lastPing + "ms";
+                } else lastPing = -1;
                 break;
             case 'go':
                 // Le jeu est lancé, on affiche la manette suivant l'appareil utilisé
@@ -119,6 +141,10 @@ function connect() {
                 let endUrl = window.location.origin + '/introduction.html#end#' + data.winner + '#' + isWinner;
                 document.location.href = endUrl;
                 break;
+            case 'newCooldown':
+                msCooldown = data.coolDown;
+                console.log("cooldown: " + msCooldown + "ms");
+                break;
             default:
                 return;
         }
@@ -126,9 +152,21 @@ function connect() {
 
     // Lorsque la connection est fermé par le serveur
     conn.onclose = function() {
-        console.log("Connection fermé.")
+        console.log("Connection fermé.");
         conn = null;
     };
+}
+
+function randomInt() {
+    return Math.floor(Math.random() * 100000);
+}
+
+// Envoie des paquets aléatoire en continue
+function stressTest() {
+    let val1 = randomInt(), val2 = randomInt();
+    let paquet = { "action": "stresstest", val1, val2};
+    envoyerPaquet(paquet);
+    setTimeout(stressTest, msCooldown);
 }
 
 // Renvoie la position actuel du joueur (en % de l'écran)

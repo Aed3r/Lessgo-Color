@@ -88,6 +88,15 @@ async def pngGetHandler(request):
     except:
         return web.Response(text="404: '" + url + "' n'existe pas")
 
+# Sert tous les fichiers json demandé
+@routes.get('/{file}.json')
+async def jsonGetHandler(request):
+    url = "web/data/{}.json".format(request.match_info['file'])
+    try:
+        return web.FileResponse(url)
+    except:
+        return web.Response(text="404: '" + url + "' n'existe pas")
+
 nb_jaune = 0 
 pourc_jaune = 0
 
@@ -110,6 +119,7 @@ class BouclePrincipale(threading.Thread):
         altPressed = False
         etatJeu = "attente" # "jeu", "fin"
         pause = False
+        cooldownChange = 0
         
         while getattr(t, "do_run", True):
             # Affiche l'écran d'attente
@@ -152,9 +162,18 @@ class BouclePrincipale(threading.Thread):
                     # Menu pause
                     elif event.key == pygame.K_ESCAPE:
                         pause = mp.toggle(etatJeu)
+                    # Modification du cooldown
+                    elif event.key == pygame.K_UP and altPressed:
+                        cooldownChange = 1
+                    elif event.key == pygame.K_DOWN and altPressed:
+                        cooldownChange = -1
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LALT:
                         altPressed = False
+                    elif (event.key == pygame.K_UP or event.key == pygame.K_DOWN) and cooldownChange != 0:
+                        avertirClients(avertirClients({'action': 'newCooldown', 'coolDown': socketHandler.getCooldown()}))
+                        socketHandler.resetAveragePing()
+                        cooldownChange = 0
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     # Gestion des clics dans le menu de pause
                     e = mp.verifClic(event.pos)
@@ -192,6 +211,9 @@ class BouclePrincipale(threading.Thread):
                     # Redimmensionnement
                     setRes(event.size)
                     fenetre=pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                
+            if (cooldownChange != 0):
+                socketHandler.changeCooldown(cooldownChange)
 
 
 # Initialise ou réinitialise le jeu
@@ -208,8 +230,6 @@ def initJeu():
 
 # Lance le jeu "correctement", cad en venant de l'écran d'attente
 def lancerJeu():
-    global app
-
     # On initialise le jeu
     initJeu()
 
@@ -218,6 +238,7 @@ def lancerJeu():
 
 # Envoie un message à tous les clients
 def avertirClients(msg):
+    global app
     coroutine = socketHandler.avertirClients(app, msg)
     asyncio.run(coroutine)
 

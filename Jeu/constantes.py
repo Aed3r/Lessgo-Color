@@ -71,6 +71,10 @@ margins = {'left': 5, 'right': 5, 'top': 20, 'bottom': 10} # En %
 tailleCompteur = 0.05 # En % de la hauteur de la fenêtre
 titleColor = (2, 13, 14) # Couleurs du texte sur fond blanc
 margeCompteur = 5
+dureeListes = 10000 # ms
+dureeQR = 5000 # ms
+animationDuration = 500 # ms
+delaiBlocs = 100 # ms
 
 # ----------------- Menu pause ----------------- #
 buttonBGcol = couleurFond

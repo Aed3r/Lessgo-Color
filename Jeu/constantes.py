@@ -53,6 +53,7 @@ defVitesse = 1
 
 collisions = True
 vitesseMax = 5 # Sans powerup
+
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3
 nbSpecial = 2
@@ -75,6 +76,7 @@ dureeListes = 10000 # ms
 dureeQR = 5000 # ms
 animationDuration = 500 # ms
 delaiBlocs = 100 # ms
+tailleQR = 80 # %
 
 # ----------------- Menu pause ----------------- #
 buttonBGcol = couleurFond

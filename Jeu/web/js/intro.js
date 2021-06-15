@@ -12,6 +12,17 @@ window.addEventListener("load", function() {
     alignBox();
 });
 
+// Utiliser les boutons avec entrer
+document.getElementById("pseudoBox").addEventListener("keyup", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.key == "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        choisirNom();
+    }
+});
+
 // Enregistre le nom choisie et charge la sélection de l'équipe
 function choisirNom() {
     var textBox = document.getElementById("pseudoBox");

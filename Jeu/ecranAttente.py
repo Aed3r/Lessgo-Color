@@ -20,10 +20,12 @@ pixelMargins = {}
 # Animations
 startT = time.time() * 1000
 blocsBuffer = []
+qrImgOG = pygame.image.load(os.path.join('Data', 'Images', 'serverlink.png'))
+qrImg = None
 
 # Doit être appelé avant les autres fonction pour initialiser les variables nécessitant la globale getRes()
 def initValeurs():
-    global blockH, blockW, ico, icoOG, pixelMargins
+    global blockW, blockH, ico, icoOG, pixelMargins, blocsBuffer
     
     # MAJ des marges en fonction de la taille d'écran
     pixelMargins['left'] = margins['left'] / 100 * getRes()[0]
@@ -32,28 +34,51 @@ def initValeurs():
     pixelMargins['bottom'] = margins['bottom'] / 100 * getRes()[1]
 
     # Taille des blocs de couleurs
-    blockW = (getRes()[0] - (pixelMargins['left'] * 5)) / 4
-    blockH = getRes()[1] - pixelMargins['top'] - pixelMargins['bottom']
+    newBlockW = (getRes()[0] - (pixelMargins['left'] * 5)) / 4
+    newBlockH = getRes()[1] - pixelMargins['top'] - pixelMargins['bottom']
 
-    # buffers des blocs de couleurs
-    for i in range(4):
-        blocsBuffer.append(pygame.Surface((blockW, blockH)))
+    if len(blocsBuffer) > 0 and (newBlockW != blockW or newBlockH != blockH):
+        for i in range(4):
+            blocsBuffer[i] = pygame.Surface((newBlockW, newBlockH), pygame.SRCALPHA)
+
+        # Code QR
+        scaleQR()
+        
+    blockW = newBlockW
+    blockH = newBlockH
 
     # Icône
     # https://www.flaticon.com/free-icon/user_1077114?term=user&page=1&position=1&page=1&position=1&related_id=1077114&origin=search
     if (icoOG == None):
         icoOG = pygame.image.load(os.path.join('Data', 'Images', 'user.png')).convert_alpha() # Récupération
 
+        # buffers des blocs de couleurs
+        for i in range(4):
+            blocsBuffer.append(pygame.Surface((blockW, blockH), pygame.SRCALPHA))
+        
+        # Code QR
+        scaleQR()
+
     ico = pygame.transform.smoothscale(icoOG, (int(getRes()[1]*tailleCompteur), int(getRes()[1]*tailleCompteur))) # Redimensionnement
 
+def scaleQR():
+    global qrImg, qrImgOG
+    tQR = (int) (min(getRes()[0]-pixelMargins["left"]-pixelMargins["right"], getRes()[1]-pixelMargins["top"]-pixelMargins["bottom"]))
+    qrImg = pygame.transform.smoothscale(qrImgOG, (tQR, tQR))
+
 def clear (fenetre):
-    pg.draw.rect(fenetre, (255, 255, 255), pg.Rect(0, 0, getRes()[0], getRes()[1]))
+    pg.draw.rect(fenetre, couleurFond, pg.Rect(0, 0, getRes()[0], getRes()[1]))
 
 def afficherBlocsCouleurs():
     global blocsBuffer
 
     for i in range(4):
-        pg.draw.rect(blocsBuffer[i], couleursPlateau[i], pg.Rect(0, 0, blockW, blockH))
+        # Fond
+        blocsBuffer[i].set_colorkey(couleurFond)
+        # Rectangle 1 (sert à adoucir les bords)
+        pg.draw.rect(blocsBuffer[i], couleursPlateau[i] + (50,), pg.Rect(0, 0, blockW, blockH), 0, 7)
+        # Rectangle 2
+        pg.draw.rect(blocsBuffer[i], couleursPlateau[i], pg.Rect(0, 0, blockW, blockH), 0, 10)
 
 def afficherNomsJoueurs():
     global blocsBuffer
@@ -127,24 +152,32 @@ def sineWave (duree, destination, t):
         return math.sin(t * ((2 * math.pi) / (duree*4))) * destination
 
 def animate (fenetre):
-    global startT, blocsBuffer
+    global startT, blocsBuffer, qrImg
 
     execT = (time.time() * 1000 - startT) % (dureeListes + dureeQR)
 
-    if execT < dureeListes:
-        if execT < dureeListes - animationDuration - 3*delaiBlocs:
-            posBlocs = [pixelMargins['top']+blockH+pixelMargins['bottom']-sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-delaiBlocs*0),
-                        pixelMargins['top']+blockH+pixelMargins['bottom']-sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-delaiBlocs*1),
-                        pixelMargins['top']+blockH+pixelMargins['bottom']-sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-delaiBlocs*2),
-                        pixelMargins['top']+blockH+pixelMargins['bottom']-sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-delaiBlocs*3)]
-        else:
-            posBlocs = [pixelMargins['top']+sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-(dureeListes-animationDuration-delaiBlocs*0)),
-                        pixelMargins['top']+sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-(dureeListes-animationDuration-delaiBlocs*1)),
-                        pixelMargins['top']+sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-(dureeListes-animationDuration-delaiBlocs*2)),
-                        pixelMargins['top']+sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-(dureeListes-animationDuration-delaiBlocs*3))]
+    if execT < dureeQR: # Code QR
+        if execT < dureeQR - animationDuration: # Fade in
+            qrImg.set_alpha(sineWave(animationDuration, 255, execT))
+        else: # Fade out
+            qrImg.set_alpha(255-sineWave(animationDuration, 255, execT-(dureeQR-animationDuration)))
+        
+        fenetre.blit(qrImg, (getRes()[0] / 2 - qrImg.get_width()/2, pixelMargins['top']))
+    else: # Blocs de couleurs avec listes
+        if execT < dureeQR + dureeListes - animationDuration - 3*delaiBlocs: # Slide in progressif de chaque bloc avec délai
+            posBlocs = [pixelMargins['top']+blockH+pixelMargins['bottom']-sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-dureeQR-delaiBlocs*0),
+                        pixelMargins['top']+blockH+pixelMargins['bottom']-sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-dureeQR-delaiBlocs*1),
+                        pixelMargins['top']+blockH+pixelMargins['bottom']-sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-dureeQR-delaiBlocs*2),
+                        pixelMargins['top']+blockH+pixelMargins['bottom']-sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-dureeQR-delaiBlocs*3)]
+        else: # Slide out progressif
+            posBlocs = [pixelMargins['top']+sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-(dureeQR+dureeListes-animationDuration-delaiBlocs*0)),
+                        pixelMargins['top']+sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-(dureeQR+dureeListes-animationDuration-delaiBlocs*1)),
+                        pixelMargins['top']+sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-(dureeQR+dureeListes-animationDuration-delaiBlocs*2)),
+                        pixelMargins['top']+sineWave(animationDuration, blockH+pixelMargins['bottom'], execT-(dureeQR+dureeListes-animationDuration-delaiBlocs*3))]
 
         for i in range(4):
             fenetre.blit(blocsBuffer[i], (pixelMargins['left'] + i * (blockW+pixelMargins['left']), posBlocs[i]))
+        
 
 
 def toutDessiner(fenetre):

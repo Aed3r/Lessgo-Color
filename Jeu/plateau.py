@@ -2,7 +2,7 @@ import pygame
 import random
 import os
 import time
-from constantes import *
+import constantes as cst
 import math
 
 class Case:
@@ -36,18 +36,18 @@ class Terrain:
         for i in range(4):
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
-        self._buffer = pygame.Surface((getResP()[0], getResP()[1]))
-        self._buffer.set_alpha(effetFondu)
-        self._bufferPlateau = pygame.Surface((getResP()[0], getResP()[1]))
+        self._buffer = pygame.Surface((cst.getResP()[0], cst.getResP()[1]))
+        self._buffer.set_alpha(cst.effetFondu)
+        self._bufferPlateau = pygame.Surface((cst.getResP()[0], cst.getResP()[1]))
         # On charge les images des powerups
         self._powerUpSprites = []
-        for i in range(nbPowerup + nbSpecial):
-            img = pygame.image.load(os.path.join('Data', 'Images', 'Powerups', listeValeurs[i][3]+".png"))
-            img = pygame.transform.smoothscale(img, (taillePowerUp, taillePowerUp))
+        for i in range(cst.nbPowerup + cst.nbSpecial):
+            img = pygame.image.load(os.path.join('Data', 'Images', 'Powerups', cst.listeValeurs[i][3]+".png"))
+            img = pygame.transform.smoothscale(img, (cst.taillePowerUp, cst.taillePowerUp))
             self._powerUpSprites.append(img)
         # On dessine le fond sur la surface
-        pygame.draw.rect(self._buffer, couleurFond, pygame.Rect(0, 0, getResP()[0], getResP()[1]))
-        pygame.draw.rect(self._bufferPlateau, couleurFond, pygame.Rect(0, 0, getResP()[0], getResP()[1]))
+        pygame.draw.rect(self._buffer, cst.couleurFond, pygame.Rect(0, 0, cst.getResP()[0], cst.getResP()[1]))
+        pygame.draw.rect(self._bufferPlateau, cst.couleurFond, pygame.Rect(0, 0, cst.getResP()[0], cst.getResP()[1]))
 
     def getCase(self, x, y):
         return self.plateau[x][y]
@@ -68,24 +68,24 @@ class Terrain:
         wrapped = False
 
         if x < 0:
-            if wrapAround == True: 
+            if cst.wrapAround == True: 
                 x = self.larg + x
             else :
                 wrapped = True
         elif x >= self.larg:
-            if wrapAround == True:
+            if cst.wrapAround == True:
                 x = x - self.larg
             else :
                 wrapped = True
         
         if y < 0:
-            if wrapAround == True:
+            if cst.wrapAround == True:
                 y = self.long + y
             else :
                 wrapped = True
     
         elif y >= self.long:
-            if wrapAround == True:
+            if cst.wrapAround == True:
                 y = y - self.long
             else :
                 wrapped = True
@@ -113,13 +113,13 @@ class Terrain:
     def getType(self, x, y, rayon):
         for i in range(len(self.powerups)):
             p = self.powerups[i]
-            if math.sqrt(math.pow(p['x']-x, 2)+math.pow(p['y']-y, 2)) <= (rayon*tailleCase)+taillePowerUp/2:
+            if math.sqrt(math.pow(p['x']-x, 2)+math.pow(p['y']-y, 2)) <= (rayon*cst.tailleCase)+cst.taillePowerUp/2:
                 self.powerups.pop(i)
                 return p['type']
         return None
 
     def initTerrain(self):
-        taille = (int)(getResP()[0] / tailleCase * propZoneInit)
+        taille = (int)(cst.getResP()[0] / cst.tailleCase * cst.propZoneInit)
         for i in range(taille):
             for j in range(taille):
                 self.setColor(i, j, 0, None)
@@ -127,7 +127,7 @@ class Terrain:
                 self.setColor(i, self.long-j-1, 2, None)
                 self.setColor(self.larg-i-1, self.long-j-1, 3, None)
         
-        for i in range(powerUpsDemarage):
+        for i in range(cst.powerUpsDemarage):
             self.placerPowerupAlea()
         
         self.setType(500, 500, 3)
@@ -141,16 +141,16 @@ class Terrain:
                     if col != None:
                         code = self._calcNeighbors(i, j)
                         if (code != 15):
-                            self._buffer.blit(self._tiles[col][code], (i*tailleCase, j*tailleCase))
+                            self._buffer.blit(self._tiles[col][code], (i*cst.tailleCase, j*cst.tailleCase))
                         else:
-                            pygame.draw.rect(self._buffer, couleursPlateau[col], pygame.Rect(i*tailleCase, j*tailleCase, tailleCase, tailleCase))
+                            pygame.draw.rect(self._buffer, cst.couleursPlateau[col], pygame.Rect(i*cst.tailleCase, j*cst.tailleCase, cst.tailleCase, cst.tailleCase))
         
         self._bufferPlateau.blit(self._buffer, (0,0))
         fenetre.blit(self._bufferPlateau, (0, 0))
 
         # Powerup
         for p in self.powerups:
-            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-taillePowerUp/2, p['y']-taillePowerUp/2))          
+            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-cst.taillePowerUp/2, p['y']-cst.taillePowerUp/2))          
 
     # Construit un code binaire en ajoutant comprenant 1 à l'indice i si le le voisin i (déterminé par self._offset) est de la même couleur que la case (x, y)
     def _calcNeighbors(self, x, y):
@@ -166,10 +166,10 @@ class Terrain:
         tot=0
         i=0
         for p in listePour:
-            pygame.draw.rect(fenetre,couleursPlateau[i],pygame.Rect(tot*getRes()[0],getRes()[1]-19,getRes()[0]*p,18))
+            pygame.draw.rect(fenetre,cst.couleursPlateau[i],pygame.Rect(tot*cst.getRes()[0],cst.getRes()[1]-19,cst.getRes()[0]*p,18))
             tot+=p
             i+=1
-        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*getRes()[0],getRes()[1]-19,getRes()[0],18))
+        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*cst.getRes()[0],cst.getRes()[1]-19,cst.getRes()[0],18))
 
     def modifCompteur(self, pos, color, joueur):
         colorNow = self.getColor(pos[0], pos[1])
@@ -197,7 +197,7 @@ class Terrain:
         dX = x2-x1
         dY = y2-y1
         m = 2*dY
-        err = -dX;
+        err = -dX
 
         for x in range(x1, x2+1):
             if inv:
@@ -239,9 +239,9 @@ class Terrain:
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, j)
     
     def placerPowerupAlea(self):
-        resolution = getRes()
-        taille = (int)(resolution[0] * propZoneInit)
-        type = random.randrange(nbPowerup)
+        resolution = cst.getRes()
+        taille = (int)(resolution[0] * cst.propZoneInit)
+        type = random.randrange(cst.nbPowerup)
         bienPlace =  False
         
         while bienPlace == False:
@@ -249,7 +249,7 @@ class Terrain:
             y = random.randrange(resolution[1])
             bienPlace = True
             #On vérifie le placement du powerup
-            if (x<taille and y<taille) or (x < taille and y > resolution[1] - taille) or (x > resolution[0] - taille and y < taille) or (x > resolution[0] - taille and y > resolution[1] - taille) or y > resolution[1] - tailleBarre - (taillePowerUp/2):
+            if (x<taille and y<taille) or (x < taille and y > resolution[1] - taille) or (x > resolution[0] - taille and y < taille) or (x > resolution[0] - taille and y > resolution[1] - taille) or y > resolution[1] - cst.tailleBarre - (cst.taillePowerUp/2):
                 bienPlace = False
 
             #On vérifie si le powerup est sur un autre si il est bien placé
@@ -291,15 +291,15 @@ terrain = None
 
 def initTerrain():
     global terrain
-    terrain = Terrain(round(getResP()[1]/tailleCase), round(getResP()[0]/tailleCase))
+    terrain = Terrain(round(cst.getResP()[1]/cst.tailleCase), round(cst.getResP()[0]/cst.tailleCase))
 
 def getTerrain():
     global terrain
     return terrain
 
 def updateCase(j):
-    posCase1 = ((int) (j.oldX/getResP()[0]*terrain.getLarg()), (int) (j.oldY/getResP()[1]*terrain.getLong()))
-    posCase2 = ((int) (j.x/getResP()[0]*terrain.getLarg()), (int) (j.y/getResP()[1]*terrain.getLong()))
+    posCase1 = ((int) (j.oldX/cst.getResP()[0]*terrain.getLarg()), (int) (j.oldY/cst.getResP()[1]*terrain.getLong()))
+    posCase2 = ((int) (j.x/cst.getResP()[0]*terrain.getLarg()), (int) (j.y/cst.getResP()[1]*terrain.getLong()))
 
     j.oldX = j.x
     j.oldY = j.y
@@ -310,13 +310,13 @@ def updateCase(j):
     p = terrain.getType(j.x, j.y, j.getRayon())
     if (p != None):
         j.setPowerUp(p)
-        if (listeValeurs[p][3].endswith("Gold")):
-            if listeValeurs[p][3] == "paintMoreGold":
+        if (cst.listeValeurs[p][3].endswith("Gold")):
+            if cst.listeValeurs[p][3] == "paintMoreGold":
                 text = "Bonus de coloriage pour "
-            if listeValeurs[p][3] == "gottaGoFastGold":
+            if cst.listeValeurs[p][3] == "gottaGoFastGold":
                 text = "Bonus de vitesse pour "
 
-            text += "l'équipe " + nomsEquipes[j.getEquipe()] + " !"
+            text += "l'équipe " + cst.nomsEquipes[j.getEquipe()] + " !"
 
             return text
         else:

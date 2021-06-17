@@ -74,8 +74,8 @@ titleColor = (2, 13, 14) # Couleurs du texte sur fond blanc
 margeCompteur = 5
 dureeListes = 10000 # ms
 dureeQR = 5000 # ms
-animationDuration = 500 # ms
-delaiBlocs = 100 # ms
+animAttenteDuree = 500 # ms
+delaiAttenteBlocs = 100 # ms
 tailleQR = 80 # %
 
 # ----------------- Menu pause ----------------- #
@@ -98,3 +98,5 @@ ENATTENTE = "En attente de joueurs..."
 
 # ----------------- Ecran fin ----------------- #
 largeurBarres = 60
+animFinDuree = 500 # ms
+delaiFinBlocs = 1000 # ms

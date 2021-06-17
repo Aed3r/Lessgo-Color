@@ -1,6 +1,7 @@
 import pygame
 import UI.bouton as b
-from constantes import *
+import constantes as cst
+import pygame
 
 boutons = []
 rectBoutons = []
@@ -15,17 +16,17 @@ def toggle (etat):
         orientation = 'V'
         doDraw = True
         if etat == "attente":
-            boutons.append(b.Bouton(LANCERJEU, policeBold, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(QUITTERJEU, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(cst.LANCERJEU, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
+            boutons.append(b.Bouton(cst.QUITTERJEU, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
         elif etat == "jeu":
-            boutons.append(b.Bouton(REDEMJEU, policeBold, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(REVATTENTE, policeBold, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(INITTIMER, policeBold, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(FINIRJEU, policeBold, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(QUITTERJEU, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(cst.REDEMJEU, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
+            boutons.append(b.Bouton(cst.REVATTENTE, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
+            boutons.append(b.Bouton(cst.INITTIMER, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
+            boutons.append(b.Bouton(cst.FINIRJEU, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
+            boutons.append(b.Bouton(cst.QUITTERJEU, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
         elif etat == "fin":
-            boutons.append(b.Bouton(REVATTENTE, policeBold, buttonBGcol, buttonFGcol))
-            boutons.append(b.Bouton(QUITTERJEU, policeBold, buttonBGcol, buttonFGcol))
+            boutons.append(b.Bouton(cst.REVATTENTE, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
+            boutons.append(b.Bouton(cst.QUITTERJEU, cst.policeBold, cst.buttonBGcol, cst.buttonFGcol))
     else: # Suppression des boutons
         boutons.clear()
         rectBoutons.clear()

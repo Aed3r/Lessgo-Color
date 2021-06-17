@@ -3,7 +3,7 @@ import socketHandler
 import threading 
 import socket
 import os, signal
-from constantes import *
+import constantes as cst
 import affichageJeu
 import plateau
 import ecranAttente
@@ -11,6 +11,8 @@ import menuPause as mp
 import joueur
 import asyncio
 import finPartie
+import importlib
+import pygame
 
 routes = web.RouteTableDef()
 app = None
@@ -21,10 +23,10 @@ def initFenetre ():
     # Initialisation de la fenêtre                                                                                                                     
     pygame.display.set_caption("LessGo Color")                                                                                 #nom fenetre
     
-    if (pleinEcran):
+    if (cst.pleinEcran):
         return pygame.display.set_mode((0,0), pygame.FULLSCREEN)
     else:
-        return pygame.display.set_mode(getRes(), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+        return pygame.display.set_mode(cst.getRes(), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
 
 fenetre = initFenetre()
 
@@ -167,6 +169,9 @@ class BouclePrincipale(threading.Thread):
                         cooldownChange = 1
                     elif event.key == pygame.K_DOWN and altPressed:
                         cooldownChange = -1
+                    # Rechargement des constantes
+                    elif event.key == pygame.K_F5:
+                        importlib.reload(cst)
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LALT:
                         altPressed = False
@@ -179,28 +184,28 @@ class BouclePrincipale(threading.Thread):
                     e = mp.verifClic(event.pos)
                     if e != None:
                         # Un bouton a été appuyé
-                        if e == LANCERJEU:
+                        if e == cst.LANCERJEU:
                             # Si le bouton 'lancer jeu' a été appuyé on lance la boucle principale
                             lancerJeu()
                             etatJeu = "jeu"
-                            pygame.display.set_mode(getRes(), 0)
-                        elif e == QUITTERJEU:
+                            pygame.display.set_mode(cst.getRes(), 0)
+                        elif e == cst.QUITTERJEU:
                             # On quitte
                             os.kill(os.getpid(), signal.SIGINT)
-                        elif e == REDEMJEU:
+                        elif e == cst.REDEMJEU:
                             # On relance le jeu sans passer par le menu d'attente
                             initJeu()
-                        elif e == REVATTENTE:
+                        elif e == cst.REVATTENTE:
                             # On revient au menu d'attente
                             etatJeu = "attente"
-                            pygame.display.set_mode(getRes(), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                            pygame.display.set_mode(cst.getRes(), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
 
                             # On avertit les clients
                             avertirClients({'action': 'attente'})
-                        elif e == INITTIMER:
+                        elif e == cst.INITTIMER:
                             # On remet le timer à zéro sans toucher la partie en cours
                             affichageJeu.initChrono()
-                        elif e == FINIRJEU:
+                        elif e == cst.FINIRJEU:
                             # On termine la partie prématurément
                             etatJeu = "fin"
                             terminerJeu()
@@ -209,7 +214,7 @@ class BouclePrincipale(threading.Thread):
                         pause = False
                 elif event.type == pygame.VIDEORESIZE:
                     # Redimmensionnement
-                    setRes(event.size)
+                    cst.setRes(event.size)
                     fenetre=pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
                 
             if (cooldownChange != 0):
@@ -259,8 +264,8 @@ if __name__ == '__main__':
     boucle = BouclePrincipale()
     app = init_app()
     boucle.start() 
-    print("Résolution : ", getRes())
+    print("Résolution : ", cst.getRes())
     print("Affichage démarré. Lancement du site...")
-    web.run_app(app, port=port)
+    web.run_app(app, port=cst.port)
     boucle.do_run = False
     print("Serveur et affichage arreté. Goodbye")

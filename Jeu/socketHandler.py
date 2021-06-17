@@ -3,7 +3,7 @@ import aiohttp
 import json
 import joueur as j
 import time
-from constantes import *
+import constantes as cst
 import asyncio
 import random
 import threading
@@ -12,7 +12,7 @@ import threading
 clients = []
 
 # Cooldown des joueurs
-msCooldown = defaultCooldown
+msCooldown = cst.defaultCooldown
 
 # Ping moyen
 avgPing = -1
@@ -33,8 +33,8 @@ async def request_handler(ws_current, request):
         # On envoie la position initiale du joueur, ainsi que la taille de l'écran
         player = j.getJoueur(request.remote)
         await envoyerPaquet(ws_current, {'action': 'init', 'x': player.getPos()[0], 'y': player.getPos()[1],
-                                         'resX': getResP()[0], 'resY': getResP()[1], 'team': player.getEquipe(),
-                                         'color': couleursPlateau[player.getEquipe()], 'coolDown': msCooldown})
+                                         'resX': cst.getResP()[0], 'resY': cst.getResP()[1], 'team': player.getEquipe(),
+                                         'color': cst.couleursPlateau[player.getEquipe()], 'coolDown': msCooldown})
 
     while True:
         msg = await ws_current.receive()
@@ -65,16 +65,16 @@ async def request_handler(ws_current, request):
                 clients.append(request.remote)
 
                 # On envoie le cooldown actuel
-                await envoyerPaquet(ws_current, {'action': 'newCooldown', 'coolDown': msCooldown});
+                await envoyerPaquet(ws_current, {'action': 'newCooldown', 'coolDown': msCooldown})
             elif data["action"] == "stresstest":
                 # On calcule le ping moyen
                 calcPingMoyen(data["ping"])
 
                 # On renvoie une réponse aléatoire
-                val1 = random.randint(0, 100000);
-                val2 = random.randint(0, 100000);
+                val1 = random.randint(0, 100000)
+                val2 = random.randint(0, 100000)
 
-                await envoyerPaquet(ws_current, {'action': 'stresstest', 'val1': val1, 'val2': val2});
+                await envoyerPaquet(ws_current, {'action': 'stresstest', 'val1': val1, 'val2': val2})
         else:
             break
 
@@ -92,7 +92,7 @@ def calcPingMoyen (newPing):
         # On affiche le résultat
         if (nPings == 1):
             print("cooldown: " + str(msCooldown) + "ms\nsheeeeesh")
-        print("\033[Aping: " + str(newPing) + "ms avg: " + str(round(avgPing)) + "ms                 ");
+        print("\033[Aping: " + str(newPing) + "ms avg: " + str(round(avgPing)) + "ms                 ")
     mutex.release()
 
 # Vérifie que la socket est ouverte puis envoie le paquet

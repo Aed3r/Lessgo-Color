@@ -2,7 +2,7 @@
 
 import time
 import math
-from constantes import *
+import constantes as cst
 
 joueurs = []
 
@@ -14,8 +14,8 @@ class Joueur(object):
     def __init__(self, id, nom, equipe):
         global spawn
 
-        self.rayonCouleur = defRayonCouleur
-        self.vitesse = defVitesse
+        self.rayonCouleur = cst.defRayonCouleur
+        self.vitesse = cst.defVitesse
         self.nom = nom
         self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
         self.score = 0
@@ -29,7 +29,7 @@ class Joueur(object):
         self.EQUIPE = equipe
 
         #On assigne une couleur au joueur selon son équipe et on le place dans la zone de son équipe
-        self.COLOR = couleursJoueurs[equipe]
+        self.COLOR = cst.couleursJoueurs[equipe]
 
         # Position
         self.x = spawn[equipe][0]
@@ -51,12 +51,12 @@ class Joueur(object):
     def move(self):
         #On vérifie si on doit enlever un powerup
         for pu in self.PowerUp:
-            if(time.time() - pu[1] >= listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
-                self.vitesse -= listeValeurs[pu[0]][0]
-                self.rayonCouleur -= listeValeurs[pu[0]][1]
+            if(time.time() - pu[1] >= cst.listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
+                self.vitesse -= cst.listeValeurs[pu[0]][0]
+                self.rayonCouleur -= cst.listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
 
-        if (collisions):
+        if (cst.collisions):
             # Accélération selon l'entrée du joueur
             self.hSpeed += (self.dX * self.vitesse) / 10
             self.vSpeed += (self.dY * self.vitesse) / 10
@@ -67,19 +67,19 @@ class Joueur(object):
 
             # Cap de vitesse horizontale
             ratio = 1
-            if self.hSpeed > vitesseMax * self.vitesse:
-                ratio = self.hSpeed / vitesseMax * self.vitesse
-            if self.hSpeed < -vitesseMax * self.vitesse:
-                ratio = self.hSpeed / -vitesseMax * self.vitesse
+            if self.hSpeed > cst.vitesseMax * self.vitesse:
+                ratio = self.hSpeed / cst.vitesseMax * self.vitesse
+            if self.hSpeed < -cst.vitesseMax * self.vitesse:
+                ratio = self.hSpeed / -cst.vitesseMax * self.vitesse
             self.hSpeed /= ratio
             self.vSpeed /= ratio
 
             # Cap de vitesse verticale
             ratio = 1
-            if self.vSpeed > vitesseMax * self.vitesse:
-                ratio = self.vSpeed / vitesseMax * self.vitesse
-            if self.vSpeed < -vitesseMax * self.vitesse:
-                ratio = self.vSpeed / -vitesseMax * self.vitesse
+            if self.vSpeed > cst.vitesseMax * self.vitesse:
+                ratio = self.vSpeed / cst.vitesseMax * self.vitesse
+            if self.vSpeed < -cst.vitesseMax * self.vitesse:
+                ratio = self.vSpeed / -cst.vitesseMax * self.vitesse
             self.hSpeed /= ratio
             self.vSpeed /= ratio
             
@@ -90,54 +90,51 @@ class Joueur(object):
             self.x = int(self.x + self.dX * self.vitesse)
             self.y = int(self.y + self.dY * self.vitesse)
 
-        rayon = self.getRayon() * tailleCase
+        rayon = self.getRayon() * cst.tailleCase
 
         # Vérification de dépassement des bordures
-        if (wrapAround):
-            if (self.x >= getResP()[0] ): self.x = 1
-            if (self.x <= 0): self.x = getResP()[0] - 1
-            if (self.y >= getResP()[1] ): self.y = 1
-            if (self.y <= 0): self.y = getResP()[1] - 1
-        elif (collisions):
-            if (self.x+rayon >= getResP()[0] ): 
-                self.x = getResP()[0] - rayon - 1
+        if (cst.wrapAround):
+            if (self.x >= cst.getResP()[0] ): self.x = 1
+            if (self.x <= 0): self.x = cst.getResP()[0] - 1
+            if (self.y >= cst.getResP()[1] ): self.y = 1
+            if (self.y <= 0): self.y = cst.getResP()[1] - 1
+        elif (cst.collisions):
+            if (self.x+rayon >= cst.getResP()[0] ): 
+                self.x = cst.getResP()[0] - rayon - 1
                 self.hSpeed *= -1
             if (self.x-rayon < 0): 
                 self.x = rayon
                 self.hSpeed *= -1
-            if (self.y+rayon >= getResP()[1] ): 
-                self.y = getResP()[1] - rayon - 1
+            if (self.y+rayon >= cst.getResP()[1] ): 
+                self.y = cst.getResP()[1] - rayon - 1
                 self.vSpeed *= -1
             if (self.y-rayon < 0): 
                 self.y = rayon
                 self.vSpeed *= -1
         else:
-            if (self.x+rayon >= getResP()[0] ): self.x = getResP()[0] - rayon - 1
+            if (self.x+rayon >= cst.getResP()[0] ): self.x = cst.getResP()[0] - rayon - 1
             if (self.x-rayon < 0): self.x = rayon
-            if (self.y+rayon >= getResP()[1] ): self.y = getResP()[1] - rayon - 1
+            if (self.y+rayon >= cst.getResP()[1] ): self.y = cst.getResP()[1] - rayon - 1
             if (self.y-rayon < 0): self.y = rayon
 
     def setDirection(self, dx, dy):
         self.dX = dx
         self.dY = dy
-        
-    def getRayon(self):
-        return self.nom
 
     def getPos(self):
         return (round(self.x), round(self.y))
 
     #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
     def setPowerUp(self, pu):
-        if pu < nbPowerup:
-            self.vitesse += listeValeurs[pu][0]
-            self.rayonCouleur += listeValeurs[pu][1]
+        if pu < cst.nbPowerup:
+            self.vitesse += cst.listeValeurs[pu][0]
+            self.rayonCouleur += cst.listeValeurs[pu][1]
             self.PowerUp.append((pu, time.time()))
-        elif pu < nbPowerup + nbSpecial:
+        elif pu < cst.nbPowerup + cst.nbSpecial:
             equipePowerUp(pu, self.EQUIPE)
             
     def getPosPourcentage(self):
-        return (self.x / getResP()[0], self.y / getResP()[1])
+        return (self.x / cst.getResP()[0], self.y / cst.getResP()[1])
 
     def getEquipe(self):
         return self.EQUIPE
@@ -154,7 +151,7 @@ class Joueur(object):
     # Renvoie une liste descriptive des powerups actifs
     def getPowerups(self):
         pu = list(map(lambda x: x[0], self.PowerUp)) # On récupère les powerup actifs
-        puNames = list(map(lambda x: listeValeurs[x][3], pu)) # On remplace par des noms
+        puNames = list(map(lambda x: cst.listeValeurs[x][3], pu)) # On remplace par des noms
         return puNames
 
     # Renvoie le rayon d'affichage du joueur
@@ -177,7 +174,7 @@ class Joueur(object):
 
     # Vérifie s'il y a eu collision avec j2
     def _areColliding (self, j2):
-        return math.sqrt(math.pow(j2.getPos()[0]-self.getPos()[0], 2)+math.pow(j2.getPos()[1]-self.getPos()[1], 2)) <= (j2.getRayon()*tailleCase)+(self.getRayon()*tailleCase)
+        return math.sqrt(math.pow(j2.getPos()[0]-self.getPos()[0], 2)+math.pow(j2.getPos()[1]-self.getPos()[1], 2)) <= (j2.getRayon()*cst.tailleCase)+(self.getRayon()*cst.tailleCase)
 
     # Modifie les déplacemenent du joueur courant et de j2 s'il entre en collision
     def handleCollision (self, j2):
@@ -217,7 +214,7 @@ def moveJoueurs():
     for joueur in joueurs:
         joueur.move()
 
-        if (collisions):
+        if (cst.collisions):
             # On vérifie s'il y a eu collision
             for j2 in joueurs:
                 joueur.handleCollision(j2)
@@ -248,17 +245,17 @@ def equipePowerUp(pu, equipe):
     global joueurs
     for joueur in joueurs:
         if joueur.EQUIPE == equipe:
-            joueur.vitesse += listeValeurs[pu][0]
-            joueur.rayonCouleur += listeValeurs[pu][1]
+            joueur.vitesse += cst.listeValeurs[pu][0]
+            joueur.rayonCouleur += cst.listeValeurs[pu][1]
             joueur.PowerUp.append((pu, time.time()))
 
 def initSpawnPoints():
     global spawn
-    spawnXOffset = getResP()[0] * propZoneInit / 2
-    spawnYOffset = getResP()[1] * propZoneInit / 2
+    spawnXOffset = cst.getResP()[0] * cst.propZoneInit / 2
+    spawnYOffset = cst.getResP()[1] * cst.propZoneInit / 2
     spawn = [(spawnXOffset, spawnYOffset),
-            (getResP()[0] - spawnXOffset, spawnYOffset),
-            (spawnXOffset, getResP()[1] - spawnYOffset),
-            (getResP()[0] - spawnXOffset, getResP()[1] - spawnYOffset)]
+            (cst.getResP()[0] - spawnXOffset, spawnYOffset),
+            (spawnXOffset, cst.getResP()[1] - spawnYOffset),
+            (cst.getResP()[0] - spawnXOffset, cst.getResP()[1] - spawnYOffset)]
 
 initSpawnPoints()

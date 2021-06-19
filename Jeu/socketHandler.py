@@ -39,42 +39,50 @@ async def request_handler(ws_current, request):
     while True:
         msg = await ws_current.receive()
         if msg.type == aiohttp.WSMsgType.text:
-            data = json.loads(msg.data)
+            try:
+                data = json.loads(msg.data)
 
-            if data["action"] == None:
-                continue
-
-            if data["action"] == "deplacement" and isinstance(data["dx"], int) and isinstance(data["dy"], int):
-                # On vérifie que le joueur est initialisé
-                if player == None:
+                if data["action"] == None:
                     continue
 
-                # On calcule le ping moyen
-                calcPingMoyen(data["ping"])
+                if data["action"] == "deplacement" and isinstance(data["dx"], int) and isinstance(data["dy"], int):
+                    # On vérifie que le joueur est initialisé
+                    if player == None:
+                        continue
 
-                # On modifie le déplacement du joueur
-                player.setDirection(data["dx"]/10, data["dy"]/10)
+                    # On calcule le ping moyen
+                    calcPingMoyen(data["ping"])
 
-                # On renvoie la position et le powerup actuel
-                pos = player.getPosPourcentage()
-                await envoyerPaquet(ws_current, {'action': 'update', 'x': pos[0], 'y': pos[1], 'pu': player.getPowerups()})
-            elif data["action"] == "init":
-                # On enregistre le nouveau joueur
-                player = j.Joueur(request.remote, data["nom"], data["team"])
-                j.ajouterJoueur(player)
-                clients.append(request.remote)
+                    # On modifie le déplacement du joueur
+                    player.setDirection(data["dx"]/10, data["dy"]/10)
 
-                # On envoie le cooldown actuel
-                await envoyerPaquet(ws_current, {'action': 'newCooldown', 'coolDown': msCooldown})
-            elif data["action"] == "stresstest":
-                # On calcule le ping moyen
-                calcPingMoyen(data["ping"])
+                    # On renvoie la position et le powerup actuel
+                    pos = player.getPosPourcentage()
+                    await envoyerPaquet(ws_current, {'action': 'update', 'x': pos[0], 'y': pos[1], 'pu': player.getPowerups()})
+                elif data["action"] == "init":
+                    # On enregistre le nouveau joueur
+                    player = j.Joueur(request.remote, data["nom"], data["team"])
+                    j.ajouterJoueur(player)
+                    clients.append(request.remote)
 
-                # On renvoie une réponse aléatoire
-                val1 = random.randint(0, 100000)
-                val2 = random.randint(0, 100000)
+                    # On envoie le cooldown actuel
+                    await envoyerPaquet(ws_current, {'action': 'newCooldown', 'coolDown': msCooldown})
 
-                await envoyerPaquet(ws_current, {'action': 'stresstest', 'val1': val1, 'val2': val2})
+                    # Si le jeu est lancé on demande au client de charger la manette
+                    if cst.jeuLance:
+                        await envoyerPaquet(ws_current, {'action': 'go'})
+                elif data["action"] == "stresstest":
+                    # On calcule le ping moyen
+                    calcPingMoyen(data["ping"])
+
+                    # On renvoie une réponse aléatoire
+                    val1 = random.randint(0, 100000)
+                    val2 = random.randint(0, 100000)
+
+                    await envoyerPaquet(ws_current, {'action': 'stresstest', 'val1': val1, 'val2': val2})
+            except:
+                print("\033[A\033[A\033[31mMauvais paquet '" + msg.data + "' du joueur '" + str(request.remote) + "'\033[39m\n\n")
+                changeCooldown(0)
         else:
             break
 

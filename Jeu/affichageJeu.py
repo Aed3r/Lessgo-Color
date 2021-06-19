@@ -11,6 +11,7 @@ chronoDebut = None
 place = True
 fond = None
 fondChrono = None
+posXFondChrono = None
 
 # Temps de calcul alloué pour une image
 msPerFrame = int(1000 / cst.fps)
@@ -23,10 +24,11 @@ def afficherJoueurs(fenetre):
 def initChrono():
     global chronoDebut
     chronoDebut = time.time() + cst.tempsPartie
+    posXFondChrono = None
 
 # AfficehRenvoie True si la partie est finie, False sinon
 def drawChrono(fenetre):
-    global chronoDebut, place, fondChrono, fond
+    global chronoDebut, place, fondChrono, fond, posXFondChrono
 
     tActuelle=time.time()
     t0=chronoDebut - tActuelle
@@ -38,18 +40,29 @@ def drawChrono(fenetre):
     elif ((int)(t0 % 10) != 0):
         place = True
     t0 = int(t0)
-    minute= str(t0//60)
-    seconde = str(t0%60)
+
+    minute = t0//60
+    if minute < 10:
+        minute = "0" + str(t0//60)
+    else:
+        minute = str(t0//60)
+    
+    seconde = t0%60
+    if seconde < 10:
+        seconde = "0" + str(t0%60)
+    else:
+        seconde = str(t0%60)
+
     if (t0 == 0):
         return True
-    text = cst.policeBold.render (minute + ":" + seconde, True, (255,255,255))
+    text = cst.policeBold.render (minute + ":" + seconde, True, cst.couleurChrono)
 
     if fondChrono == None:
         fond = pygame.image.load(os.path.join("Data", "Images", "styleChrono.png")).convert_alpha()
         fondChrono = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.50), (int) (text.get_height() + (text.get_width()*0.5))))
-    chronoPos = ((int) (cst.getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
+        posXFondChrono = ((int) (cst.getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
 
-    fenetre.blit(fondChrono, chronoPos)
+    fenetre.blit(fondChrono, posXFondChrono)
     fenetre.blit(text, (cst.getRes()[0]/2 - text.get_width()/2, 50))   
     return False      
 
@@ -74,7 +87,7 @@ def definirAnnonce (texte):
     global fond, annonceDebut, annonce
 
     annonceDebut = time.time()
-    text = cst.policeBold.render (texte, True, (255,255,255))
+    text = cst.policeBold.render (texte, True, cst.couleurAnnonces)
     text = pygame.transform.smoothscale(text, ((int) (cst.getRes()[0]*cst.largeurAnnonces), int((text.get_height() / text.get_width()) * (cst.getRes()[0]*cst.largeurAnnonces))))
     if fond == None:
         fond = pygame.image.load(os.path.join("Data", "Images", "styleChrono.png")).convert_alpha()

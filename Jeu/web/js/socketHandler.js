@@ -15,6 +15,7 @@ var activePU = null;
 var wraparound = false;
 const afficherPing = true;
 var lastPing = -1;
+var ready = false;
 
 /* Initialisations */
 if (!afficherPing) t1.style.visibility = "hidden"
@@ -31,14 +32,17 @@ function envoyerDirection(angle, vitesse) {
 
     // On prépare le paquet à envoyer
     let paquet = { "action": "deplacement", dx, dy };
-    envoyerPaquet(paquet);
+    if (dx == 0 && dy == 0)
+        envoyerPaquet(paquet, true);
+    else 
+        envoyerPaquet(paquet, false);
 }
 
 // Envoi le paquet donné au serveur si assez de temps s'est écoulé depuis le dernier
-function envoyerPaquet(packet) {
+function envoyerPaquet(packet, force) {
     // Vérification du cooldown
     let now = Date.now();
-    if ((now < lastMsg + msCooldown))
+    if (!force && now < lastMsg + msCooldown)
         return;
 
     // On ajoute le dernier ping
@@ -120,6 +124,8 @@ function connect() {
                 } else lastPing = -1;
                 break;
             case 'go':
+                // On ne lance le jeu que si le joueur a choisit un nom et une équipe
+                if (!ready) return;
                 // Le jeu est lancé, on affiche la manette suivant l'appareil utilisé
                 let device = getDeviceType()
                 if (device == "mobile" || device == "tablet")
@@ -165,7 +171,7 @@ function randomInt() {
 function stressTest() {
     let val1 = randomInt(), val2 = randomInt();
     let paquet = { "action": "stresstest", val1, val2};
-    envoyerPaquet(paquet);
+    envoyerPaquet(paquet, true);
     setTimeout(stressTest, msCooldown);
 }
 
@@ -247,5 +253,9 @@ const getDeviceType = () => {
     }
     return "desktop";
 };
+
+function setReady() {
+    ready = true;
+}
 
 connect();

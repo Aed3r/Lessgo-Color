@@ -119,7 +119,10 @@ class BouclePrincipale(threading.Thread):
         
         t = threading.currentThread()
         altPressed = False
-        etatJeu = "attente" # "jeu", "fin"
+        if cst.jeuLance == True:
+            etatJeu = "jeu"
+        else:
+            etatJeu = "attente" # "jeu", "fin"
         pause = False
         cooldownChange = 0
         
@@ -235,6 +238,8 @@ def initJeu():
 
 # Lance le jeu "correctement", cad en venant de l'écran d'attente
 def lancerJeu():
+    cst.lancerJeu()
+
     # On initialise le jeu
     initJeu()
 
@@ -249,6 +254,9 @@ def avertirClients(msg):
 
 # Avertit les clients de la fin du jeu
 def terminerJeu():
+    cst.terminerJeu()
+    finPartie.initFin()
+
     maxV = 0
     maxI = -1
     i = 0

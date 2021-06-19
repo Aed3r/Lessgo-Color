@@ -62,7 +62,8 @@ function choisirTeam(team) {
 
     // On envoie les infos
     packet["action"] = "init";
-    envoyerPaquet(packet);
+    setReady();
+    envoyerPaquet(packet, true);
 
     // On affiche le prochain écran
     loadWaitScreen();

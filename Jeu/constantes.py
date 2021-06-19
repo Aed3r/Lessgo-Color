@@ -30,6 +30,17 @@ def setRes(res):
 # ------------------ Main ------------------- #
 port = 8081
 tempsPartie = 300 # secondes
+jeuLance = False # Permet de sauter l'étape "attente". Sert également côté réseau
+_tempEtatJeu = None # Garde en mémoire l'état initial de jeuLance pour le rétablir après une partie
+
+def lancerJeu():
+    global jeuLance, _tempEtatJeu
+    _tempEtatJeu = jeuLance
+    jeuLance = True
+
+def terminerJeu():
+    global jeuLance, _tempEtatJeu
+    jeuLance = _tempEtatJeu
 
 # ------------------ Réseau ------------------- #
 defaultCooldown = 100 # ms
@@ -43,6 +54,8 @@ couleurFond = (254, 243, 236)
 wrapAround = False
 taillePowerUp = 50 # pixels
 effetFondu = 20 # 0 (très lent) - 255 (instant)
+couleurChrono = couleurFond
+couleurAnnonces = couleurFond
 
 # ------------------ Joueur ----------------- #
 playerSize = 5
@@ -51,7 +64,7 @@ playerSize = 5
 defRayonCouleur = 1
 defVitesse = 1
 
-collisions = False
+collisions = True
 vitesseMax = 5 # Sans powerup
 
 # ----------------- Gameplay ----------------- #

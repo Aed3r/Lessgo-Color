@@ -17,6 +17,7 @@ const afficherPing = true;
 var lastPing = -1;
 var ready = false;
 var isEndCard = false;
+var isBot = (document.location.pathname == "/bot.html");
 
 /* Initialisations */
 if (!afficherPing) t1.style.visibility = "hidden"
@@ -31,16 +32,16 @@ function envoyerDirection(angle, vitesse) {
     // Vérifications
     if (angle == null || vitesse == null)
         return;
-
+    
     // On calcule le déplacement à effectuer 
-    dx = parseInt(Math.cos(angle) * vitesse);
-    dy = parseInt(Math.sin(angle) * vitesse);
+    dx = Math.round(Math.cos(angle) * vitesse);
+    dy = Math.round(Math.sin(angle) * vitesse);
 
     // On prépare le paquet à envoyer
     let paquet = { "action": "deplacement", dx, dy };
     if (dx == 0 && dy == 0)
         envoyerPaquet(paquet, true);
-    else 
+    else
         envoyerPaquet(paquet, false);
 }
 
@@ -78,12 +79,22 @@ function connect() {
     console.log("Tentative de connection...");
 
     // Lorsque la connection est établie
-    conn.onopen = function() {
+    conn.onopen = function () {
         console.log("Connection établie.");
+
+        if (isBot) {
+            // On vérifie s'il faut introduire le bot au serveur ou non
+            let hash = location.hash.split('#');
+
+            if (!(hash && hash.length > 0 && hash[1] == "intro"))
+                botIntro();
+            else // On enlève le hash
+                history.pushState("", document.title, window.location.pathname);
+        }
     };
 
     // Lorsqu'un message est reçue
-    conn.onmessage = function(e) {
+    conn.onmessage = function (e) {
         var data = null;
         try {
             data = JSON.parse(e.data);
@@ -92,7 +103,7 @@ function connect() {
             return;
         }
 
-        if(!data || !data.action) return;
+        if (!data || !data.action) return;
 
         switch (data.action) {
             case 'init':
@@ -105,14 +116,17 @@ function connect() {
                 if (isEndCard) {
                     document.getElementById("contentQuestion").innerHTML = "Vous avez colorié <b>" + data.score + "</b> cases!"
                 }
-                // VVV On initialise également la position VVV
+            // VVV On initialise également la position VVV
             case 'update':
                 // On met à jour la position sur la minimap
                 posX = data.x;
                 posY = data.y;
 
+                // On lance le bot après initialisation
+                if (data.action == "init" && isBot) sendStep();
+
                 // On charge les images correspondant aux powerup actifs s'il y a eu un changement
-                if (data.pu && data.pu != [] && (activePU == null || activePU != data.pu)) {
+                if (!isBot && data.pu && data.pu != [] && (activePU == null || activePU != data.pu)) {
                     activePU = data.pu
                     // On enlève les anciennes images
                     let puDisplay = document.getElementById("powerUpDisplay");
@@ -125,17 +139,22 @@ function connect() {
                         puDisplay.appendChild(img);
                     });
                 }
-                // VVV On met également à jour le dernier ping VVV
+            // VVV On met également à jour le dernier ping VVV
             case 'stresstest':
                 // On arrête le timer et on affiche le ping
                 if (t1) {
                     lastPing = performance.now() - t1;
-                    if(afficherPing) document.getElementById("affichagePing").innerHTML = lastPing + "ms";
+                    if (afficherPing) document.getElementById("affichagePing").innerHTML = lastPing + "ms";
                 } else lastPing = -1;
                 break;
             case 'go':
                 // On ne lance le jeu que si le joueur a choisit un nom et une équipe
                 if (!ready) return;
+                // On redirige les bots sur eux même
+                if (isBot) {
+                    location.reload();
+                    return;
+                }
                 // Le jeu est lancé, on affiche la manette suivant l'appareil utilisé
                 let device = getDeviceType()
                 if (device == "mobile" || device == "tablet")
@@ -144,19 +163,28 @@ function connect() {
                     window.location.pathname = '/manette_pc.html';
                 break;
             case 'attente':
-                // On revient à l'écran d'attente
-                let waitUrl = window.location.origin + '/introduction.html';
-                if (nom != null) waitUrl += '?nom=' + nom;
-                document.location.href = waitUrl;
-                //location.reload();
+                if (isBot) {
+                    // On revient à l'écran d'attente 'bot'
+                    location.reload();
+                } else {
+                    // On revient à l'écran d'attente
+                    let waitUrl = window.location.origin + '/introduction.html';
+                    if (nom != null) waitUrl += '?nom=' + nom;
+                    document.location.href = waitUrl;
+                    //location.reload();
+                }
                 break;
             case 'fin':
-                // On affiche l'écran de fin de jeu
-                let isWinner = null;
-                if (team != null) isWinner = data.winner == team;
+                if (isBot) {
+                    stopBot();
+                } else {
+                    // On affiche l'écran de fin de jeu
+                    let isWinner = null;
+                    if (team != null) isWinner = data.winner == team;
 
-                let endUrl = window.location.origin + '/introduction.html#end#' + data.winner + '#' + isWinner;
-                document.location.href = endUrl;
+                    let endUrl = window.location.origin + '/introduction.html#end#' + data.winner + '#' + isWinner;
+                    document.location.href = endUrl;
+                }
                 break;
             case 'newCooldown':
                 msCooldown = data.coolDown;
@@ -168,7 +196,7 @@ function connect() {
     };
 
     // Lorsque la connection est fermé par le serveur
-    conn.onclose = function() {
+    conn.onclose = function () {
         console.log("Connection fermé.");
         conn = null;
     };
@@ -181,7 +209,7 @@ function randomInt() {
 // Envoie des paquets aléatoire en continue
 function stressTest() {
     let val1 = randomInt(), val2 = randomInt();
-    let paquet = { "action": "stresstest", val1, val2};
+    let paquet = { "action": "stresstest", val1, val2 };
     envoyerPaquet(paquet, true);
     setTimeout(stressTest, msCooldown);
 }
@@ -211,6 +239,12 @@ function getPosY() {
     return posY;
 }
 
+// Renvoie la position sur le plateau de jeu
+function getRealPos() {
+    if (posX == null) return null;
+    else return { x: posX*resX, y: posY*resY };
+}
+
 // Renvoie la taille de l'écran (en pixels)
 function getResX() {
     return resX;
@@ -220,9 +254,18 @@ function getResY() {
     return resY;
 }
 
+function getRes() {
+    if (resX == null) return null;
+    return { x: resX, y: resY };
+}
+
 function getColor() {
-    if (color) return "rgb("+color[0]+","+color[1]+","+color[2]+")";
+    if (color) return "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
     else return 'rgba(100, 100, 100, 1)';
+}
+
+function getCooldown() {
+    return msCooldown;
 }
 
 // Déconnecte la connection websocket existante

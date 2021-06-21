@@ -11,7 +11,7 @@ global spawn
 
 class Joueur(object): 
 
-    def __init__(self, id, nom, equipe):
+    def __init__(self, id, nom, equipe, estBot):
         global spawn
 
         self.rayonCouleur = cst.defRayonCouleur
@@ -48,6 +48,9 @@ class Joueur(object):
 
         # Indique si le joueur joue toujours au relancement
         self.stillPlaying = True
+
+        # Pour les bots
+        self.estBot = estBot
 
     def move(self):
         #On vérifie si on doit enlever un powerup
@@ -208,6 +211,12 @@ class Joueur(object):
     def getStillPlaying(self):
         return self.stillPlaying
 
+    def setIsBot(self, isBot):
+        self.estBot = isBot
+    
+    def isBot(self):
+        return self.estBot
+
 # Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):
     return j.y
@@ -249,7 +258,7 @@ def initJoueurs():
     global joueurs
     initSpawnPoints()
     for joueur in joueurs:
-        joueur.__init__(joueur.getID(), joueur.getNom(), joueur.getEquipe())
+        joueur.__init__(joueur.getID(), joueur.getNom(), joueur.getEquipe(), joueur.isBot())
 
 # Applique un powerup a toute l'équipe donnée en paramètre
 def equipePowerUp(pu, equipe):

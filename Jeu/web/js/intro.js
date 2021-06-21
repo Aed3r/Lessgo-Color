@@ -62,6 +62,7 @@ function choisirTeam(team) {
 
     // On envoie les infos
     packet["action"] = "init";
+    packet["estBot"] = 0;
     setReady();
     envoyerPaquet(packet, true);
 

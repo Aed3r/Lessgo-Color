@@ -18,7 +18,8 @@ msPerFrame = int(1000 / cst.fps)
 
 def afficherJoueurs(fenetre):
     for j in joueur.getJoueurs():
-        pygame.draw.circle(fenetre, j.getCouleur(), j.getPos(), j.getRayon()*cst.tailleCase)   
+        if j.getStillPlaying():
+            pygame.draw.circle(fenetre, j.getCouleur(), j.getPos(), j.getRayon()*cst.tailleCase)   
 
 # (Ré-)initialise le chronomètre
 def initChrono():

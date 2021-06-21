@@ -98,6 +98,9 @@ function loadWaitScreen() {
 }
 
 function loadEndCard(winner, isWinner) {
+    // On indique au socket handler de chargé le score dès qu'il est reçu
+    setEndCard();
+
     // On cache l'entrée active
     if (step == 0) {
         var namePicker = document.getElementById("namePicker");
@@ -114,15 +117,13 @@ function loadEndCard(winner, isWinner) {
 
     // On modifie le texte
     if (isWinner == 'true') {
-        document.getElementById("greet").innerHTML = "Félicitation !";
-        document.getElementById("contentQuestion").innerHTML = "Votre équipe a gagné";
+        document.getElementById("greet").innerHTML = "Félicitation ! Votre équipe a gagné";
     } else if (isWinner == 'false') {
-        document.getElementById("greet").innerHTML = "Dommage...";
-        document.getElementById("contentQuestion").innerHTML = "Votre équipe a perdu";
+        document.getElementById("greet").innerHTML = "Dommage... Votre équipe a perdu";
     } else {
-        document.getElementById("greet").innerHTML = "Game Over";
-        document.getElementById("contentQuestion").innerHTML = "L'équipe " + (winner + 1) + " gagne!";
+        document.getElementById("greet").innerHTML = "Game Over ! L'équipe " + (winner + 1) + " gagne!";
     }
+    document.getElementById("contentQuestion").innerHTML = "";
 
     // On enlève le hash
     history.pushState("", document.title, window.location.pathname);

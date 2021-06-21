@@ -7,7 +7,7 @@ var resX = null,
     resY = null;
 var t1;
 var dx, dy;
-var team = null, color = null;
+var team = null, color = null, nom = null;
 var powerupNames = ["gottaGoFast", "mildPower", "paintMore", "paintMoreGold", "gottaGoFastGold"];
 var powerupImages = {};
 const tailleImagesPowerup = 0.2;
@@ -16,9 +16,15 @@ var wraparound = false;
 const afficherPing = true;
 var lastPing = -1;
 var ready = false;
+var isEndCard = false;
 
 /* Initialisations */
 if (!afficherPing) t1.style.visibility = "hidden"
+let params = new URLSearchParams(document.location.search.substring(1));
+nom = params.get("nom");
+if (nom != null) {
+    document.getElementById("pseudoBox").value = nom;
+}
 
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
@@ -95,6 +101,10 @@ function connect() {
                 team = data.team;
                 color = data.color;
                 msCooldown = data.coolDown;
+                nom = data.nom;
+                if (isEndCard) {
+                    document.getElementById("contentQuestion").innerHTML = "Vous avez colorié <b>" + data.score + "</b> cases!"
+                }
                 // VVV On initialise également la position VVV
             case 'update':
                 // On met à jour la position sur la minimap
@@ -135,9 +145,10 @@ function connect() {
                 break;
             case 'attente':
                 // On revient à l'écran d'attente
-                let waitUrl = window.location.origin + '/introduction.html#skip';
+                let waitUrl = window.location.origin + '/introduction.html';
+                if (nom != null) waitUrl += '?nom=' + nom;
                 document.location.href = waitUrl;
-                location.reload();
+                //location.reload();
                 break;
             case 'fin':
                 // On affiche l'écran de fin de jeu
@@ -230,6 +241,11 @@ async function loadImages() {
         tmp.src = pu + ".png";
         powerupImages[pu] = tmp;
     });
+}
+
+// Indique qu'il s'agit de l'écran de fin
+function setEndCard() {
+    isEndCard = true;
 }
 
 // On ne charge les images que si le jeu est lancé

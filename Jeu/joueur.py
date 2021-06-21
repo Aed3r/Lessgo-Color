@@ -46,7 +46,8 @@ class Joueur(object):
         # Dernieres collisions
         self.collisions = set()
 
-
+        # Indique si le joueur joue toujours au relancement
+        self.stillPlaying = True
 
     def move(self):
         #On vérifie si on doit enlever un powerup
@@ -198,6 +199,15 @@ class Joueur(object):
     def getScore(self):
         return self.score
 
+    def init(self, nom, equipe):
+        self.__init__(self.getID(), nom, equipe)
+
+    def setStillPlaying(self, mode):
+        self.stillPlaying = mode
+
+    def getStillPlaying(self):
+        return self.stillPlaying
+
 # Fonction de comparaison entre joueurs. Utile pour le trie
 def comparJoueur(j):
     return j.y
@@ -229,13 +239,14 @@ def getJoueur(id):
     global joueurs
     return next(j for j in joueurs if j.getID() == id)
 
-# Renvoi le nombre de joueurs s'ayant connectés
+# Renvoi le nombre de joueurs s'ayant connectés et près à jouer
 def getNombreJoueurs():
     global joueurs
-    return len(joueurs)
+    return len(list(filter(lambda j: j.getStillPlaying(), joueurs)))
 
 # Réinitialise les joueurs
 def initJoueurs():
+    global joueurs
     initSpawnPoints()
     for joueur in joueurs:
         joueur.__init__(joueur.getID(), joueur.getNom(), joueur.getEquipe())
@@ -257,5 +268,14 @@ def initSpawnPoints():
             (cst.getResP()[0] - spawnXOffset, spawnYOffset),
             (spawnXOffset, cst.getResP()[1] - spawnYOffset),
             (cst.getResP()[0] - spawnXOffset, cst.getResP()[1] - spawnYOffset)]
+
+def resetJoueurs():
+    global joueurs
+    joueurs = []
+
+def setAllNotPlaying():
+    global joueurs
+    for j in joueurs:
+        j.setStillPlaying(False)
 
 initSpawnPoints()

@@ -9,7 +9,7 @@ import random
 import threading
 
 # Liste des addresses IP des joueurs connectés
-clients = []
+clients = set()
 
 # Cooldown des joueurs
 msCooldown = cst.defaultCooldown
@@ -34,7 +34,8 @@ async def request_handler(ws_current, request):
         player = j.getJoueur(request.remote)
         await envoyerPaquet(ws_current, {'action': 'init', 'x': player.getPos()[0], 'y': player.getPos()[1],
                                          'resX': cst.getResP()[0], 'resY': cst.getResP()[1], 'team': player.getEquipe(),
-                                         'color': cst.couleursPlateau[player.getEquipe()], 'coolDown': msCooldown})
+                                         'color': cst.couleursPlateau[player.getEquipe()], 'coolDown': msCooldown,
+                                         'nom': player.getNom(), 'score': player.getScore()})
 
     while True:
         msg = await ws_current.receive()
@@ -61,9 +62,13 @@ async def request_handler(ws_current, request):
                     await envoyerPaquet(ws_current, {'action': 'update', 'x': pos[0], 'y': pos[1], 'pu': player.getPowerups()})
                 elif data["action"] == "init":
                     # On enregistre le nouveau joueur
-                    player = j.Joueur(request.remote, data["nom"], data["team"])
-                    j.ajouterJoueur(player)
-                    clients.append(request.remote)
+                    if player is None:
+                        player = j.Joueur(request.remote, data["nom"], data["team"])
+                        j.ajouterJoueur(player)
+                        clients.add(request.remote)
+                    else:
+                        player.init(data["nom"], data["team"])
+                        player.setStillPlaying(True)
 
                     # On envoie le cooldown actuel
                     await envoyerPaquet(ws_current, {'action': 'newCooldown', 'coolDown': msCooldown})
@@ -81,12 +86,16 @@ async def request_handler(ws_current, request):
 
                     await envoyerPaquet(ws_current, {'action': 'stresstest', 'val1': val1, 'val2': val2})
             except:
-                print("\033[A\033[A\033[31mMauvais paquet '" + msg.data + "' du joueur '" + str(request.remote) + "'\033[39m\n\n")
-                changeCooldown(0)
+                alert("Mauvais paquet '" + msg.data + "' du joueur '" + str(request.remote) + "'")
         else:
             break
 
     return ws_current
+
+# Affiche le message msg dans le terminal en couleur rouge
+def alert(msg):
+    print("\033[A\033[A\033[31m" + msg + "\033[39m\n\n")
+    changeCooldown(0)
 
 # Calcule et affiche le nouveau piong ainsi que la moyenne des pings précédents
 def calcPingMoyen (newPing):

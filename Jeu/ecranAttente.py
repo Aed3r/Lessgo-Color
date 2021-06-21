@@ -85,6 +85,9 @@ def afficherNomsJoueurs():
     offsetListes = [0, 0, 0, 0]
 
     for joueur in j.joueurs:
+        if not joueur.getStillPlaying():
+            continue
+        
         e = joueur.getEquipe() # Indice d'équipe du joueur
 
         # Préparation de la couleur de texte (inverse du bloc)

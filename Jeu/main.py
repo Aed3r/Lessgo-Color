@@ -201,6 +201,8 @@ class BouclePrincipale(threading.Thread):
                         elif e == cst.REVATTENTE:
                             # On revient au menu d'attente
                             etatJeu = "attente"
+                            cst.terminerJeu()
+                            joueur.setAllNotPlaying()
                             pygame.display.set_mode(cst.getRes(), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
 
                             # On avertit les clients

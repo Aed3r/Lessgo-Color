@@ -150,13 +150,11 @@ function connect() {
             case 'go':
                 // On ne lance le jeu que si le joueur a choisit un nom et une équipe
                 if (!ready) return;
-
                 // On redirige les bots sur eux même
                 if (isBot) {
                     location.reload();
                     return;
                 }
-                
                 // Le jeu est lancé, on affiche la manette suivant l'appareil utilisé
                 let device = getDeviceType()
                 if (device == "mobile" || device == "tablet")

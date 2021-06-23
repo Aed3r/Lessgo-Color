@@ -135,9 +135,7 @@ function bouton() {
     context2.strokeRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
     context2.fillStyle = 'rgba(255, 255, 255, 1)';
     context2.font = taillePolice + 'px sans-serif';
-    let text = 'Plein écran';
-    let taille = context2.measureText(text);
-    context2.fillText(text, xBouton + (largeurBouton / 2) - taille.width / 2, yBouton + (longeurBouton / 2) + (taille.actualBoundingBoxAscent+taille.actualBoundingBoxDescent) / 2);
+    context2.fillText('Plein écran', xBouton + (largeurBouton / 2) - (2.5 * taillePolice), yBouton + (longeurBouton / 2));
 }
 //dessine le joyistique pas selectionner dans le canvas 3.
 function joystick() {

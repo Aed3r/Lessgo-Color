@@ -64,7 +64,7 @@ playerSize = 5
 defRayonCouleur = 1
 defVitesse = 1
 
-collisions = False
+collisions = True
 vitesseMax = 5 # Sans powerup
 
 # ----------------- Gameplay ----------------- #

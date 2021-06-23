@@ -307,18 +307,17 @@ def updateCase(j):
     terrain.dessinerLigne(posCase1[0], posCase1[1], posCase2[0], posCase2[1], j)
 
     #Si le joueur passe sur un PowerUp il le récupère  
-    if not j.isBot():
-        p = terrain.getType(j.x, j.y, j.getRayon())
-        if (p != None):
-            j.setPowerUp(p)
-            if (cst.listeValeurs[p][3].endswith("Gold")):
-                if cst.listeValeurs[p][3] == "paintMoreGold":
-                    text = "Bonus de coloriage pour "
-                if cst.listeValeurs[p][3] == "gottaGoFastGold":
-                    text = "Bonus de vitesse pour "
+    p = terrain.getType(j.x, j.y, j.getRayon())
+    if (p != None):
+        j.setPowerUp(p)
+        if (cst.listeValeurs[p][3].endswith("Gold")):
+            if cst.listeValeurs[p][3] == "paintMoreGold":
+                text = "Bonus de coloriage pour "
+            if cst.listeValeurs[p][3] == "gottaGoFastGold":
+                text = "Bonus de vitesse pour "
 
-                text += "l'équipe " + cst.nomsEquipes[j.getEquipe()] + " !"
+            text += "l'équipe " + cst.nomsEquipes[j.getEquipe()] + " !"
 
-                return text
-            else:
-                return None
+            return text
+        else:
+            return None

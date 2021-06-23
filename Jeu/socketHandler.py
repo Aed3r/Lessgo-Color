@@ -63,7 +63,7 @@ async def request_handler(ws_current, request):
                 elif data["action"] == "init":
                     # On enregistre le nouveau joueur
                     if player is None:
-                        player = j.Joueur(request.remote, data["nom"], data["team"], (data["estBot"] == 1))
+                        player = j.Joueur(request.remote, data["nom"], data["team"])
                         j.ajouterJoueur(player)
                         clients.add(request.remote)
                     else:

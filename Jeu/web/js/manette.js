@@ -27,6 +27,7 @@ var rayonInterieur = 0,
 //test si entrer dans boucle.
 var jj = false;
 var jooy = false;
+var bout = false;
 var dessine = false;
 //utiliser pour dessiner le jotistique au bonne endroit effet tirer.
 var dist = 0;
@@ -37,7 +38,6 @@ var servPosX = 0,
     servPosY = 0;
 var posJX = 0,
     posJY = 0;
-var taillePolice = 40;
 //lorsque la page est totalement charger avec les 3 canvas on met en place les listener, puis lance la fonction redimentionn pour initialiser les dimmention des different elemeents.
 function chargementfini() {
     canvas1 = document.getElementById('canvas1');
@@ -62,7 +62,6 @@ function redimentionne() {
     //recupere dimmention de l'ecrant.
     largeur = (window.innerWidth) - 10;
     hauteur = (window.innerHeight) - 10;
-    taillePolice = largeur/100*2;
     //canvas1 qui est la miniMap prend la totaliter de l'écrant.
     canvas1.width = largeur;
     canvas1.height = hauteur;
@@ -83,9 +82,7 @@ function redimentionne() {
         xJoy = canvas3.width * 0.5;
         yJoy = canvas3.height * 0.5;
         //affichage sans aucune selection.
-        if (!document.fullscreenElement) {
-            bouton();
-        }
+        bouton();
         joystick();
     } else {
         //pareille qu'au dessus avec les dimmentions differents.
@@ -101,9 +98,7 @@ function redimentionne() {
         rayonExterieur = rayonInterieur + 5;
         xJoy = canvas3.width * 0.5;
         yJoy = canvas3.height * 0.5;
-        if (!document.fullscreenElement) {
-            bouton();
-        }
+        bouton();
         joystick();
     }
     //dimmention des 3 canvas sur lecrant utilisateur utiliser par la suite.
@@ -122,6 +117,7 @@ function debut(event) {
 //fonction lancer lorsque le listener detecte un fin de mouvement pour le bouton.
 function finBouton(event) {
     dessine = false;
+    bout = false;
     utiliser(event);
 }
 //fonction lancer lorsque le listener detecte un fin de mouvement pour le joyistique.
@@ -141,9 +137,16 @@ function bouton() {
     context2.lineWidth = "5";
     context2.strokeStyle = 'rgba(150, 0, 0, 1)';
     context2.strokeRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
-    context2.fillStyle = 'rgba(255, 255, 255, 1)';
-    context2.font = taillePolice + 'px sans-serif';
-    context2.fillText('Plein écran', xBouton + (largeurBouton / 2) - (2.5 * taillePolice), yBouton + (longeurBouton / 2));
+}
+//dessine le bouton selectionner dans le canvas 2.
+function boutonA() {
+    context2.clearRect(0, 0, widthCanvas2, heightCanvas2);
+    context2.fillStyle = 'rgba(250, 0, 0, 0.5)';
+    context2.fillRect(xBouton, yBouton, largeurBouton, longeurBouton);
+    context2.lineWidth = "5";
+    context2.strokeStyle = 'rgba(250, 0, 0, 1)';
+    context2.strokeRect(xBouton + 5, yBouton + 5, largeurBouton - 10, longeurBouton - 10);
+    bout = true;
 }
 //dessine le joyistique pas selectionner dans le canvas 3.
 function joystick() {
@@ -206,6 +209,8 @@ function utiliser(event) {
              //si le client est dans le canvas du bouton
             if (xClient > 0 && xClient < widthCanvas2) {
                 if (((xClient > xBouton + 5) && (xClient < xBouton + largeurBouton)) && ((yClient > yBouton + 5) && (yClient < yBouton + longeurBouton))) {
+                    boutonA();
+                    //passe mode plein ecrant
                     if (!document.fullscreenElement) {
                         document.documentElement.requestFullscreen();
                     }
@@ -232,9 +237,12 @@ function utiliser(event) {
             }
         }
         //envoie au serveure l'angle et la vitesse du mouvement.
-        if (angle) envoyerDirection(angle, vitesse);
+        envoyerDirection(angle, vitesse);
     }
     if (!jooy) {
         joystick();
+    }
+    if (!bout) {
+        bouton();
     }
 }

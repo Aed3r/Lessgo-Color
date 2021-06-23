@@ -82,7 +82,7 @@ def finPartie(fenetre, joueurs):
     listeEquipes = []
     for i in range(4):
         # On récupère les joueurs de chaque équipe et on les trie selon leurs scores
-        listeEquipes.append(sorted(list(filter(lambda j: j.getEquipe() == i and not j.isBot(), joueurs)), key=lambda j:j.getScore(), reverse=True))
+        listeEquipes.append(sorted(list(filter(lambda j: j.getEquipe() == i, joueurs)), key=lambda j:j.getScore(), reverse=True))
     
     for i in range(4):
         offset = (cst.getRes()[1]*0.8)-(cst.getRes()[1]*listeP[i]/2)-10

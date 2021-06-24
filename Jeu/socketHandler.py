@@ -19,6 +19,9 @@ avgPing = -1
 nPings = 0
 mutex = threading.Lock()
 
+# Affichage terminal
+statsDrawnOnce = False
+
 # Attend et répond aux requêtes client
 # Une fonction par client
 async def request_handler(ws_current, request):
@@ -63,7 +66,7 @@ async def request_handler(ws_current, request):
                 elif data["action"] == "init":
                     # On enregistre le nouveau joueur
                     if player is None:
-                        player = j.Joueur(request.remote, data["nom"], data["team"])
+                        player = j.Joueur(request.remote, data["nom"], data["team"], False)
                         j.ajouterJoueur(player)
                         clients.add(request.remote)
                     else:
@@ -85,8 +88,8 @@ async def request_handler(ws_current, request):
                     val2 = random.randint(0, 100000)
 
                     await envoyerPaquet(ws_current, {'action': 'stresstest', 'val1': val1, 'val2': val2})
-            except:
-                alert("Mauvais paquet '" + msg.data + "' du joueur '" + str(request.remote) + "'")
+            except Exception as e:
+                alert("Mauvais paquet '" + msg.data + "' du joueur '" + str(request.remote) + "' (" + str(e) + ")")
         else:
             break
 
@@ -94,12 +97,17 @@ async def request_handler(ws_current, request):
 
 # Affiche le message msg dans le terminal en couleur rouge
 def alert(msg):
-    print("\033[A\033[A\033[31m" + msg + "\033[39m\n\n")
+    global statsDrawnOnce
+
+    if statsDrawnOnce:
+        print("\033[A\033[A\033[31m" + msg + "\033[39m\n\n")
+    else:
+        print("\033[31m" + msg + "\033[39m")
     changeCooldown(0)
 
 # Calcule et affiche le nouveau piong ainsi que la moyenne des pings précédents
 def calcPingMoyen (newPing):
-    global avgPing, nPings, mutex
+    global avgPing, nPings, mutex, statsDrawnOnce
 
     mutex.acquire()
     if (newPing != -1): 
@@ -107,9 +115,10 @@ def calcPingMoyen (newPing):
         avgPing += (newPing - avgPing) / nPings
 
         # On affiche le résultat
-        if (nPings == 1):
-            print("cooldown: " + str(msCooldown) + "ms\nsheeeeesh")
-        print("\033[Aping: " + str(newPing) + "ms avg: " + str(round(avgPing)) + "ms                 ")
+        #if (nPings == 1):
+            #print("cooldown: " + str(msCooldown) + "ms\nsheeeeesh")
+        #print("\033[Aping: " + str(newPing) + "ms avg: " + str(round(avgPing)) + "ms                 ")
+        statsDrawnOnce = True
     mutex.release()
 
 # Vérifie que la socket est ouverte puis envoie le paquet
@@ -127,13 +136,14 @@ async def avertirClients(app, msg):
 
 # Effectue le changement de cooldown définie par change
 def changeCooldown(change):
-    global msCooldown
+    global msCooldown, statsDrawnOnce
     msCooldown += change
 
     if (msCooldown < 0):
         msCooldown = 0
     
-    print("\033[A\033[Acooldown: " + str(msCooldown) + "ms                          \n")
+    #print("\033[A\033[Acooldown: " + str(msCooldown) + "ms                          \n")
+    statsDrawnOnce = True
 
     return msCooldown
 

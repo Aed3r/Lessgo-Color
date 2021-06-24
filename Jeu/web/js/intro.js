@@ -98,9 +98,6 @@ function loadWaitScreen() {
 }
 
 function loadEndCard(winner, isWinner) {
-    // On indique au socket handler de chargé le score dès qu'il est reçu
-    setEndCard();
-
     // On cache l'entrée active
     if (step == 0) {
         var namePicker = document.getElementById("namePicker");

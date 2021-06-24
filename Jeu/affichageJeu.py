@@ -61,7 +61,7 @@ def drawChrono(fenetre):
     if fondChrono == None:
         fond = pygame.image.load(os.path.join("Data", "Images", "styleChrono.png")).convert_alpha()
         fondChrono = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.50), (int) (text.get_height() + (text.get_width()*0.5))))
-        posXFondChrono = ((int) (cst.getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
+    posXFondChrono = ((int) (cst.getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
 
     fenetre.blit(fondChrono, posXFondChrono)
     fenetre.blit(text, (cst.getRes()[0]/2 - text.get_width()/2, 50))   

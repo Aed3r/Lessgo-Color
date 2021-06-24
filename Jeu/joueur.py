@@ -3,6 +3,7 @@
 import time
 import math
 import constantes as cst
+from random import random 
 
 joueurs = []
 
@@ -11,11 +12,11 @@ global spawn
 
 class Joueur(object): 
 
-    def __init__(self, id, nom, equipe):
+    def __init__(self, id, nom, equipe, estBot):
         global spawn
 
         self.rayonCouleur = cst.defRayonCouleur
-        self.vitesse = cst.defVitesse
+        self.vitessePU = 0
         self.nom = nom
         self.PowerUp = [] # Liste de PowerUp (Tuples contenant le PU et le moment ou il a été appliqué)
         self.score = 0
@@ -47,20 +48,34 @@ class Joueur(object):
         self.collisions = set()
 
         # Indique si le joueur joue toujours au relancement
-        self.stillPlaying = True
+        try:
+            self.stillPlaying # Déjà définie
+        except:
+            self.stillPlaying = True # Pas encore définie
+
+        # Pour les bots
+        self.estBot = estBot
+        self.destination = None
+
 
     def move(self):
+        # S'il s'agit d'un bot on choisit la direction
+        if self.isBot():
+            self.setAutoDirection()
+
         #On vérifie si on doit enlever un powerup
         for pu in self.PowerUp:
             if(time.time() - pu[1] >= cst.listeValeurs[pu[0]][2]): #Si le powerup est la depuis plus longtemps que ses paramètres le permettent
-                self.vitesse -= cst.listeValeurs[pu[0]][0]
+                self.vitessePU -= cst.listeValeurs[pu[0]][0]
                 self.rayonCouleur -= cst.listeValeurs[pu[0]][1]
                 self.PowerUp.remove(pu)
 
-        if (cst.collisions):
+        vitesse = cst.defVitesse +self.vitessePU
+
+        if (cst.meilleureMouvement):
             # Accélération selon l'entrée du joueur
-            self.hSpeed += (self.dX * self.vitesse) / 10
-            self.vSpeed += (self.dY * self.vitesse) / 10
+            self.hSpeed += (self.dX * vitesse) / 10
+            self.vSpeed += (self.dY * vitesse) / 10
 
             # Réduction de la vitesse au cours du temps
             self.hSpeed *= 0.99
@@ -68,28 +83,34 @@ class Joueur(object):
 
             # Cap de vitesse horizontale
             ratio = 1
-            if self.hSpeed > cst.vitesseMax * self.vitesse:
-                ratio = self.hSpeed / cst.vitesseMax * self.vitesse
-            if self.hSpeed < -cst.vitesseMax * self.vitesse:
-                ratio = self.hSpeed / -cst.vitesseMax * self.vitesse
-            self.hSpeed /= ratio
-            self.vSpeed /= ratio
+            if self.hSpeed > cst.vitesseMax * vitesse:
+                ratio = self.hSpeed / cst.vitesseMax * vitesse
+            if self.hSpeed < -cst.vitesseMax * vitesse:
+                ratio = self.hSpeed / -cst.vitesseMax * vitesse
+            
+            if ratio != 0:
+                self.hSpeed /= ratio
+                self.vSpeed /= ratio
 
             # Cap de vitesse verticale
             ratio = 1
-            if self.vSpeed > cst.vitesseMax * self.vitesse:
-                ratio = self.vSpeed / cst.vitesseMax * self.vitesse
-            if self.vSpeed < -cst.vitesseMax * self.vitesse:
-                ratio = self.vSpeed / -cst.vitesseMax * self.vitesse
-            self.hSpeed /= ratio
-            self.vSpeed /= ratio
+            if self.vSpeed > cst.vitesseMax * vitesse:
+                ratio = self.vSpeed / cst.vitesseMax * vitesse
+            if self.vSpeed < -cst.vitesseMax * vitesse:
+                ratio = self.vSpeed / -cst.vitesseMax * vitesse
+            
+            if ratio != 0:
+                self.hSpeed /= ratio
+                self.vSpeed /= ratio
             
             # Application du vecteur déplacement
-            self.x += int(self.hSpeed)
-            self.y += int(self.vSpeed)
+            if not math.isnan(self.hSpeed):
+                self.x += int(self.hSpeed)
+            if not math.isnan(self.vSpeed):
+                self.y += int(self.vSpeed)
         else:
-            self.x = int(self.x + self.dX * self.vitesse)
-            self.y = int(self.y + self.dY * self.vitesse)
+            self.x = int(self.x + self.dX * vitesse)
+            self.y = int(self.y + self.dY * vitesse)
 
         rayon = self.getRayon() * cst.tailleCase
 
@@ -128,7 +149,7 @@ class Joueur(object):
     #Applique les valeurs du powerup Pu, attend la durée du powerup et puis rétabli les valeurs précédentes
     def setPowerUp(self, pu):
         if pu < cst.nbPowerup:
-            self.vitesse += cst.listeValeurs[pu][0]
+            self.vitessePU += cst.listeValeurs[pu][0]
             self.rayonCouleur += cst.listeValeurs[pu][1]
             self.PowerUp.append((pu, time.time()))
         elif pu < cst.nbPowerup + cst.nbSpecial:
@@ -200,7 +221,7 @@ class Joueur(object):
         return self.score
 
     def init(self, nom, equipe):
-        self.__init__(self.getID(), nom, equipe)
+        self.__init__(self.getID(), nom, equipe, self.isBot())
 
     def setStillPlaying(self, mode):
         self.stillPlaying = mode
@@ -208,9 +229,42 @@ class Joueur(object):
     def getStillPlaying(self):
         return self.stillPlaying
 
-# Fonction de comparaison entre joueurs. Utile pour le trie
-def comparJoueur(j):
-    return j.y
+    def setIsBot(self, isBot):
+        self.estBot = isBot
+    
+    def isBot(self):
+        return self.estBot
+
+    def trouverPosAlea(self):
+        destX = math.floor(random() * cst.getResP()[0])
+        destY = math.floor(random() * cst.getResP()[1])
+        self.destination = (destX, destY)
+
+    def distToDest(self):
+        if self.destination is None:
+            self.trouverPosAlea()
+
+        return math.sqrt(math.pow(self.destination[0] - self.getPos()[0], 2)+math.pow(self.destination[1] - self.getPos()[1], 2))
+
+    def setAutoDirection(self):
+        dist = self.distToDest()
+        if dist < cst.distMinDestBots:
+            self.trouverPosAlea()
+
+        angle = math.atan2(self.destination[1]-self.getPos()[1], self.destination[0]-self.getPos()[0])
+    
+        if (angle < 0):
+            angle += 2 * math.pi
+
+        vitesse = math.floor((random() / 2 + 0.5) * 100)
+        if (dist < vitesse):
+            vitesse = dist
+
+        dx = round(math.cos(angle) * vitesse)
+        dy = round(math.sin(angle) * vitesse)
+
+        self.setDirection(dx / 10, dy / 10)
+        
 
 # Ajoute le joueur j passé en paramètres et renvoie son numéro
 def ajouterJoueur(j):
@@ -242,21 +296,40 @@ def getJoueur(id):
 # Renvoi le nombre de joueurs s'ayant connectés et près à jouer
 def getNombreJoueurs():
     global joueurs
-    return len(list(filter(lambda j: j.getStillPlaying(), joueurs)))
+    if cst.afficherBotsStats:
+        return len(list(filter(lambda j: j.getStillPlaying(), joueurs)))
+    else:
+        return len(list(filter(lambda j: j.getStillPlaying() and not j.isBot(), joueurs)))
+
+def completerEquipes():
+    count = [0, 0, 0, 0]
+    biggest = -1
+    for i in range(4):
+        count[i] = len(list(filter(lambda j: j.getEquipe() == i and j.getStillPlaying(), joueurs)))
+        if (count[i] > biggest):
+            biggest = count[i]
+
+    biggest = max(biggest, cst.minTailleEquipes)
+
+    for i in range(4):
+        for j in range(biggest - count[i]):
+            ajouterJoueur(Joueur(i+j, "bot "+str(i)+"-"+str(j), i, True))
 
 # Réinitialise les joueurs
 def initJoueurs():
     global joueurs
+
+    completerEquipes()
     initSpawnPoints()
     for joueur in joueurs:
-        joueur.__init__(joueur.getID(), joueur.getNom(), joueur.getEquipe())
+        joueur.__init__(joueur.getID(), joueur.getNom(), joueur.getEquipe(), joueur.isBot())
 
 # Applique un powerup a toute l'équipe donnée en paramètre
 def equipePowerUp(pu, equipe):
     global joueurs
     for joueur in joueurs:
         if joueur.EQUIPE == equipe:
-            joueur.vitesse += cst.listeValeurs[pu][0]
+            joueur.vitessePU += cst.listeValeurs[pu][0]
             joueur.rayonCouleur += cst.listeValeurs[pu][1]
             joueur.PowerUp.append((pu, time.time()))
 
@@ -275,7 +348,16 @@ def resetJoueurs():
 
 def setAllNotPlaying():
     global joueurs
+
+    toRemove = []
+
     for j in joueurs:
-        j.setStillPlaying(False)
+        if j.isBot():
+            toRemove.append(j)
+        else:
+            j.setStillPlaying(False)
+    
+    for j in toRemove:
+        joueurs.remove(j)
 
 initSpawnPoints()

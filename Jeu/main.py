@@ -174,7 +174,9 @@ class BouclePrincipale(threading.Thread):
                         cooldownChange = -1
                     # Rechargement des constantes
                     elif event.key == pygame.K_F5:
+                        tmpRes = cst.getRes()
                         importlib.reload(cst)
+                        cst.setRes(tmpRes)
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LALT:
                         altPressed = False

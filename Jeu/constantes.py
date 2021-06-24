@@ -14,33 +14,11 @@ afficherFPS = False
 tempsAnnonces = 3 # secondes
 largeurAnnonces = 0.7 # % de la largeur de l'écran
 
-def getRes():
-    global _resolution
-    return _resolution
-
-def getResP():
-    global _resolutionPlateau
-    return _resolutionPlateau
-
-def setRes(res):
-    global _resolution, _resolutionPlateau
-    _resolution = res
-    _resolutionPlateau = (res[0], res[1] - tailleBarre)
-
 # ------------------ Main ------------------- #
 port = 8081
-tempsPartie = 300 # secondes
+tempsPartie = 120 # secondes
 jeuLance = False # Permet de sauter l'étape "attente". Sert également côté réseau
 _tempEtatJeu = None # Garde en mémoire l'état initial de jeuLance pour le rétablir après une partie
-
-def lancerJeu():
-    global jeuLance, _tempEtatJeu
-    _tempEtatJeu = jeuLance
-    jeuLance = True
-
-def terminerJeu():
-    global jeuLance, _tempEtatJeu
-    jeuLance = _tempEtatJeu
 
 # ------------------ Réseau ------------------- #
 defaultCooldown = 100 # ms
@@ -64,7 +42,8 @@ playerSize = 5
 defRayonCouleur = 1
 defVitesse = 1
 
-collisions = True
+collisions = False
+meilleureMouvement = True
 vitesseMax = 5 # Sans powerup
 
 # ----------------- Gameplay ----------------- #
@@ -113,3 +92,33 @@ ENATTENTE = "En attente de joueurs..."
 largeurBarres = 60
 animFinDuree = 500 # ms
 delaiFinBlocs = 1000 # ms
+
+# ----------------- Bots ----------------- #
+afficherBotsStats = False
+botPowerUpsPickup = True
+distMinDestBots = 20 # px
+minTailleEquipes = 25 # Remplir les équipes par des bots pour atteindre un minimum de joueurs
+
+# ----------------- Accesseurs ----------------- #
+
+def getRes():
+    global _resolution
+    return _resolution
+
+def getResP():
+    global _resolutionPlateau
+    return _resolutionPlateau
+
+def setRes(res):
+    global _resolution, _resolutionPlateau
+    _resolution = res
+    _resolutionPlateau = (res[0], res[1] - tailleBarre)
+
+def lancerJeu():
+    global jeuLance, _tempEtatJeu
+    _tempEtatJeu = jeuLance
+    jeuLance = True
+
+def terminerJeu():
+    global jeuLance, _tempEtatJeu
+    jeuLance = _tempEtatJeu

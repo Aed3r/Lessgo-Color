@@ -16,11 +16,10 @@ var wraparound = false;
 const afficherPing = true;
 var lastPing = -1;
 var ready = false;
-var isEndCard = false;
 
 /* Initialisations */
 if (!afficherPing) t1.style.visibility = "hidden"
-let params = new URLSearchParams(document.location.search.substring(1));
+var params = new URLSearchParams(document.location.search.substring(1));
 nom = params.get("nom");
 if (nom != null) {
     document.getElementById("pseudoBox").value = nom;
@@ -33,8 +32,8 @@ function envoyerDirection(angle, vitesse) {
         return;
 
     // On calcule le déplacement à effectuer 
-    dx = parseInt(Math.cos(angle) * vitesse);
-    dy = parseInt(Math.sin(angle) * vitesse);
+    dx = Math.round(Math.cos(angle) * vitesse);
+    dy = Math.round(Math.sin(angle) * vitesse);
 
     // On prépare le paquet à envoyer
     let paquet = { "action": "deplacement", dx, dy };
@@ -102,7 +101,7 @@ function connect() {
                 color = data.color;
                 msCooldown = data.coolDown;
                 nom = data.nom;
-                if (isEndCard) {
+                if (data.score && nom != null) {
                     document.getElementById("contentQuestion").innerHTML = "Vous avez colorié <b>" + data.score + "</b> cases!"
                 }
                 // VVV On initialise également la position VVV
@@ -241,11 +240,6 @@ async function loadImages() {
         tmp.src = pu + ".png";
         powerupImages[pu] = tmp;
     });
-}
-
-// Indique qu'il s'agit de l'écran de fin
-function setEndCard() {
-    isEndCard = true;
 }
 
 // On ne charge les images que si le jeu est lancé

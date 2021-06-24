@@ -87,6 +87,9 @@ def afficherNomsJoueurs():
     for joueur in j.joueurs:
         if not joueur.getStillPlaying():
             continue
+
+        if not cst.afficherBotsStats and joueur.isBot():
+            continue
         
         e = joueur.getEquipe() # Indice d'équipe du joueur
 
@@ -131,7 +134,7 @@ def afficherCompteJoueurs (fenetre):
     fenetre.blit(ico, (cst.getRes()[0]-tailleIco[0]-cst.margeCompteur, cst.margeCompteur))
 
     # Compteur
-    textSurface = cst.policeBold.render(str(j.getNombreJoueurs()), True, cst.titleColor);
+    textSurface = cst.policeBold.render(str(j.getNombreJoueurs()), True, cst.titleColor)
     tailleTexte = textSurface.get_size()
     newHeight = cst.getRes()[1]*cst.tailleCompteur
     textSurface = pg.transform.smoothscale(textSurface, 

@@ -134,10 +134,10 @@ class Joueur(object):
                 self.y = rayon
                 self.vSpeed *= -1
         else:
-            if (self.x+rayon >= cst.getResP()[0] ): self.x = cst.getResP()[0] - rayon - 1
-            if (self.x-rayon < 0): self.x = rayon
-            if (self.y+rayon >= cst.getResP()[1] ): self.y = cst.getResP()[1] - rayon - 1
-            if (self.y-rayon < 0): self.y = rayon
+            if (self.x+rayon*cst.scale >= cst.getResP()[0] ): self.x = cst.getResP()[0] - rayon*cst.scale - 1
+            if (self.x-rayon*cst.scale < 0): self.x = rayon*cst.scale
+            if (self.y+rayon*cst.scale >= cst.getResP()[1] ): self.y = cst.getResP()[1] - rayon*cst.scale - 1
+            if (self.y-rayon*cst.scale < 0): self.y = rayon*cst.scale
 
     def setDirection(self, dx, dy):
         self.dX = dx

@@ -137,7 +137,7 @@ def printInfos():
         statsDrawnOnce = True
 
     print("Cooldown: " + str(msCooldown) + "ms                         ")
-    print("Ping: " + str(lastPing) + "ms avg: " + str(round(avgPing)) + "ms                      ")
+    print("Ping: " + str(round(lastPing)) + "ms avg: " + str(round(avgPing)) + "ms                      ")
     if cst.getCurrFPS() != None:
         print("FPS: " + str(cst.getCurrFPS()) + " fps                           ")
     else:

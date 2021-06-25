@@ -129,9 +129,9 @@ class Terrain:
                 self.setColor(self.larg-i-1, self.long-j-1, 3, None)
         
         for i in range(cst.powerUpsDemarage):
-            self.placerPowerupAlea()
+            self.placerPowerupAlea(False)
         
-        self.setType(500, 500, 3)
+        self.setType(cst.getResP()[0]/2, cst.getResP()[1]/2, 3)
 
     def afficheTerrain(self, fenetre):
         for i in range(self.larg):
@@ -239,10 +239,13 @@ class Terrain:
                 else: # 2 
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, j)
     
-    def placerPowerupAlea(self):
-        resolution = (cst.getResP()[0]*cst.scale, cst.getResP()[1]*cst.scale)
-        taille = (int)(resolution[0] * cst.propZoneInit)
-        type = random.randrange(cst.nbPowerup)
+    def placerPowerupAlea(self, gold):
+        resolution = (cst.getResP()[0], cst.getResP()[1])
+        taille = (int)(resolution[0] * cst.propZoneInit * cst.scale)
+        if gold:
+            typePU = random.randrange(cst.nbPowerup, cst.nbPowerup+cst.nbSpecial)
+        else:
+            typePU = random.randrange(cst.nbPowerup)
         bienPlace =  False
         
         while bienPlace == False:
@@ -259,7 +262,7 @@ class Terrain:
                     if(p['x'] == x and p['y'] == y):
                         bienPlace = False
         
-        self.setType(x, y, type)
+        self.setType(x, y, typePU)
 
 def cercle_bresenham_plateau(r, xc, yc, couleur, joueur):
     x = 0

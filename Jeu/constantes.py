@@ -19,7 +19,7 @@ port = 8081
 tempsPartie = 120 # secondes
 jeuLance = False # Permet de sauter l'étape "attente". Sert également côté réseau
 _tempEtatJeu = None # Garde en mémoire l'état initial de jeuLance pour le rétablir après une partie
-afficherStatsTerm = False
+afficherStatsTerm = True
 
 # ------------------ Réseau ------------------- #
 defaultCooldown = 100 # ms
@@ -58,6 +58,8 @@ teamPaintMore = 3
 teamGoFast = 4
 # Pour stocker la valeur a ajouter aux stats du joueur pour chaque powerups on va utiliser un tableau de vecteurs [Vitesse, rayon, Durée(sec)]
 listeValeurs = [[0, 1, 10, "paintMore"], [2, 0, 10, "gottaGoFast"], [1, 1, 10, "mildPower"], [0, 1, 5, "paintMoreGold"], [2, 0, 5, "gottaGoFastGold"]]
+frequenceApparitionPU = 2 # s
+frequenceApparitionGold = 20 # s
 
 #Nombre de PowerUp présent au démarage
 powerUpsDemarage = 4
@@ -96,14 +98,16 @@ animFinDuree = 500 # ms
 delaiFinBlocs = 1000 # ms
 
 # ----------------- Bots ----------------- #
-utiliserBots = False
+utiliserBots = True
 afficherBotsStats = False
 botPowerUpsPickup = True
 distMinDestBots = 20 # px
 minTailleEquipes = 0 # Remplir les équipes par des bots pour atteindre un minimum de joueurs
 
-# ----------------- Bots ----------------- #
-frequenceApparitionPU = 2 # secondes
+# ----------------- Musique ----------------- #
+musiqueAttente = os.path.join("Data", "Musique", "canals.ogg")
+musiqueJeu = os.path.join("Data", "Musique", "Another Medium.ogg")
+musiqueFin = musiqueAttente
 
 # ----------------- Accesseurs ----------------- #
 

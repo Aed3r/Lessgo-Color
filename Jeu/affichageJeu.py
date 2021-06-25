@@ -9,6 +9,7 @@ import os
 # Timer
 chronoDebut = None
 place = True
+placeG = True
 fond = None
 fondChrono = None
 posXFondChrono = None
@@ -30,17 +31,26 @@ def initChrono():
 
 # Renvoie True si la partie est finie, False sinon
 def drawChrono(fenetre):
-    global chronoDebut, place, fondChrono, fond, posXFondChrono, lastRes
+    global chronoDebut, place, fondChrono, fond, posXFondChrono, lastRes, placeG
 
     tActuelle=time.time()
     t0=chronoDebut - tActuelle
     #print("t0 = " + str(t0) + "t0 % 10 =" + str(t0%10))
     #print(place)
+    # normal
     if ((int)(t0 % cst.frequenceApparitionPU) == 0) and (place == True):
-        plateau.getTerrain().placerPowerupAlea()
+        plateau.getTerrain().placerPowerupAlea(False)
         place = False
-    elif ((int)(t0 % 10) != 0):
+    elif ((int)(t0 % cst.frequenceApparitionPU) != 0):
         place = True
+
+    # gold
+    if ((int)(t0 % cst.frequenceApparitionGold) == 0) and (placeG == True):
+        plateau.getTerrain().placerPowerupAlea(True)
+        placeG = False
+    elif ((int)(t0 % cst.frequenceApparitionGold) != 0):
+        placeG = True
+
     t0 = int(t0)
 
     minute = t0//60
@@ -66,6 +76,9 @@ def drawChrono(fenetre):
     if lastRes == None or lastRes != cst.getRes()[0]:
         posXFondChrono = ((int) (cst.getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
         lastRes = cst.getRes()[0]
+
+    if posXFondChrono == None:
+        posXFondChrono = ((int) (cst.getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
 
     fenetre.blit(fondChrono, posXFondChrono)
     fenetre.blit(text, (cst.getRes()[0]/2 - text.get_width()/2, 50))   

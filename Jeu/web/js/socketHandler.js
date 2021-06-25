@@ -13,12 +13,12 @@ var powerupImages = {};
 const tailleImagesPowerup = 0.2;
 var activePU = null;
 var wraparound = false;
-const afficherPing = true;
+const afficherPing = false;
 var lastPing = -1;
 var ready = false;
 
 /* Initialisations */
-if (!afficherPing) t1.style.visibility = "hidden"
+if (!afficherPing) document.getElementById("affichagePing").style.visibility = "hidden"
 var params = new URLSearchParams(document.location.search.substring(1));
 nom = params.get("nom");
 if (nom != null) {
@@ -106,7 +106,8 @@ function connect() {
                 color = data.color;
                 msCooldown = data.coolDown;
                 nom = data.nom;
-                if (data.score && nom != null && !document.getElementById("greet").innerHTML.startsWith("Bienvenue")) {
+                if (data.score && nom != null && document.getElementById("greet") != null && 
+                    !document.getElementById("greet").innerHTML.startsWith("Bienvenue")) {
                     document.getElementById("contentQuestion").innerHTML = "Vous avez colorié <b>" + data.score + "</b> cases!"
                 }
                 // VVV On initialise également la position VVV

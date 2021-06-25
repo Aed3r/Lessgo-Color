@@ -19,6 +19,7 @@ port = 8081
 tempsPartie = 120 # secondes
 jeuLance = False # Permet de sauter l'étape "attente". Sert également côté réseau
 _tempEtatJeu = None # Garde en mémoire l'état initial de jeuLance pour le rétablir après une partie
+afficherStatsTerm = False
 
 # ------------------ Réseau ------------------- #
 defaultCooldown = 100 # ms
@@ -100,6 +101,9 @@ afficherBotsStats = False
 botPowerUpsPickup = True
 distMinDestBots = 20 # px
 minTailleEquipes = 0 # Remplir les équipes par des bots pour atteindre un minimum de joueurs
+
+# ----------------- Bots ----------------- #
+frequenceApparitionPU = 2 # secondes
 
 # ----------------- Accesseurs ----------------- #
 

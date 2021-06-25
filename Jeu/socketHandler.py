@@ -128,6 +128,9 @@ def calcPingMoyen (newPing):
 def printInfos():
     global avgPing, lastPing, msCooldown, statsDrawnOnce
 
+    if not cst.afficherStatsTerm:
+        return
+
     if statsDrawnOnce:
         print("\033[A\033[A\033[A\033[A")
     else:

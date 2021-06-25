@@ -28,7 +28,7 @@ def initChrono():
     chronoDebut = time.time() + cst.tempsPartie
     posXFondChrono = None
 
-# AfficehRenvoie True si la partie est finie, False sinon
+# Renvoie True si la partie est finie, False sinon
 def drawChrono(fenetre):
     global chronoDebut, place, fondChrono, fond, posXFondChrono, lastRes
 
@@ -36,7 +36,7 @@ def drawChrono(fenetre):
     t0=chronoDebut - tActuelle
     #print("t0 = " + str(t0) + "t0 % 10 =" + str(t0%10))
     #print(place)
-    if ((int)(t0 % 10) == 0) and (place == True):
+    if ((int)(t0 % cst.frequenceApparitionPU) == 0) and (place == True):
         plateau.getTerrain().placerPowerupAlea()
         place = False
     elif ((int)(t0 % 10) != 0):

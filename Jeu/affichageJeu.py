@@ -12,6 +12,7 @@ place = True
 fond = None
 fondChrono = None
 posXFondChrono = None
+lastRes = None
 
 # Temps de calcul alloué pour une image
 msPerFrame = int(1000 / cst.fps)
@@ -19,17 +20,17 @@ msPerFrame = int(1000 / cst.fps)
 def afficherJoueurs(fenetre):
     for j in joueur.getJoueurs():
         if j.getStillPlaying():
-            pygame.draw.circle(fenetre, j.getCouleur(), j.getPos(), j.getRayon()*cst.tailleCase)   
+            pygame.draw.circle(fenetre, j.getCouleur(), j.getPos(), j.getRayon()*cst.tailleCase*cst.scale)   
 
 # (Ré-)initialise le chronomètre
 def initChrono():
-    global chronoDebut
+    global chronoDebut, posXFondChrono
     chronoDebut = time.time() + cst.tempsPartie
     posXFondChrono = None
 
 # AfficehRenvoie True si la partie est finie, False sinon
 def drawChrono(fenetre):
-    global chronoDebut, place, fondChrono, fond, posXFondChrono
+    global chronoDebut, place, fondChrono, fond, posXFondChrono, lastRes
 
     tActuelle=time.time()
     t0=chronoDebut - tActuelle
@@ -61,7 +62,10 @@ def drawChrono(fenetre):
     if fondChrono == None:
         fond = pygame.image.load(os.path.join("Data", "Images", "styleChrono.png")).convert_alpha()
         fondChrono = pygame.transform.smoothscale(fond, ((int) (text.get_width()*1.50), (int) (text.get_height() + (text.get_width()*0.5))))
-    posXFondChrono = ((int) (cst.getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
+
+    if lastRes == None or lastRes != cst.getRes()[0]:
+        posXFondChrono = ((int) (cst.getRes()[0]/2 - text.get_width()*1.5/2), (int) (50 - text.get_width()*0.5/2))
+        lastRes = cst.getRes()[0]
 
     fenetre.blit(fondChrono, posXFondChrono)
     fenetre.blit(text, (cst.getRes()[0]/2 - text.get_width()/2, 50))   

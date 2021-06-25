@@ -302,6 +302,9 @@ def getNombreJoueurs():
         return len(list(filter(lambda j: j.getStillPlaying() and not j.isBot(), joueurs)))
 
 def completerEquipes():
+    if not cst.utiliserBots:
+        return
+    
     count = [0, 0, 0, 0]
     biggest = -1
     for i in range(4):
@@ -335,8 +338,8 @@ def equipePowerUp(pu, equipe):
 
 def initSpawnPoints():
     global spawn
-    spawnXOffset = cst.getResP()[0] * cst.propZoneInit / 2
-    spawnYOffset = cst.getResP()[1] * cst.propZoneInit / 2
+    spawnXOffset = (cst.getResP()[0]*cst.scale) * cst.propZoneInit / 2
+    spawnYOffset = (cst.getResP()[1]*cst.scale) * cst.propZoneInit / 2
     spawn = [(spawnXOffset, spawnYOffset),
             (cst.getResP()[0] - spawnXOffset, spawnYOffset),
             (spawnXOffset, cst.getResP()[1] - spawnYOffset),

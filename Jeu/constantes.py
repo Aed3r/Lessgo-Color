@@ -34,6 +34,7 @@ taillePowerUp = 50 # pixels
 effetFondu = 20 # 0 (très lent) - 255 (instant)
 couleurChrono = couleurFond
 couleurAnnonces = couleurFond
+scale = 0.5
 
 # ------------------ Joueur ----------------- #
 playerSize = 5
@@ -44,7 +45,7 @@ defVitesse = 1
 
 collisions = False
 meilleureMouvement = True
-vitesseMax = 5 # Sans powerup
+vitesseMax = 2 # Sans powerup
 
 # ----------------- Gameplay ----------------- #
 nbPowerup = 3
@@ -94,10 +95,11 @@ animFinDuree = 500 # ms
 delaiFinBlocs = 1000 # ms
 
 # ----------------- Bots ----------------- #
+utiliserBots = False
 afficherBotsStats = False
 botPowerUpsPickup = True
 distMinDestBots = 20 # px
-minTailleEquipes = 25 # Remplir les équipes par des bots pour atteindre un minimum de joueurs
+minTailleEquipes = 0 # Remplir les équipes par des bots pour atteindre un minimum de joueurs
 
 # ----------------- Accesseurs ----------------- #
 

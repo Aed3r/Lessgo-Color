@@ -32,10 +32,11 @@ class Terrain:
         self.initTerrain()
         self._offset = [[0, -1], [1, 0], [0, 1], [-1, 0]]
         self._tiles = [[], [], [], []]
-        # On charge tous les tiles une seule fois
+        # On charge tous les tiles une seule fois et on les redimensionne
         for i in range(4):
             for j in range(16):
                 self._tiles[i].append(pygame.image.load(os.path.join('Data', 'Images', 'Tiles', str(i), str(j)+".png")))
+                self._tiles[i][j] = pygame.transform.smoothscale(self._tiles[i][j], (round(cst.tailleCase*cst.scale), round(cst.tailleCase*cst.scale)))
         self._buffer = pygame.Surface((cst.getResP()[0], cst.getResP()[1]))
         self._buffer.set_alpha(cst.effetFondu)
         self._bufferPlateau = pygame.Surface((cst.getResP()[0], cst.getResP()[1]))
@@ -43,7 +44,7 @@ class Terrain:
         self._powerUpSprites = []
         for i in range(cst.nbPowerup + cst.nbSpecial):
             img = pygame.image.load(os.path.join('Data', 'Images', 'Powerups', cst.listeValeurs[i][3]+".png"))
-            img = pygame.transform.smoothscale(img, (cst.taillePowerUp, cst.taillePowerUp))
+            img = pygame.transform.smoothscale(img, (round(cst.taillePowerUp*cst.scale), round(cst.taillePowerUp*cst.scale)))
             self._powerUpSprites.append(img)
         # On dessine le fond sur la surface
         pygame.draw.rect(self._buffer, cst.couleurFond, pygame.Rect(0, 0, cst.getResP()[0], cst.getResP()[1]))
@@ -119,7 +120,7 @@ class Terrain:
         return None
 
     def initTerrain(self):
-        taille = (int)(cst.getResP()[0] / cst.tailleCase * cst.propZoneInit)
+        taille = (int)((cst.getResP()[0]*cst.scale) / cst.tailleCase * cst.propZoneInit)
         for i in range(taille):
             for j in range(taille):
                 self.setColor(i, j, 0, None)
@@ -141,16 +142,16 @@ class Terrain:
                     if col != None:
                         code = self._calcNeighbors(i, j)
                         if (code != 15):
-                            self._buffer.blit(self._tiles[col][code], (i*cst.tailleCase, j*cst.tailleCase))
+                            self._buffer.blit(self._tiles[col][code], (i*round(cst.tailleCase*cst.scale), j*round(cst.tailleCase*cst.scale)))
                         else:
-                            pygame.draw.rect(self._buffer, cst.couleursPlateau[col], pygame.Rect(i*cst.tailleCase, j*cst.tailleCase, cst.tailleCase, cst.tailleCase))
+                            pygame.draw.rect(self._buffer, cst.couleursPlateau[col], pygame.Rect(i*round(cst.tailleCase*cst.scale), j*round(cst.tailleCase*cst.scale), round(cst.tailleCase*cst.scale), round(cst.tailleCase*cst.scale)))
         
         self._bufferPlateau.blit(self._buffer, (0,0))
         fenetre.blit(self._bufferPlateau, (0, 0))
 
         # Powerup
         for p in self.powerups:
-            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-cst.taillePowerUp/2, p['y']-cst.taillePowerUp/2))          
+            fenetre.blit(self._powerUpSprites[p['type']], (p['x']-(cst.taillePowerUp*cst.scale)/2, p['y']-(cst.taillePowerUp*cst.scale)/2))          
 
     # Construit un code binaire en ajoutant comprenant 1 à l'indice i si le le voisin i (déterminé par self._offset) est de la même couleur que la case (x, y)
     def _calcNeighbors(self, x, y):
@@ -169,7 +170,7 @@ class Terrain:
             pygame.draw.rect(fenetre,cst.couleursPlateau[i],pygame.Rect(tot*cst.getRes()[0],cst.getRes()[1]-19,cst.getRes()[0]*p,18))
             tot+=p
             i+=1
-        pygame.draw.rect(fenetre,(255,255,255),pygame.Rect(tot*cst.getRes()[0],cst.getRes()[1]-19,cst.getRes()[0],18))
+        pygame.draw.rect(fenetre,cst.couleurFond,pygame.Rect(tot*cst.getRes()[0],cst.getRes()[1]-19,cst.getRes()[0],18))
 
     def modifCompteur(self, pos, color, joueur):
         colorNow = self.getColor(pos[0], pos[1])
@@ -239,7 +240,7 @@ class Terrain:
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, j)
     
     def placerPowerupAlea(self):
-        resolution = cst.getRes()
+        resolution = (cst.getResP()[0]/cst.scale, cst.getResP()[1]/cst.scale)
         taille = (int)(resolution[0] * cst.propZoneInit)
         type = random.randrange(cst.nbPowerup)
         bienPlace =  False
@@ -291,7 +292,7 @@ terrain = None
 
 def initTerrain():
     global terrain
-    terrain = Terrain(round(cst.getResP()[1]/cst.tailleCase), round(cst.getResP()[0]/cst.tailleCase))
+    terrain = Terrain(round((cst.getResP()[1]/cst.scale)/cst.tailleCase), round((cst.getResP()[0]/cst.scale)/cst.tailleCase))
 
 def getTerrain():
     global terrain
@@ -308,7 +309,7 @@ def updateCase(j):
 
     if cst.botPowerUpsPickup or not j.isBot():
         #Si le joueur passe sur un PowerUp il le récupère  
-        p = terrain.getType(j.x, j.y, j.getRayon())
+        p = terrain.getType(j.x, j.y, j.getRayon()*cst.scale)
         if (p != None):
             j.setPowerUp(p)
             if (cst.listeValeurs[p][3].endswith("Gold")):

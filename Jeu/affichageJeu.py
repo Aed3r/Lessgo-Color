@@ -127,8 +127,10 @@ def drawAll(fenetre, pause):
 
     # Affichage fps
     tempsCalcul = end - start # ms
+    fps = round(1000 / tempsCalcul)
+    cst.setCurrFPS(fps)
     if cst.afficherFPS:
-        text = cst.policeMedium.render(str(min(cst.fps, round(1000 / tempsCalcul))) + " fps", True, (0,0,0), (255,255,255))
+        text = cst.policeMedium.render(str(min(cst.fps, fps)) + " fps", True, (0,0,0), (255,255,255))
         fenetre.blit(text, (cst.getRes()[0] - text.get_width(), 0))   
 
     sleep = (msPerFrame - tempsCalcul)/1000.

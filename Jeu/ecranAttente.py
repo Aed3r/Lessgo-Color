@@ -185,6 +185,9 @@ def toutDessiner(fenetre):
 
     # Fin de la mesure du temps et attente pour afficher la prochaine frame
     end = time.time() * 1000
-    sleep = (msPerFrame - (end - start))/1000.
+    tempsCalcul = end - start # ms
+    fps = round(1000 / tempsCalcul)
+    cst.setCurrFPS(fps)
+    sleep = (msPerFrame - tempsCalcul)/1000.
     if (sleep > 0): 
         time.sleep(sleep)

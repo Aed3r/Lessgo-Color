@@ -16,6 +16,7 @@ msCooldown = cst.defaultCooldown
 
 # Ping moyen
 avgPing = -1
+lastPing = -1
 nPings = 0
 mutex = threading.Lock()
 
@@ -88,6 +89,8 @@ async def request_handler(ws_current, request):
                     val2 = random.randint(0, 100000)
 
                     await envoyerPaquet(ws_current, {'action': 'stresstest', 'val1': val1, 'val2': val2})
+                elif data["action"] == "erreur":
+                    alert(data["message"])
             except Exception as e:
                 alert("Mauvais paquet '" + msg.data + "' du joueur '" + str(request.remote) + "' (" + str(e) + ")")
         else:
@@ -100,17 +103,18 @@ def alert(msg):
     global statsDrawnOnce
 
     if statsDrawnOnce:
-        print("\033[A\033[A\033[31m" + msg + "\033[39m\n\n")
+        print("\033[A\033[A\033[A\033[A\033[31m" + msg + "\033[39m\n\n")
     else:
         print("\033[31m" + msg + "\033[39m")
     changeCooldown(0)
 
 # Calcule et affiche le nouveau piong ainsi que la moyenne des pings précédents
 def calcPingMoyen (newPing):
-    global avgPing, nPings, mutex, statsDrawnOnce
+    global avgPing, nPings, mutex, statsDrawnOnce, lastPing
 
     mutex.acquire()
     if (newPing != -1): 
+        lastPing = newPing
         nPings += 1
         avgPing += (newPing - avgPing) / nPings
 
@@ -118,8 +122,23 @@ def calcPingMoyen (newPing):
         #if (nPings == 1):
             #print("cooldown: " + str(msCooldown) + "ms\nsheeeeesh")
         #print("\033[Aping: " + str(newPing) + "ms avg: " + str(round(avgPing)) + "ms                 ")
-        statsDrawnOnce = True
+        #statsDrawnOnce = True
     mutex.release()
+
+def printInfos():
+    global avgPing, lastPing, msCooldown, statsDrawnOnce
+
+    if statsDrawnOnce:
+        print("\033[A\033[A\033[A\033[A")
+    else:
+        statsDrawnOnce = True
+
+    print("Cooldown: " + str(msCooldown) + "ms                         ")
+    print("Ping: " + str(lastPing) + "ms avg: " + str(round(avgPing)) + "ms                      ")
+    if cst.getCurrFPS() != None:
+        print("FPS: " + str(cst.getCurrFPS()) + " fps                           ")
+    else:
+        print("FPS: -- fps                           ")
 
 # Vérifie que la socket est ouverte puis envoie le paquet
 async def envoyerPaquet (websocket, paquet):
@@ -143,7 +162,7 @@ def changeCooldown(change):
         msCooldown = 0
     
     #print("\033[A\033[Acooldown: " + str(msCooldown) + "ms                          \n")
-    statsDrawnOnce = True
+    #statsDrawnOnce = True
 
     return msCooldown
 
@@ -154,7 +173,7 @@ def resetAveragePing():
     avgPing = -1
     nPings = 0
     mutex.release()
-    print("\033[A\033[A\033[A")
+    #print("\033[A\033[A\033[A")
 
 def getCooldown():
     return msCooldown

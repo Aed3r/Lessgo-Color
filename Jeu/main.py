@@ -153,6 +153,9 @@ class BouclePrincipale(threading.Thread):
             # Raffraichissment de la fenêtre
             pygame.display.flip()
 
+            # Affichage des stats
+            socketHandler.printInfos()
+
             # Gestionnaire des entrées
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

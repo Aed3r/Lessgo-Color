@@ -25,6 +25,11 @@ if (nom != null) {
     document.getElementById("pseudoBox").value = nom;
 }
 
+window.onerror = function(message, source, lineno, colno, error) {
+    if (error) message = error.stack;
+    envoyerPaquet({'action':'erreur', 'message': message}, True);
+}
+
 // Envoi la direction choisie par le joueur au serveur
 function envoyerDirection(angle, vitesse) {
     // Vérifications
@@ -101,7 +106,7 @@ function connect() {
                 color = data.color;
                 msCooldown = data.coolDown;
                 nom = data.nom;
-                if (data.score && nom != null) {
+                if (data.score && nom != null && !document.getElementById("greet").innerHTML.startsWith("Bienvenue")) {
                     document.getElementById("contentQuestion").innerHTML = "Vous avez colorié <b>" + data.score + "</b> cases!"
                 }
                 // VVV On initialise également la position VVV

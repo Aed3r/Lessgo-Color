@@ -124,3 +124,12 @@ def lancerJeu():
 def terminerJeu():
     global jeuLance, _tempEtatJeu
     jeuLance = _tempEtatJeu
+
+currFPS = None
+def setCurrFPS(fps):
+    global currFPS
+    currFPS = fps
+
+def getCurrFPS():
+    global currFPS
+    return currFPS

@@ -240,7 +240,7 @@ class Terrain:
                     self._bresenham(0, 0, dY, dX, 1, 1, 1, x1, y1, j)
     
     def placerPowerupAlea(self):
-        resolution = (cst.getResP()[0]/cst.scale, cst.getResP()[1]/cst.scale)
+        resolution = (cst.getResP()[0]*cst.scale, cst.getResP()[1]*cst.scale)
         taille = (int)(resolution[0] * cst.propZoneInit)
         type = random.randrange(cst.nbPowerup)
         bienPlace =  False
